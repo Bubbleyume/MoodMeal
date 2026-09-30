@@ -128,176 +128,91 @@ gives food suggestions.
   illustrated artwork, for the same "no image hosting reachable, and no
   image-generation tool in this environment" reason.
 
-## Avatar system (Phase 2B / 2B.1 / 2C)
+## Avatar system (Avatar Redesign Phase 1)
 
 MoodMeal has exactly two visual identities: the official logo
 (`BrandLogo.tsx`/`BRANDING.logo`, used sparingly — app icon, a small brand
 mark on Welcome/loading/About) and each user's own personalized avatar.
 There is no separate mascot character. One user creates one avatar; that
 same avatar represents them everywhere MoodMeal shows a face, across all 12
-moods — only the expression changes, never the identity. Three layers, kept
-deliberately separate so any one of them can change without touching the
-others:
+moods — only the expression changes, never the identity.
+
+### Identity: three choices
+
+`AvatarConfig` is exactly `{ baseStyle, skinTone, hairStyle }`, chosen in
+the Creator in that order — **Style → Skin Tone → Hairstyle**:
+
+| Field       | Options                                                                  |
+| ----------- | ------------------------------------------------------------------------ |
+| `baseStyle` | Feminine, Masculine, Androgynous (body, outfit, and pose)                |
+| `skinTone`  | Fair, Light, Medium, Tan, Deep, Rich                                     |
+| `hairStyle` | Long Wavy, Straight, Braids, Short Curly, Short Straight, Buzz Cut, Bald |
+
+All three are independent, giving 3 × 6 × 7 = 126 combinations. Hair color
+isn't stored; the renderer uses one fixed natural tone.
+
+### Files
 
 ```
-src/types/avatar.ts          STATE       — AvatarConfig (identity, chosen
-                                            once) and ExpressionSpec (per-
-                                            mood, never identity-bearing)
-src/hooks/useAvatar.ts       STATE       — localStorage persistence,
-                                            survives refresh/restart, wiped
-                                            by "Clear Local Data"; runs every
-                                            read through avatarMigration.ts
-src/data/avatarOptions.ts    STATE       — the customization menu (every
-                                            pickable id + its label/swatch)
-src/data/avatarMigration.ts  STATE       — normalizes a saved AvatarConfig
-                                            from an older option set (see
-                                            "Phase 2C simplification" below)
-src/data/avatarExpressions.ts STATE      — EmotionId -> ExpressionSpec map
-src/data/avatarAssets.ts     RESOLUTION  — id -> style/shape asset ref and
-                                            id -> color resolvers, kept
-                                            separate (see below); the ONLY
-                                            file that should know what a
-                                            real asset file's path would be
+src/types/avatar.ts           AvatarConfig (identity) and ExpressionSpec
+                              (per-mood, never identity-bearing)
+src/data/avatarOptions.ts     option lists (id + label + swatch hex) and
+                              DEFAULT_AVATAR_CONFIG
+src/data/avatarMigration.ts   normalizeAvatarConfig — converts any older
+                              stored avatar into the current shape
+src/data/avatarExpressions.ts EmotionId -> ExpressionSpec
+src/hooks/useAvatar.ts        localStorage persistence ("moodmeal:avatar");
+                              normalizes every read and self-heals the
+                              stored copy once
 src/components/avatar/
-  Avatar.tsx                 RENDERING   — draws the resolved layers as SVG
-  AvatarCreator.tsx                      — the customization UI
-  AvatarPreview.tsx                      — a framed <Avatar> for cards
-  AvatarOptionPicker.tsx                 — the reusable swatch/pill picker
-public/assets/avatars/       (future)    — where real illustrated layer
-                                            files land — see its README.md
+  Avatar.tsx                  the ONE character renderer (inline SVG)
+  AvatarCreator.tsx           Style → Skin Tone → Hairstyle UI
+  AvatarRadioGroup.tsx        accessible radiogroup used by every picker
+  AvatarPreview.tsx           a framed <Avatar> for cards/headers
 ```
 
-### Phase 2C simplification
+`Avatar.tsx` is the only place that knows how an avatar is drawn — skin
+color lookup, contrast-adaptive facial "ink", hair, body, and expression
+layers all live there. The earlier split between an asset-resolution
+module (`avatarAssets.ts`, which mapped ids to planned
+`/assets/avatars/<layer>/*.svg` files that never existed) and a separate
+vector renderer has been retired. `public/assets/avatars/` (empty
+placeholder folders plus its README) and
+`docs/preset-character-reference.png` are left on disk for now and can be
+deleted once the Phase 1 renderer is signed off.
 
-To keep the first production art pack tractable, the Creator UI now walks
-through only five short steps — **Choose Your Frame** (Soft Frame / Bold
-Frame — a non-gendered body/silhouette choice, never a gender category),
-**Choose Your Pose** (Standing / Seated — a presentation choice, not a
-separate body-type or identity category; Seated is written to conceptually
-support a wheelchair-based presentation), **Pick a Skin Tone** (6 tones,
-Fair through Rich), **Pick a Hairstyle** (7 styles), and **Pick a Hair
-Color** — plus one standard outfit ("MoodMeal shirt" + jeans) every avatar
-wears, no longer a Creator choice. `AvatarConfig` still models the full
-Phase 2B option set underneath (face shape, eye style/color, eyebrow style,
-facial hair, clothing style/color, accessories) — those fields are simply
-fixed at a sensible default for new avatars and left untouched for avatars
-that chose something before Phase 2C, so a future advanced-customization
-mode can bring any of them back without a data migration or renderer
-rework. `avatarMigration.ts`'s `normalizeAvatarConfig` is what makes an
-avatar saved before Phase 2C (missing `frame`/`pose`, using a retired skin
-tone or hairstyle id, wearing a since-removed clothing choice) load
-correctly under the new option set; `useAvatar.ts` runs it on every read
-and self-heals the stored copy.
+`variant="full"` (default) draws the whole standing figure
+(`viewBox="0 0 200 310"`); `variant="bust"` crops to head and shoulders
+(`0 0 200 220`) for small contexts such as mood tiles and Profile
+thumbnails.
 
-The canvas grew to fit a real standing/seated pose: `Avatar` now renders a
-full figure (`viewBox="0 0 200 310"`) by default, with legs+shoes for
-Standing or shorter bent legs plus a wheelchair-conceptual hint (a seat
-rail and two wheel outlines) for Seated — see `renderLowerBody` in
-Avatar.tsx. Small/decorative contexts that only need the face to read at
-32-56px (mood tiles, the bottom-sheet face, the Creator's tiny expression
-previews, Profile's avatar thumbnails) pass `variant="bust"`, which crops
-back to the pre-2C `viewBox="0 0 200 220"` framing instead of shrinking the
-face to make room for legs nobody could see at that size anyway — see the
-`variant` prop on `Avatar`/`AvatarPreview`/`EmotionFace`. The "frame"
-choice (Soft/Bold) is expressed in this vector renderer as a body-width
-transform on the torso/legs (see `frameScale` in Avatar.tsx) rather than
-two fully hand-drawn bodies — a shortcut the production art brief below
-calls out explicitly.
+### Legacy avatar migration
 
-To replace the temporary vector rendering with production artwork later:
-point each `avatarAssets.ts` style/shape getter (`getBaseAsset`,
-`getHairAsset`, `getLowerBodyAsset`, `getEyeAsset`, `getEyebrowAsset`,
-`getMouthAsset`, `getFacialHairAsset`, `getClothingAsset`,
-`getAccessoryAsset`, `getExpressionEffectAsset`) at a real file instead of
-the placeholder `/assets/avatars/<layer>/<name>.svg` path, and update the
-small number of `render*`/`<Eye>`/`<Eyebrow>`/`<Mouth>` functions in
-`Avatar.tsx` (each already commented with which getter/resolver it
-corresponds to) to draw an `<image>` tinted via CSS/SVG filter, or a
-pre-masked layer, instead of a vector path. Nothing else (state,
-persistence, the Creator UI, or any page that renders `<Avatar>`) needs to
-change.
+`normalizeAvatarConfig` runs on every read and accepts:
 
-### Production art brief
+- **Phase 1** `{ baseStyle, skinTone, hairStyle }`: kept as-is.
+- **Seven-preset model** (`presetId`): mapped to the base style and
+  hairstyle that preset was drawn with — `feminine`, `braids` → Feminine
+  (Long Wavy / Braids); `masculine`, `classic` → Masculine (Short
+  Straight); `seated` → Masculine (Short Curly); `androgynous` →
+  Androgynous (Short Straight); `bold` → Androgynous (Buzz Cut).
+- **Three-model** (`baseModel`) and **Phase 2C** (`frame: "soft" | "bold"`,
+  `pose`) avatars: `baseModel` is used directly, and `frame: "bold"` maps
+  to Masculine (anything else to Feminine). The stored hairstyle is kept.
+- **Phase 2B** hairstyle ids (`buzz`, `curly`, `coily-afro`, `locs`, `bun`,
+  …) map to the nearest current style, and the `porcelain` skin tone maps
+  to Fair.
 
-The rule that matters most, unchanged from before: **draw shapes, not
-colors.** Every identity field is either a SHAPE choice (a hairstyle, a
-frame, a pose) or a COLOR choice (a hair color, a skin tone) — never both
-baked into one file. A production illustrator delivers one uncolored
-silhouette per shape (or per shape × expression, for eyes/eyebrows/mouth)
-and this app tints it at render time from `avatarAssets.ts`'s color
-resolvers. **Never deliver a separate fully-colored file for every shape ×
-color combination.**
+Retired fields (hair color, face shape, eye/eyebrow styles, facial hair,
+clothing, accessories, frame, pose, presetId, baseModel) are dropped.
+Invalid values fall back to the defaults. A stored value that isn't an
+object is treated as "no avatar yet".
 
-- **Canvas**: match the renderer's full-figure `viewBox="0 0 200 310"` (a
-  200×310 unit standing/seated figure) — the top 220 units are exactly the
-  old bust framing, so a bust-only crop still works for small contexts.
-  Deliver at a high base resolution (e.g. 1000×1550px or native SVG) so it
-  scales cleanly from a 32px preview button up to a 300px+ Welcome hero.
-- **Format**: per-layer files as transparent-background greyscale/alpha
-  masks or native SVG with a single tintable fill (SVG preferred); PNG/WebP
-  masks at 1x/2x/3x if rasterized. No layer should ship pre-colored.
-- **Registration**: every layer shares one fixed anchor so swapping any
-  single layer still lines up with every other one. Anchor points, in the
-  renderer's 200-wide coordinate space: head center ≈ (100, 98), eye
-  baseline y ≈ 98, mouth center ≈ (100, 130), shoulder/waist line ≈ y 220,
-  standing feet ≈ y 288-296, seated wheel centers ≈ y 273.
-- **Style**: cute, human, chibi-inspired; large expressive eyes; rounded
-  features; friendly, colorful, clean, polished. Compatible with
-  MoodMeal's purple/pink/green identity without copying any specific
-  reference character pixel-for-pixel. The Seated illustration should read
-  as a genuine, respectful wheelchair presentation (a real seat, frame and
-  wheels) rather than the current placeholder's simplified wheel-outline
-  hint — this is the single highest-value upgrade the first art pack can
-  make over the vector renderer.
+### Accessibility
 
-**Starter pack — what the current, simplified Creator UI actually needs**
-(every one of these is either directly user-chosen, or the one fixed value
-every MVP avatar currently uses):
-
-  - `base/soft`, `base/bold` — 2 files — tint: skin color. Unlike the
-    placeholder renderer's transform-based shortcut, these should be two
-    genuinely distinct body illustrations (see FrameId's comment in
-    types/avatar.ts).
-  - `hair/{short-cut,buzz-cut,long-wavy,curly,coily,braids,locs}` — 7 files
-    — tint: hair color — no per-color file.
-  - `lower-body/standing`, `lower-body/seated` — 2 files — fixed jeans +
-    shoe palette (not user-tintable). `seated` is the wheelchair
-    illustration called out above.
-  - `eyes/round--<expression>` — 9 files (one `EyeStyleId`, the only one a
-    new avatar gets today, × 9 `EyeShapeKey` expressions) — tint: eye
-    color.
-  - `eyebrows/natural--<expression>` — 8 files (one `EyebrowStyleId` × 8
-    `EyebrowShapeKey` expressions) — tint: the contrast-adaptive ink color,
-    not hair color, so brows stay legible on every skin tone.
-  - `mouths/<expression>` — 12 files (all `MouthShapeKey` values) — tint:
-    ink color.
-  - `clothing/crew-neck` — 1 file, the "MoodMeal shirt" — tint: clothing
-    color (only "brand-purple" is ever selected today, but the resolver
-    supports any `ClothingColorId`).
-  - `effects/{blush,tears,sweatDrop}` — 3 fixed-palette overlay files.
-  - **Starter pack total: ~44 shape files** plus the existing skin/hair/eye/
-    clothing color swatches already defined in `avatarOptions.ts` — small
-    enough to commission in one pass, unlike a full cross-product.
-
-**Full option set already modeled** (not exposed in the current Creator,
-but real `AvatarConfig` fields an advanced-customization mode could restore
-without any renderer rework): 3 `FaceShapeId` values, 3 `EyeStyleId` values,
-4 `EyebrowStyleId` values, 5 `FacialHairId` values (`facial-hair/<id>`,
-tint: hair color), 4 `ClothingStyleId` values, and 4 `AccessoryId` values
-(`accessories/<id>`, mostly fixed-palette; freckles tint with ink color).
-Producing art for these now is optional — nothing in the current app
-requires it — but `avatarAssets.ts`'s getters already have the right shape
-for it (`getEyeAsset(eyeStyle, expression)` etc.), so there's no
-architecture to redo later, only more files to add.
-
-**Compound lookups**: `avatarAssets.ts` exports `resolveLayer(asset,
-config)` / `resolveTint(tint, config)` to pair any getter's output with its
-resolved color for one avatar in a single call — the shape (file + color) a
-production renderer actually consumes per layer.
-
-**What must NOT vary between expression sets**: frame, pose, skin tone,
-hairstyle/color, clothing — only the eyes/eyebrows/mouth/(blush/tears/sweat)
-layer changes per mood, and none of those may be drawn with a specific skin
-tone, hair color, or eye color baked in — that's what makes it possible for
-a shape file to be reused across every user who happens to share that
-style.
+Each Creator step is a `role="radiogroup"`, labelled by its visible
+heading, with one `role="radio"`/`aria-checked` button per option and a
+roving tabindex: Tab enters or leaves the group in one stop, arrow keys
+move the selection (wrapping), Home/End jump to the first or last option,
+and Space/Enter select. A checked option shows a checkmark as well as a
+ring, so selection never relies on color alone.

@@ -1,47 +1,37 @@
 /**
- * Normalizes a saved AvatarConfig that may predate the three-model MVP
- * option set, or come straight out of localStorage where nothing is
- * type-checked at the boundary — into a config valid for the CURRENT
- * option set. Safe to call on an already-current config (a no-op in that
- * case). See src/hooks/useAvatar.ts for where this runs (on every read, and
- * self-healing the stored copy once).
+ * Converts whatever is stored under `moodmeal:avatar` into a current
+ * AvatarConfig ({ baseStyle, skinTone, hairStyle }). localStorage is not
+ * type-checked, so this accepts `unknown` and is defensive about every
+ * field. Safe (and a no-op) on an already-current config. See
+ * src/hooks/useAvatar.ts for where it runs — on every read, self-healing
+ * the stored copy once.
  *
- * What changes on an older avatar:
- *   - old frame and pose fields map to a complete base model.
- *   - `skinTone`: Phase 2B's "porcelain" is folded into "fair" (the new
- *     lightest starter tone) — everything else maps 1:1.
- *   - `hairStyle`: Phase 2B's 12-style set maps onto the 7-style MVP set
- *     below (see LEGACY_HAIR_STYLE_MAP for exactly which style each old one
- *     becomes — every mapping keeps the same general texture/length).
- *   - `clothingStyle`/`clothingColor` are normalized to the one standard
- *     "MoodMeal shirt" outfit — the MVP no longer varies clothing, so an
- *     avatar that previously wore a hoodie or a different color now wears
- *     the same standard shirt as every other avatar.
- *   - Everything else (hairColor, faceShape, eyeStyle, eyeColor,
- *     eyebrowStyle, facialHair, accessories) is untouched — those fields
- *     didn't change shape in Phase 2C, so whatever the user previously
- *     chose keeps rendering exactly as before, even though the Creator no
- *     longer offers a picker for it.
+ * Stored shapes it understands, newest first:
+ *   - Phase 1:  { baseStyle, skinTone, hairStyle }
+ *   - Presets:  { presetId, skinTone, hairStyle, hairColor, faceShape, ... }
+ *               Each of the seven retired presets maps to the base style
+ *               and hairstyle it was drawn with, so the avatar looks as
+ *               close as possible to what the user last saw.
+ *   - 3 models: { baseModel, hairStyle, ... }
+ *   - Phase 2C: { frame: "soft" | "bold", pose, hairStyle, ... }
+ *   - Phase 2B: { hairStyle, skinTone, ... } with the older 12-style
+ *               hairstyle ids and the "porcelain" skin tone.
+ * Every retired field (hairColor, faceShape, eye/eyebrow styles, facial
+ * hair, clothing, accessories, frame, pose, presetId, baseModel) is
+ * dropped from the result.
+ *
+ * Returns null for anything that isn't an object — the caller treats that
+ * as "no avatar yet".
  */
-import { DEFAULT_AVATAR_CONFIG, STANDARD_OUTFIT } from "./avatarOptions";
-import type { AvatarConfig, HairStyleId, PresetCharacterId, SkinToneId } from "../types/avatar";
+import { BASE_STYLE_IDS, DEFAULT_AVATAR_CONFIG, HAIR_STYLE_IDS, SKIN_TONE_IDS } from "./avatarOptions";
+import type { AvatarConfig, BaseStyleId, HairStyleId, SkinToneId } from "../types/avatar";
 
-const VALID_SKIN_TONES: SkinToneId[] = ["fair", "light", "medium", "tan", "deep", "rich"];
 const LEGACY_SKIN_TONE_MAP: Record<string, SkinToneId> = {
   porcelain: "fair",
 };
 
-const VALID_HAIR_STYLES: HairStyleId[] = [
-  "long-wavy",
-  "straight",
-  "braids",
-  "short-curly",
-  "short-straight",
-  "buzz-cut",
-  "bald",
-];
+/** Phase 2B's 12-style set -> nearest current style (same texture/length). */
 const LEGACY_HAIR_STYLE_MAP: Record<string, HairStyleId> = {
-  bald: "bald",
   buzz: "buzz-cut",
   short: "short-straight",
   "short-cut": "short-straight",
@@ -57,63 +47,57 @@ const LEGACY_HAIR_STYLE_MAP: Record<string, HairStyleId> = {
   bun: "long-wavy",
 };
 
-const VALID_PRESETS: PresetCharacterId[] = [
-  "feminine",
-  "masculine",
-  "androgynous",
-  "braids",
-  "seated",
-  "bold",
-  "classic",
-];
+/** The seven retired presets -> the body and hair each one was drawn with. */
+const LEGACY_PRESET_MAP: Record<string, { baseStyle: BaseStyleId; hairStyle: HairStyleId }> = {
+  feminine: { baseStyle: "feminine", hairStyle: "long-wavy" },
+  masculine: { baseStyle: "masculine", hairStyle: "short-straight" },
+  androgynous: { baseStyle: "androgynous", hairStyle: "short-straight" },
+  braids: { baseStyle: "feminine", hairStyle: "braids" },
+  seated: { baseStyle: "masculine", hairStyle: "short-curly" },
+  bold: { baseStyle: "androgynous", hairStyle: "buzz-cut" },
+  classic: { baseStyle: "masculine", hairStyle: "short-straight" },
+};
 
-/** Accepts an untyped value (e.g. straight from `JSON.parse`, or an
- * already-valid `AvatarConfig`) on purpose — that's the actual shape of
- * data coming out of localStorage, and this function's whole job is to be
- * defensive about it regardless of which shape it's handed. */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function normalizeAvatarConfig(raw: any): AvatarConfig {
-  const rawSkinTone = raw.skinTone as string | undefined;
-  const skinTone: SkinToneId = VALID_SKIN_TONES.includes(rawSkinTone as SkinToneId)
-    ? (rawSkinTone as SkinToneId)
-    : LEGACY_SKIN_TONE_MAP[rawSkinTone ?? ""] ?? DEFAULT_AVATAR_CONFIG.skinTone;
+/** Hairstyle used when nothing usable was stored. */
+const DEFAULT_HAIR_FOR_BASE: Record<BaseStyleId, HairStyleId> = {
+  feminine: "long-wavy",
+  masculine: "short-straight",
+  androgynous: "short-straight",
+};
 
-  const rawHairStyle = raw.hairStyle as string | undefined;
-  const hairStyle: HairStyleId = VALID_HAIR_STYLES.includes(rawHairStyle as HairStyleId)
-    ? (rawHairStyle as HairStyleId)
-    : LEGACY_HAIR_STYLE_MAP[rawHairStyle ?? ""] ?? DEFAULT_AVATAR_CONFIG.hairStyle;
+function isOneOf<T extends string>(list: readonly T[], value: unknown): value is T {
+  return typeof value === "string" && (list as readonly string[]).includes(value);
+}
 
-  const presetId: PresetCharacterId = VALID_PRESETS.includes(raw.presetId as PresetCharacterId)
-    ? (raw.presetId as PresetCharacterId)
-    : raw.baseModel === "masculine" || raw.frame === "bold"
-      ? "masculine"
-      : raw.baseModel === "androgynous"
-        ? "androgynous"
-        : DEFAULT_AVATAR_CONFIG.presetId;
+export function normalizeAvatarConfig(raw: unknown): AvatarConfig | null {
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return null;
+  const r = raw as Record<string, unknown>;
 
-  const presetHair: Record<PresetCharacterId, HairStyleId> = {
-    feminine: "long-wavy",
-    masculine: "short-straight",
-    androgynous: "short-straight",
-    braids: "braids",
-    seated: "short-curly",
-    bold: "buzz-cut",
-    classic: "short-straight",
-  };
+  const skinTone: SkinToneId = isOneOf(SKIN_TONE_IDS, r.skinTone)
+    ? r.skinTone
+    : LEGACY_SKIN_TONE_MAP[String(r.skinTone)] ?? DEFAULT_AVATAR_CONFIG.skinTone;
 
-  return {
-    ...DEFAULT_AVATAR_CONFIG,
-    ...(raw as Partial<AvatarConfig>),
-    presetId,
-    skinTone,
-    hairStyle: presetHair[presetId],
-    hairColor: DEFAULT_AVATAR_CONFIG.hairColor,
-    faceShape: DEFAULT_AVATAR_CONFIG.faceShape,
-    eyeStyle: DEFAULT_AVATAR_CONFIG.eyeStyle,
-    eyeColor: DEFAULT_AVATAR_CONFIG.eyeColor,
-    eyebrowStyle: DEFAULT_AVATAR_CONFIG.eyebrowStyle,
-    facialHair: DEFAULT_AVATAR_CONFIG.facialHair,
-    accessories: DEFAULT_AVATAR_CONFIG.accessories,
-    ...STANDARD_OUTFIT,
-  };
+  // A preset avatar's hair was dictated by the preset, not by the stored
+  // hairStyle field, so the preset wins when there's no current baseStyle.
+  const preset = !isOneOf(BASE_STYLE_IDS, r.baseStyle) && typeof r.presetId === "string"
+    ? LEGACY_PRESET_MAP[r.presetId]
+    : undefined;
+
+  const baseStyle: BaseStyleId = isOneOf(BASE_STYLE_IDS, r.baseStyle)
+    ? r.baseStyle
+    : preset
+      ? preset.baseStyle
+      : isOneOf(BASE_STYLE_IDS, r.baseModel)
+        ? r.baseModel
+        : r.frame === "bold"
+          ? "masculine"
+          : DEFAULT_AVATAR_CONFIG.baseStyle;
+
+  const hairStyle: HairStyleId = preset
+    ? preset.hairStyle
+    : isOneOf(HAIR_STYLE_IDS, r.hairStyle)
+      ? r.hairStyle
+      : LEGACY_HAIR_STYLE_MAP[String(r.hairStyle)] ?? DEFAULT_HAIR_FOR_BASE[baseStyle];
+
+  return { baseStyle, skinTone, hairStyle };
 }

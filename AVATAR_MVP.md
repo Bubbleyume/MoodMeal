@@ -1,31 +1,19 @@
-# MoodMeal Preset Avatar MVP
+# MoodMeal Avatar — Redesign Phase 1
 
-The avatar creator now has only two user choices:
+The avatar creator asks for three choices, in this order:
 
-1. Select a preset character.
-2. Select a skin tone.
+1. **Style**: Feminine, Masculine, or Androgynous (body, outfit, and pose).
+2. **Skin Tone**: Fair, Light, Medium, Tan, Deep, or Rich.
+3. **Hairstyle**: Long Wavy, Straight, Braids, Short Curly, Short Straight,
+   Buzz Cut, or Bald.
 
-## Preset characters
+Every hairstyle works with every style and skin tone. Hair color is fixed
+and isn't a user choice.
 
-1. Feminine, long wavy hair, purple MoodMeal tee, cuffed blue jeans.
-2. Masculine, short dark hair, black hoodie, olive cargo pants.
-3. Androgynous, short purple hair, cream tee, purple cargo pants.
-4. Braids, long braids, purple MoodMeal tee, wide blue jeans.
-5. Seated Hoodie, short curly hair, dark hoodie and wheelchair pose.
-6. Bold & Unique, blonde buzz cut, cream top, pink pants.
-7. Classic Tee, short dark hair, beard, purple MoodMeal tee, black pants.
+Avatars saved under the old seven-preset lineup (or any earlier option set)
+are migrated automatically on load. See "Legacy avatar migration" in
+README.md for the exact mapping.
 
-Each preset keeps its hairstyle, hair color, outfit, pose, facial-hair choice,
-and accessibility details. Those elements are not separately editable.
-
-## Skin tones
-
-- fair
-- light
-- medium
-- tan
-- deep
-- rich
-
-The existing mood-expression system remains independent, allowing the selected
-preset character to display different emotions without changing their design.
+The mood-expression system is still independent of identity: the same
+avatar shows all 12 mood expressions without changing its style, skin tone,
+or hairstyle.
