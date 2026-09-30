@@ -22,8 +22,8 @@ export const SKIN_TONES: AvatarOption<SkinToneId>[] = [
   { id: "light", label: "Light", hex: "#e0ac76" },
   { id: "medium", label: "Medium", hex: "#c68a5b" },
   { id: "tan", label: "Tan", hex: "#a5673f" },
-  { id: "deep", label: "Deep", hex: "#7a4526" },
-  { id: "rich", label: "Rich", hex: "#4a2a18" },
+  { id: "deep", label: "Deep", hex: "#7c4828" },
+  { id: "rich", label: "Rich", hex: "#56311f" },
 ];
 
 export const HAIR_STYLES: AvatarOption<HairStyleId>[] = [

@@ -94,7 +94,7 @@ export default function AvatarCreator({
 
   return (
     <div>
-      <AvatarPreview config={draft} emotion={previewEmotion} size={184} className="mb-2 motion-safe:animate-pop-in" />
+      <AvatarPreview config={draft} emotion={previewEmotion} size={232} className="mb-2 motion-safe:animate-pop-in" />
 
       <div className="mt-1 flex justify-center gap-2">
         {previewEmotions.map((e) => (
