@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * MoodMeal brand design tokens.
+ *
+ * These CSS custom properties are the single source of truth for the
+ * vivid pink→purple brand gradient and the bright-green accent used for
+ * selection/active states across the redesigned screens. Components and
+ * pages should reference these variables (directly, or via the utility
+ * classes below) instead of hardcoding new hex values, so the brand palette
+ * can be tuned in exactly one place.
+ */
+:root {
+  /* Sampled directly from public/assets/branding/moodmeal-logo.png (the
+     official logo) so the app's palette and main gradient are visually
+     true to the brand mark, not an unrelated generic purple. Top-to-bottom
+     order below matches the logo's own gradient direction: pink at the
+     top, through purple, into violet at the bottom. */
+  --mm-pink: #d559d9;
+  --mm-purple: #a430da;
+  --mm-violet: #8123e0;
+  --mm-purple-deep: var(--mm-violet); /* kept as an alias: earlier code/comments referred to this name */
+
+  --mm-green: #7fd858; /* the logo's leaf green */
+  --mm-green-bright: #93e370;
+  --mm-green-deep: #5cb83a;
+
+  --mm-white: #ffffff;
+  --mm-neutral-50: #f6f4f4; /* the logo file's off-white padding/background */
+
+  --mm-gradient-hero: linear-gradient(180deg, var(--mm-pink) 0%, var(--mm-purple) 50%, var(--mm-violet) 100%);
+  --mm-gradient-soft: linear-gradient(180deg, #f5e8ff 0%, #efe4ff 100%);
+
+  --mm-shadow-float: 0 20px 45px -18px rgba(93, 30, 150, 0.55);
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    height: 100%;
+  }
+  body {
+    @apply text-slate-800 antialiased;
+    height: 100%;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    /* Neutral backdrop the phone-shaped app shell floats on at desktop
+       widths; invisible on mobile where the shell fills the viewport. */
+    background: radial-gradient(circle at top, #2a1152 0%, #150a2e 70%, #0c0618 100%);
+  }
+  #root {
+    height: 100%;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(124, 58, 237, 0.25);
+    border-radius: 999px;
+  }
+
+  /* Respect reduced-motion preferences everywhere: shorten/disable custom
+     keyframe animations rather than removing the classes, so layout never
+     depends on the animation having run. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .app-shell {
+    @apply relative mx-auto flex w-full max-w-app flex-col overflow-hidden bg-white;
+    height: 100dvh;
+    /* `transform` makes this box a containing block for any `position:
+       fixed` descendant (the bottom nav, the mood-selection bottom sheet).
+       Without it, those fixed elements would anchor to the browser
+       viewport instead of this card — harmless on mobile where the shell
+       *is* the viewport, but on desktop (where the shell is a smaller,
+       centered card) it would leave the nav pinned to the window edge
+       instead of the card's edge. */
+    transform: translateZ(0);
+  }
+
+  /* Above mobile widths, present the app as a centered phone-sized card
+     floating on the neutral backdrop, per the "centered phone container on
+     desktop" requirement. Below it, it fills the viewport edge-to-edge. */
+  @media (min-width: 640px) {
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .app-shell {
+      /* Leave room to breathe above/below the card rather than pinning it
+         to fixed margins — subtracting that room from the height (instead
+         of adding margin on top of a fixed height) keeps the card's total
+         footprint within the viewport, so the page itself never scrolls. */
+      height: min(calc(100dvh - 3rem), 900px);
+      border-radius: 2.5rem;
+      box-shadow: var(--mm-shadow-float);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  .screen-scroll {
+    @apply flex-1 overflow-y-auto pb-28;
+  }
+
+  /* Full-bleed vivid brand gradient background for the mood-first screens
+     (Welcome, Mood Selection, Analysis, Result hero). */
+  .mm-gradient-bg {
+    background: var(--mm-gradient-hero);
+  }
+
+  .mm-soft-bg {
+    background: var(--mm-gradient-soft);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-brand-600 px-6 py-3.5 text-sm font-semibold text-white shadow-soft transition-all duration-200 active:scale-95 hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-semibold text-brand-700 shadow-card ring-1 ring-brand-100 transition-all duration-200 active:scale-95 hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold text-brand-600 transition-colors duration-200 hover:bg-brand-50 active:scale-95;
+  }
+
+  /* Bright-green "brand CTA" button used on top of the gradient screens,
+     matching the reference art's accent color. */
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-sm font-bold text-brand-900 shadow-soft transition-all duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100;
+    background: linear-gradient(180deg, var(--mm-green-bright) 0%, var(--mm-green) 100%);
+  }
+  .btn-accent:hover {
+    background: linear-gradient(180deg, var(--mm-green-bright) 0%, var(--mm-green-deep) 100%);
+  }
+
+  .card {
+    @apply rounded-3xl bg-white p-4 shadow-card ring-1 ring-slate-100;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-700;
+  }
+
+  .section-title {
+    @apply font-display text-lg font-bold text-slate-900;
+  }
+}

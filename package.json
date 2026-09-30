@@ -1,0 +1,30 @@
+{
+  "name": "moodmeal",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "MoodMeal - AI-powered nutrition & wellness companion that connects how you feel with what you eat.",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/build.mjs",
+    "typecheck": "node scripts/typecheck.mjs",
+    "preview": "node scripts/serve.mjs"
+  },
+  "dependencies": {
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "esbuild": "0.27.7",
+    "tailwindcss": "3.4.19",
+    "typescript": "*"
+  },
+  "notes": {
+    "environment": "Dependencies in node_modules were vendored locally because this sandbox blocks all package-registry network access. See VENDORING.md. Once you have normal npm access, run `npm install` against the package.json below (react-router-dom, lucide-react, recharts included) to replace the first-party fallbacks — see README.md 'Swapping in the real packages' section.",
+    "wantedDependencies": {
+      "react-router-dom": "^6.26.0",
+      "lucide-react": "^0.441.0",
+      "recharts": "^2.12.7"
+    }
+  }
+}

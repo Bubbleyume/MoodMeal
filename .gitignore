@@ -1,0 +1,13 @@
+# Build output
+dist/
+
+# OS/editor cruft
+.DS_Store
+*.log
+
+# NOTE: node_modules is intentionally NOT ignored here. It was vendored
+# (copied from already-installed packages) rather than npm-installed,
+# because this environment has no package-registry network access — see
+# README.md "About this environment". Once you have normal npm access,
+# feel free to delete node_modules, add it to .gitignore, and run
+# `npm install` for a standard setup instead.
