@@ -13,7 +13,7 @@ interface AvatarPreviewProps {
   size?: number;
   className?: string;
   /** Defaults to "full" — this component's whole point is showing off "your
-   * avatar", including the frame/pose choice, so it shows the whole figure
+   * avatar", including the base style's body and outfit, so it shows the whole figure
    * unless the caller is using it as a small thumbnail (see ProfilePage). */
   variant?: "full" | "bust";
 }

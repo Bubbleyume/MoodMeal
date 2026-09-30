@@ -13,26 +13,19 @@ import type { AvatarConfig } from "../types/avatar";
  * wiped by "Clear Local Data" since it's part of STORAGE_KEYS.
  *
  * Every read is passed through `normalizeAvatarConfig` so an avatar saved
- * before Phase 2C's simplified option set (missing `frame`/`pose`, using a
- * retired skin tone or hairstyle id, wearing a since-removed clothing
- * choice, etc.) still loads cleanly as a valid, current AvatarConfig — see
- * src/data/avatarMigration.ts for exactly what gets mapped. If
- * normalization actually changed anything, the effect below re-saves the
- * normalized version once so future reads don't need to re-migrate it.
+ * under any older option set (presets, frames, retired hairstyle ids,
+ * extra customization fields) still loads as a valid, current AvatarConfig
+ * — see src/data/avatarMigration.ts. If normalization changed anything,
+ * the effect below re-saves the normalized version once so future reads
+ * don't need to re-migrate it.
  */
 export function useAvatar() {
-  const [rawAvatar, setRawAvatar, reset] = useLocalStorage<AvatarConfig | null>(
-    STORAGE_KEYS.avatar,
-    null
-  );
+  const [rawAvatar, setRawAvatar, reset] = useLocalStorage<unknown>(STORAGE_KEYS.avatar, null);
 
-  const avatar = useMemo(
-    () => (rawAvatar ? normalizeAvatarConfig(rawAvatar) : null),
-    [rawAvatar]
-  );
+  const avatar = useMemo(() => normalizeAvatarConfig(rawAvatar), [rawAvatar]);
 
   useEffect(() => {
-    if (rawAvatar && JSON.stringify(rawAvatar) !== JSON.stringify(avatar)) {
+    if (rawAvatar != null && JSON.stringify(rawAvatar) !== JSON.stringify(avatar)) {
       setRawAvatar(avatar);
     }
     // Only re-run when the raw stored value changes — `setRawAvatar` and
@@ -49,7 +42,7 @@ export function useAvatar() {
 
   const updateAvatar = useCallback(
     (patch: Partial<AvatarConfig>) => {
-      setRawAvatar((prev) => normalizeAvatarConfig({ ...(prev as AvatarConfig), ...patch }));
+      setRawAvatar((prev: unknown) => normalizeAvatarConfig({ ...(normalizeAvatarConfig(prev) ?? {}), ...patch }));
     },
     [setRawAvatar]
   );
