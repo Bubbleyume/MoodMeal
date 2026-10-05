@@ -1,3 +1,8 @@
+> Current avatar UI: exactly three transparent PNG presets (Feminine,
+> Androgynous, Masculine). See [AVATAR_MVP.md](AVATAR_MVP.md) for storage,
+> migration and validation details. Older art-system sections below describe
+> the deferred customization pipeline, not the current chooser.
+
 # MoodMeal
 
 MoodMeal is an AI-ready nutrition and wellness app that connects how you're

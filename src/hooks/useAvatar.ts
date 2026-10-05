@@ -6,8 +6,7 @@ import type { AvatarConfig } from "../types/avatar";
 
 /**
  * The user's own avatar — identity only (see src/types/avatar.ts); mood
- * expressions are applied on top by <Avatar> at render time and never
- * stored here. `null` means the user hasn't created one yet, which is what
+ * is stored separately; preset artwork has a fixed expression. `null` means the user hasn't created one yet, which is what
  * the Welcome screen uses to decide whether to send a first-time visitor
  * into onboarding. Persisted the same way as the rest of the profile, and
  * wiped by "Clear Local Data" since it's part of STORAGE_KEYS.
