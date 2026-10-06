@@ -124,6 +124,7 @@ export interface RecommendationInput {
   emotionId: EmotionId;
   intensity: number;
   dietaryPreferences?: DietaryPreference;
+  health?: import("../lib/wellness").HealthProfile;
 }
 
 export interface RecommendationResult {

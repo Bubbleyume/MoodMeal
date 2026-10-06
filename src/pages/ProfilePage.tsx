@@ -44,6 +44,7 @@ export default function ProfilePage() {
         <p className="mt-0.5 text-xs text-white/70">Your MoodMeal settings</p>
       </div>
       <div className="screen-scroll -mt-4 rounded-t-[2rem] bg-transparent px-4 pt-5">
+        <Button fullWidth className="mb-4" variant="secondary" onClick={() => navigate("/wellness")}>My health, reminders & wellness</Button>
         <div className="card flex items-center gap-3">
           {hasAvatar && avatar ? (
             <AvatarPreview config={avatar} size={56} variant="bust" className="shrink-0" />

@@ -159,3 +159,11 @@
     @apply font-display text-lg font-bold text-slate-900;
   }
 }
+
+@layer components {
+ .well-input { @apply mt-1 block w-full min-w-0 rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-800; }
+ .well-input:focus { @apply outline-none ring-2 ring-brand-500; }
+ .well-primary { @apply rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white; }
+ .well-secondary { @apply rounded-xl bg-brand-100 px-3 py-2 text-xs font-semibold text-brand-700; }
+ .well-secondary:focus-visible, .well-primary:focus-visible { @apply outline-none ring-2 ring-brand-500 ring-offset-2; }
+}

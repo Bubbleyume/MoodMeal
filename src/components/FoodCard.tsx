@@ -1,3 +1,4 @@
+import GlossaryText from "./GlossaryText";
 import React, { useState } from "react";
 import type { Food } from "../types";
 import ImagePlaceholder from "./ImagePlaceholder";
@@ -42,7 +43,7 @@ export default function FoodCard({ food, onAddToGroceryList }: FoodCardProps) {
           <div className="mt-1 flex flex-wrap gap-1">
             {food.nutrients.slice(0, 3).map((n) => (
               <span key={n} className="chip">
-                {n}
+                <GlossaryText text={n} />
               </span>
             ))}
           </div>

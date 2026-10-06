@@ -1,3 +1,5 @@
+> Wellness features: see [docs/WELLNESS.md](docs/WELLNESS.md) for the glossary, health preferences, tracking, reminders, self-care, privacy and validation.
+
 > Current avatar UI: exactly three transparent PNG presets (Feminine,
 > Androgynous, Masculine). See [AVATAR_MVP.md](AVATAR_MVP.md) for storage,
 > migration and validation details. Older art-system sections below describe

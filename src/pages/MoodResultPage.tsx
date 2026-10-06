@@ -1,3 +1,6 @@
+import HealthContext from "../components/HealthContext";
+import {useHealth} from "../hooks/useWellness";
+import GlossaryText from "../components/GlossaryText";
 import React, { useMemo, useState } from "react";
 import { Navigate, useNavigate } from "../lib/router";
 import Button from "../components/Button";
@@ -14,6 +17,7 @@ import type { Food } from "../types";
 export default function MoodResultPage() {
   const { draft } = useDraftMood();
   const { profile } = useProfile();
+  const [health] = useHealth();
   const { addMany } = useGroceryList();
   const navigate = useNavigate();
   const [added, setAdded] = useState(false);
@@ -24,8 +28,9 @@ export default function MoodResultPage() {
       emotionId: draft.emotionId,
       intensity: draft.intensity,
       dietaryPreferences: profile.dietaryPreference,
+        health,
     });
-  }, [draft, profile.dietaryPreference]);
+  }, [draft, profile.dietaryPreference, health]);
 
   if (!draft || !recommendation) {
     return <Navigate to="/mood" replace />;
@@ -68,12 +73,13 @@ export default function MoodResultPage() {
       </div>
 
       <div className="screen-scroll -mt-4 rounded-t-[2rem] bg-white px-4 pt-5">
+        <HealthContext />
         <div className="card">
           <p className="text-sm leading-relaxed text-slate-600">{explanation}</p>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {emotion.nutrientFocus.map((n) => (
               <span key={n} className="chip">
-                {n}
+                <GlossaryText text={n} />
               </span>
             ))}
           </div>

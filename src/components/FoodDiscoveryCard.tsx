@@ -1,3 +1,4 @@
+import GlossaryText from "./GlossaryText";
 import React, { useState } from "react";
 import type { Food } from "../types";
 import AssetImage from "./AssetImage";
@@ -61,7 +62,7 @@ export default function FoodDiscoveryCard({ food, featured = false, onAddToGroce
           {food.name}
         </h3>
         <p className={`font-semibold text-brand-600 ${featured ? "mt-1 text-sm" : "text-xs"}`}>
-          {getNutrientHighlight(food)}
+          <GlossaryText text={getNutrientHighlight(food)} />
         </p>
         {featured && (
           <p className="mt-1.5 text-xs leading-snug text-slate-500">{food.description}</p>
