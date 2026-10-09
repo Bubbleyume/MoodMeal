@@ -32,10 +32,10 @@ const DIETARY_OPTIONS: { value: DietaryPreference; label: string }[] = [
 
 export default function OnboardingPage() {
   const navigate = useNavigate();
-  const { saveAvatar } = useAvatar();
+  const { avatar, saveAvatar } = useAvatar();
   const { profile, updateProfile } = useProfile();
   const [step, setStep] = useState<Step>("avatar");
-  const [pendingAvatar, setPendingAvatar] = useState<AvatarConfig>(DEFAULT_AVATAR_CONFIG);
+  const [pendingAvatar, setPendingAvatar] = useState<AvatarConfig>(avatar ?? DEFAULT_AVATAR_CONFIG);
   const [name, setName] = useState(profile.displayName);
 
   const stepIndex = STEPS.indexOf(step);
@@ -61,10 +61,9 @@ export default function OnboardingPage() {
       <div className="screen-scroll -mt-4 flex-1 rounded-t-[2rem] px-5 pt-6">
         {step === "avatar" && (
           <>
-            <h1 className="font-display text-xl font-extrabold text-slate-800">Create Your Avatar</h1>
+            <h1 className="font-display text-xl font-extrabold text-slate-800">Choose Your Avatar</h1>
             <p className="mt-1 text-sm text-slate-500">
-              This is you — pick the look that feels like you. It'll show your mood's
-              expression everywhere MoodMeal shows a face, but never changes on its own.
+              Pick Feminine, Androgynous, or Masculine. Your character will represent you throughout MoodMeal.
             </p>
             <AvatarCreator
               mode="onboarding"

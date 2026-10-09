@@ -7,6 +7,7 @@ import { useNavigate } from "../lib/router";
 import { useProfile } from "../hooks/useProfile";
 import { useAvatar } from "../hooks/useAvatar";
 import { clearAllMoodMealData } from "../lib/storage";
+import { getAvatarPreset } from "../data/avatarPresets";
 import { DEFAULT_AVATAR_CONFIG } from "../data/avatarOptions";
 import { Bell, Trash2 } from "../components/icons";
 import type { DietaryPreference } from "../types";
@@ -43,6 +44,7 @@ export default function ProfilePage() {
         <p className="mt-0.5 text-xs text-white/70">Your MoodMeal settings</p>
       </div>
       <div className="screen-scroll -mt-4 rounded-t-[2rem] bg-transparent px-4 pt-5">
+        <Button fullWidth className="mb-4" variant="secondary" onClick={() => navigate("/wellness")}>My health, reminders & wellness</Button>
         <div className="card flex items-center gap-3">
           {hasAvatar && avatar ? (
             <AvatarPreview config={avatar} size={56} variant="bust" className="shrink-0" />
@@ -71,7 +73,7 @@ export default function ProfilePage() {
             <div>
               <p className="text-sm font-semibold text-slate-800">Your Avatar</p>
               <p className="text-xs text-slate-400">
-                {hasAvatar ? "Represents you across all 12 moods" : "Not created yet"}
+                {hasAvatar ? getAvatarPreset(avatar?.baseStyle).label : "Not created yet"}
               </p>
             </div>
           </div>

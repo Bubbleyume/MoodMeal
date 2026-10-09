@@ -69,18 +69,22 @@ function isOneOf<T extends string>(list: readonly T[], value: unknown): value is
   return typeof value === "string" && (list as readonly string[]).includes(value);
 }
 
+function ownValue<T>(map: Record<string, T>, key: unknown): T | undefined {
+  return typeof key === "string" && Object.prototype.hasOwnProperty.call(map, key) ? map[key] : undefined;
+}
+
 export function normalizeAvatarConfig(raw: unknown): AvatarConfig | null {
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return null;
   const r = raw as Record<string, unknown>;
 
   const skinTone: SkinToneId = isOneOf(SKIN_TONE_IDS, r.skinTone)
     ? r.skinTone
-    : LEGACY_SKIN_TONE_MAP[String(r.skinTone)] ?? DEFAULT_AVATAR_CONFIG.skinTone;
+    : ownValue(LEGACY_SKIN_TONE_MAP, r.skinTone) ?? DEFAULT_AVATAR_CONFIG.skinTone;
 
   // A preset avatar's hair was dictated by the preset, not by the stored
   // hairStyle field, so the preset wins when there's no current baseStyle.
   const preset = !isOneOf(BASE_STYLE_IDS, r.baseStyle) && typeof r.presetId === "string"
-    ? LEGACY_PRESET_MAP[r.presetId]
+    ? ownValue(LEGACY_PRESET_MAP, r.presetId)
     : undefined;
 
   const baseStyle: BaseStyleId = isOneOf(BASE_STYLE_IDS, r.baseStyle)
@@ -97,7 +101,7 @@ export function normalizeAvatarConfig(raw: unknown): AvatarConfig | null {
     ? preset.hairStyle
     : isOneOf(HAIR_STYLE_IDS, r.hairStyle)
       ? r.hairStyle
-      : LEGACY_HAIR_STYLE_MAP[String(r.hairStyle)] ?? DEFAULT_HAIR_FOR_BASE[baseStyle];
+      : ownValue(LEGACY_HAIR_STYLE_MAP, r.hairStyle) ?? DEFAULT_HAIR_FOR_BASE[baseStyle];
 
   return { baseStyle, skinTone, hairStyle };
 }

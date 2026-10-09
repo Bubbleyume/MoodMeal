@@ -1,3 +1,4 @@
+import GlossaryText from "../components/GlossaryText";
 import React, { useState } from "react";
 import { useParams, Navigate } from "../lib/router";
 import Header from "../components/Header";
@@ -56,7 +57,7 @@ export default function RecipeDetailPage() {
               {recipe.nutritionHighlights.map((h) => (
                 <li key={h} className="flex gap-2 text-sm text-slate-600">
                   <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" />
-                  {h}
+                  <GlossaryText text={h} />
                 </li>
               ))}
             </ul>

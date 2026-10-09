@@ -6,6 +6,9 @@ export const STORAGE_KEYS = {
   profile: "moodmeal:profile",
   draftMood: "moodmeal:draftMood",
   avatar: "moodmeal:avatar",
+  health: "moodmeal:health",
+  measurements: "moodmeal:measurements",
+  reminders: "moodmeal:reminders",
 } as const;
 
 export function readStorage<T>(key: string, fallback: T): T {

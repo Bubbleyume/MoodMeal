@@ -1,3 +1,5 @@
+import HealthContext from "../components/HealthContext";
+import {useHealth} from "../hooks/useWellness";
 import React, { useMemo } from "react";
 import Header from "../components/Header";
 import MealCard from "../components/MealCard";
@@ -6,11 +8,13 @@ import { useProfile } from "../hooks/useProfile";
 import { getRecommendations } from "../lib/recommendations";
 import { MEALS } from "../data/meals";
 import { getEmotionById } from "../data/emotions";
+import {healthScore} from "../lib/wellness";
 import { matchesDietaryPreference } from "../lib/dietary";
 
 export default function MealsPage() {
   const { draft } = useDraftMood();
   const { profile } = useProfile();
+  const [health] = useHealth();
 
   const { title, subtitle, meals } = useMemo(() => {
     if (draft) {
@@ -18,6 +22,7 @@ export default function MealsPage() {
         emotionId: draft.emotionId,
         intensity: draft.intensity,
         dietaryPreferences: profile.dietaryPreference,
+        health,
       });
       const emotion = getEmotionById(draft.emotionId)!;
       return {
@@ -29,14 +34,15 @@ export default function MealsPage() {
     return {
       title: "All Meals",
       subtitle: "Check in with your mood for personalized picks",
-      meals: MEALS.filter((m) => matchesDietaryPreference(m, profile.dietaryPreference)),
+      meals: MEALS.filter((m) => matchesDietaryPreference(m, profile.dietaryPreference)).sort((a,b)=>healthScore(b,health)-healthScore(a,health)),
     };
-  }, [draft, profile.dietaryPreference]);
+  }, [draft, profile.dietaryPreference, health]);
 
   return (
     <div className="flex h-full flex-1 flex-col mm-soft-bg">
       <Header title={title} subtitle={subtitle} />
       <div className="screen-scroll px-4 pt-4">
+        <HealthContext />
         {meals.length === 0 ? (
           <div className="mt-10 flex flex-col items-center text-center text-slate-400">
             <span className="text-4xl">🍽️</span>

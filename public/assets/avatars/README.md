@@ -1,3 +1,10 @@
+> **Unused — legacy.** Nothing in the app references this folder. Since
+> Avatar Redesign Phase 1/2, every avatar is drawn by the single renderer in
+> `src/components/avatar/Avatar.tsx`, and `src/data/avatarAssets.ts`
+> (mentioned below) no longer exists. The folder is kept on disk until the
+> Phase 2 art is signed off, and can be deleted then. The notes below are
+> historical.
+
 # Avatar asset layers
 
 This tree is where the final, illustrated avatar artwork drops in once it

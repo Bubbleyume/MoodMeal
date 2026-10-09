@@ -1,95 +1,37 @@
 import React from "react";
 import { useNavigate } from "../lib/router";
-import BrandLogo from "../components/BrandLogo";
-import Avatar from "../components/avatar/Avatar";
-import { useProfile } from "../hooks/useProfile";
 import { useAvatar } from "../hooks/useAvatar";
-import { Sparkles } from "../components/icons";
 
 export default function WelcomePage() {
   const navigate = useNavigate();
-  const { profile } = useProfile();
-  const { avatar, hasAvatar } = useAvatar();
-  const name = profile.displayName.trim();
+  const { hasAvatar } = useAvatar();
 
   return (
-    <div className="mm-gradient-bg relative flex h-full flex-1 flex-col items-center justify-between overflow-hidden px-6 pb-10 pt-[max(2rem,env(safe-area-inset-top))] text-center">
-      {/* decorative background blobs, purely ambient */}
-      <div className="pointer-events-none absolute -left-16 -top-10 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
-      <div className="pointer-events-none absolute -right-14 top-32 h-48 w-48 rounded-full bg-moodGreen-400/10 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-10 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-white/10 blur-3xl" />
-
-      <div className="flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white shadow-sm backdrop-blur">
-        <Sparkles size={14} />
-        Wellness, one mood at a time
+    <div className="relative flex h-full flex-1 flex-col items-center text-center text-white"
+      style={{ background: "linear-gradient(180deg, #d559d9 0%, #ad43df 50%, #873cea 100%)", paddingTop: "max(1.5rem, env(safe-area-inset-top))", paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}>
+      <div className="flex min-h-0 w-full flex-1 items-center justify-center px-8">
+        <h1 className="w-full max-w-[320px]">
+          <svg viewBox="0 0 440 410" role="img" aria-label="MoodMeal" className="block w-full" xmlns="http://www.w3.org/2000/svg">
+            <title>MoodMeal</title>
+            {/* Scalable opening-screen lockup, drawn from the supplied reference. */}
+            <g fill="none" stroke="#fff" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M108 184 C124 264 195 303 256 274 C298 254 319 222 325 190" strokeWidth="23" />
+              <path d="M307 121 L300 165 Q295 191 321 195 Q345 201 350 176 L360 126" strokeWidth="11" />
+              <path d="M333 124 L325 170" strokeWidth="10" />
+            </g>
+            <ellipse cx="147" cy="125" rx="17" ry="18" fill="#fff" />
+            <ellipse cx="232" cy="125" rx="17" ry="18" fill="#fff" />
+            <path d="M301 121 C278 75 307 22 389 8 C403 72 365 107 322 109 C327 82 344 55 362 40 C331 59 311 85 301 121Z" fill="#83db4c" />
+            <text x="220" y="390" textAnchor="middle" fill="#fff" fontFamily="Arial, Helvetica, sans-serif" fontSize="84" fontWeight="400" letterSpacing="-3">MoodMeal</text>
+          </svg>
+        </h1>
       </div>
-
-      <div className="flex flex-col items-center">
-        <div className="animate-float-in">
-          <div className="motion-safe:animate-bounce-slow">
-            {hasAvatar && avatar ? (
-              <Avatar config={avatar} emotion="happy" className="h-52 w-52 drop-shadow-2xl" />
-            ) : (
-              // Before an avatar exists there is no MoodMeal "character" to
-              // show — no permanent mascot. Instead this first-time slot
-              // features the official logo itself, set inside an understated,
-              // neutral ring that simply hints "your avatar goes here" once
-              // you create one, without depicting any human/company figure.
-              <div className="flex h-52 w-52 items-center justify-center rounded-full bg-white/10 ring-1 ring-inset ring-white/25 backdrop-blur-sm">
-                <BrandLogo className="h-28 w-28 shadow-2xl" />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {hasAvatar && (
-          // The official logo — the wordmark is baked into the image itself,
-          // so no separate CSS text logotype is layered on top of it. Shown
-          // here as the small brand mark once a personalized avatar is
-          // already occupying the hero slot above; first-time visitors see
-          // the logo featured in the hero itself instead (above).
-          <BrandLogo className="mt-2 h-16 w-16 shadow-lg" />
-        )}
-        <h1 className="sr-only">MoodMeal</h1>
-
-        <div className="mt-6 animate-fade-in">
-          {hasAvatar ? (
-            name ? (
-              <>
-                <p className="font-display text-3xl font-extrabold leading-tight text-white">
-                  Welcome Back,
-                </p>
-                <p className="font-display text-3xl font-extrabold leading-tight text-moodGreen-400">
-                  {name}
-                </p>
-              </>
-            ) : (
-              <p className="font-display text-3xl font-extrabold leading-tight text-white">
-                Welcome Back!
-              </p>
-            )
-          ) : (
-            <p className="font-display text-3xl font-extrabold leading-tight text-white">
-              Welcome to MoodMeal
-            </p>
-          )}
-          <p className="mx-auto mt-3 max-w-[280px] text-sm leading-relaxed text-white/80">
-            Connect how you feel with what you eat. Tell us your mood, and we'll suggest
-            nutrient-rich foods and meals to match.
-          </p>
-        </div>
-      </div>
-
-      <div className="w-full space-y-3">
-        <button
-          onClick={() => navigate(hasAvatar ? "/mood" : "/onboarding")}
-          className="btn-accent w-full text-base"
-        >
+      <div className="w-full shrink-0 space-y-3 px-6 pt-6">
+        <button onClick={() => navigate(hasAvatar ? "/mood" : "/onboarding")}
+          className="w-full rounded-2xl border border-white/50 bg-white/15 px-5 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600">
           {hasAvatar ? "How are you feeling?" : "Get Started"}
         </button>
-        <p className="text-[11px] text-white/60">
-          No sign-up needed — just tap in and check how you feel.
-        </p>
+        <p className="text-[11px] text-white/80">Wellness, one mood at a time</p>
       </div>
     </div>
   );

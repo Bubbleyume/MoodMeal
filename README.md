@@ -1,3 +1,10 @@
+> Wellness features: see [docs/WELLNESS.md](docs/WELLNESS.md) for the glossary, health preferences, tracking, reminders, self-care, privacy and validation.
+
+> Current avatar UI: exactly three transparent PNG presets (Feminine,
+> Androgynous, Masculine). See [AVATAR_MVP.md](AVATAR_MVP.md) for storage,
+> migration and validation details. Older art-system sections below describe
+> the deferred customization pipeline, not the current chooser.
+
 # MoodMeal
 
 MoodMeal is an AI-ready nutrition and wellness app that connects how you're
@@ -124,11 +131,11 @@ gives food suggestions.
   reachable from this environment and inventing external image URLs that
   might 404 was explicitly out of scope. Swap that one component for an
   `<img>` once you have real photography.
-- The user avatar (see below) is drawn as hand-coded SVG shapes rather than
-  illustrated artwork, for the same "no image hosting reachable, and no
-  image-generation tool in this environment" reason.
+- The user avatar (see below) is a hand-authored vector illustration system
+  rather than artist-painted artwork, for the same "no image hosting
+  reachable, and no image-generation tool in this environment" reason.
 
-## Avatar system (Avatar Redesign Phase 1)
+## Avatar system (Avatar Redesign Phases 1–2)
 
 MoodMeal has exactly two visual identities: the official logo
 (`BrandLogo.tsx`/`BRANDING.logo`, used sparingly — app icon, a small brand
@@ -172,19 +179,48 @@ src/components/avatar/
 ```
 
 `Avatar.tsx` is the only place that knows how an avatar is drawn — skin
-color lookup, contrast-adaptive facial "ink", hair, body, and expression
-layers all live there. The earlier split between an asset-resolution
-module (`avatarAssets.ts`, which mapped ids to planned
-`/assets/avatars/<layer>/*.svg` files that never existed) and a separate
-vector renderer has been retired. `public/assets/avatars/` (empty
-placeholder folders plus its README) and
-`docs/preset-character-reference.png` are left on disk for now and can be
-deleted once the Phase 1 renderer is signed off.
+palettes, body, outfit, hair, and expression layers all live there. The
+earlier split between an asset-resolution module (`avatarAssets.ts`, which
+mapped ids to planned `/assets/avatars/<layer>/*.svg` files that never
+existed) and a separate vector renderer was retired in Phase 1.
+`public/assets/avatars/` (empty placeholder folders plus its README, now
+marked unused) and `docs/preset-character-reference.png` are left on disk
+until the Phase 2 art is signed off.
 
-`variant="full"` (default) draws the whole standing figure
-(`viewBox="0 0 200 310"`); `variant="bust"` crops to head and shoulders
-(`0 0 200 220`) for small contexts such as mood tiles and Profile
-thumbnails.
+### Art system (Avatar Redesign Phase 2)
+
+The characters are one illustration family drawn as layered inline SVG:
+flat fills, a darker same-hue outline on every shape, and hand-placed
+shadow and highlight shapes lit from the top left. No gradients or filters
+are used, so a screen full of avatars stays cheap and needs no unique SVG
+ids. Every character wears the same white MoodMeal tee, blue jeans, and
+white sneakers in one relaxed standing pose, about four heads tall.
+
+- **Base style** is a small set of proportions (`STYLE_SHAPE`): shoulder
+  and waist width, neck width, a slightly softer or squarer jaw, and brow
+  weight. The face, pose, and outfit are shared, so the three styles read
+  as subtle presentation differences rather than stereotypes.
+- **Skin tone** picks a hand-tuned palette (`SKIN_PALETTES`) with its own
+  shadow, highlight, outline, lip, cheek, and brow colors, rather than one
+  computed overlay. Light tones keep their warmth, and deep tones keep
+  visible form and readable brows and mouths. Facial features are
+  identical across tones.
+- **Hairstyles** each have a back layer (behind the head and body) and a
+  front layer (over the scalp and shoulders), drawn against the shared
+  head anchors so they sit on the scalp for every base style. Buzz Cut and
+  Short Straight share a close-cropped cap; Buzz Cut adds scattered
+  texture marks, and Short Straight adds a fuller swept top.
+
+`variant="full"` (default) draws the whole figure (`viewBox="0 0 200 310"`).
+`variant="bust"` zooms to head and shoulders (`38 12 124 136.4`, the same
+aspect ratio as before) so faces and hair stay readable in the 32–56px
+contexts: mood tiles, the result hero, expression buttons, and Profile
+thumbnails. `AvatarPreview` frames the full figure in a portrait stage
+shaped like the figure, and the bust in a circle.
+
+To review the art, render every combination with
+`renderToStaticMarkup(<Avatar … />)` into a contact sheet. Each `<svg>`
+carries `data-base-style`, `data-skin-tone`, and `data-hair-style`.
 
 ### Legacy avatar migration
 

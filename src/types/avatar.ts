@@ -1,16 +1,5 @@
-// Types for MoodMeal's user-created avatar system.
-//
-// An avatar's IDENTITY (base style, skin tone, hairstyle) is chosen once
-// and never changes on its own. Only the EXPRESSION layer (see
-// avatarExpressions.ts) changes when the user's mood changes — same
-// person, different face.
-//
-// Avatar Redesign Phase 1 reduced AvatarConfig to the three choices the
-// Creator actually offers. Every older stored shape (Phase 2B/2C option
-// sets, the seven-preset `presetId` model) is converted into this one by
-// src/data/avatarMigration.ts — nothing else in the app has to know those
-// older shapes existed.
-
+// Preset identity is stored in baseStyle. Skin/hair fields remain for backward
+// compatibility but do not affect the fixed PNG artwork or appear in the chooser.
 import type { EmotionId } from "./index";
 
 /** Body, outfit, and pose presentation. Independent of hairstyle. */

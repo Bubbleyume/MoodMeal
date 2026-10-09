@@ -15,6 +15,14 @@ import ProfilePage from "./pages/ProfilePage";
 import OnboardingPage from "./pages/OnboardingPage";
 import AvatarEditorPage from "./pages/AvatarEditorPage";
 
+import WellnessPage from "./pages/WellnessPage";
+import HealthPage from "./pages/HealthPage";
+import TrackingPage from "./pages/TrackingPage";
+import RemindersPage from "./pages/RemindersPage";
+import SelfCarePage from "./pages/SelfCarePage";
+import GlossaryPage from "./pages/GlossaryPage";
+import ReminderAlerts from "./components/ReminderAlerts";
+
 const NO_NAV_ROUTES = ["/", "/analyzing", "/onboarding", "/profile/avatar"];
 
 function Shell() {
@@ -23,6 +31,7 @@ function Shell() {
 
   return (
     <div className="app-shell">
+      <ReminderAlerts />
       <Routes>
         <Route path="/" element={<WelcomePage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
@@ -34,6 +43,13 @@ function Shell() {
         <Route path="/recipe/:id" element={<RecipeDetailPage />} />
         <Route path="/grocery" element={<GroceryListPage />} />
         <Route path="/history" element={<MoodHistoryPage />} />
+        <Route path="/wellness" element={<WellnessPage />} />
+        <Route path="/health" element={<HealthPage />} />
+        <Route path="/tracking" element={<TrackingPage />} />
+        <Route path="/reminders" element={<RemindersPage />} />
+        <Route path="/self-care" element={<SelfCarePage />} />
+        <Route path="/glossary" element={<GlossaryPage />} />
+        <Route path="/glossary/:id" element={<GlossaryPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/profile/avatar" element={<AvatarEditorPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />

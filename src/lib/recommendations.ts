@@ -1,4 +1,5 @@
 import type { RecommendationInput, RecommendationResult } from "../types";
+import {healthScore} from "./wellness";
 import { FOODS } from "../data/foods";
 import { MEALS } from "../data/meals";
 import { getEmotionById } from "../data/emotions";
@@ -21,16 +22,17 @@ export function getRecommendations(input: RecommendationInput): RecommendationRe
   }
 
   const matchingFoods = FOODS.filter(
-    (food) => food.moodTags.includes(emotionId) && matchesDietaryPreference(food, dietaryPreferences)
+    (food) => (food.moodTags.includes(emotionId) || (input.health && healthScore(food,input.health)>0)) && matchesDietaryPreference(food, dietaryPreferences)
   );
   const matchingMeals = MEALS.filter(
-    (meal) => meal.moodTags.includes(emotionId) && matchesDietaryPreference(meal, dietaryPreferences)
+    (meal) => (meal.moodTags.includes(emotionId) || (input.health && healthScore(meal,input.health)>0)) && matchesDietaryPreference(meal, dietaryPreferences)
   );
 
   // Higher intensity -> surface a few more options, within what's available.
   const foodCount = intensity >= 7 ? 6 : intensity >= 4 ? 5 : 4;
   const mealCount = intensity >= 7 ? 4 : 3;
 
+  if (input.health) { matchingFoods.sort((a,b)=>healthScore(b,input.health!)-healthScore(a,input.health!)); matchingMeals.sort((a,b)=>healthScore(b,input.health!)-healthScore(a,input.health!)); }
   const foods = matchingFoods.slice(0, foodCount);
   const meals = matchingMeals.slice(0, mealCount);
 
