@@ -76,3 +76,6 @@ save; reminder due alert, dismissal/reload, pause, edit/reload and sound activat
 self-care relevance; CSV and calendar files downloaded and inspected.
 Calendar import/delivery in an external calendar and actual speaker output
 are not verified. No console warnings/errors observed during checked flows.
+
+## Experience refinement
+The overview now shows saved-reading and active-reminder counts. Reminder schedules appear before on-demand entry forms, with active/paused badges, edit focus, reset defaults, save feedback and removal confirmation. Tracking keeps metric selection visible while hiding completed entry forms. Health profiles flag unsaved changes; longer guidance uses expandable details while the kidney-safety notice remains visible. Verified mobile/desktop layouts, reminder cancel/save/reload, removal cancellation, measurement save/collapse, health save states and console output.
