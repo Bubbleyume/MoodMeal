@@ -8,6 +8,7 @@ export interface DraftMood {
   intensity: number;
   note: string;
   submittedAt: string;
+  checkInId?: string;
 }
 
 /**
@@ -23,8 +24,8 @@ export function useDraftMood() {
   );
 
   const submitMood = useCallback(
-    (emotionId: EmotionId, intensity: number, note: string) => {
-      setDraft({ emotionId, intensity, note, submittedAt: new Date().toISOString() });
+    (emotionId: EmotionId, intensity: number, note: string, checkInId?: string) => {
+      setDraft({ checkInId, emotionId, intensity, note, submittedAt: new Date().toISOString() });
     },
     [setDraft]
   );

@@ -16,13 +16,15 @@
  *   - Phase 2C: { frame: "soft" | "bold", pose, hairStyle, ... }
  *   - Phase 2B: { hairStyle, skinTone, ... } with the older 12-style
  *               hairstyle ids and the "porcelain" skin tone.
- * Every retired field (hairColor, faceShape, eye/eyebrow styles, facial
+ * Modular configurations retain validated per-character appearances.
+ * Every retired top-level field (hairColor, faceShape, eye/eyebrow styles, facial
  * hair, clothing, accessories, frame, pose, presetId, baseModel) is
  * dropped from the result.
  *
  * Returns null for anything that isn't an object — the caller treats that
  * as "no avatar yet".
  */
+import { appearanceFor, validStyle } from "./avatarAppearance";
 import { BASE_STYLE_IDS, DEFAULT_AVATAR_CONFIG, HAIR_STYLE_IDS, SKIN_TONE_IDS } from "./avatarOptions";
 import type { AvatarConfig, BaseStyleId, HairStyleId, SkinToneId } from "../types/avatar";
 
@@ -103,5 +105,21 @@ export function normalizeAvatarConfig(raw: unknown): AvatarConfig | null {
       ? r.hairStyle
       : ownValue(LEGACY_HAIR_STYLE_MAP, r.hairStyle) ?? DEFAULT_HAIR_FOR_BASE[baseStyle];
 
+  if (r.artworkVersion === "modular-v1" && baseStyle !== "androgynous") {
+    const config: AvatarConfig = { artworkVersion: "modular-v1", baseStyle, skinTone, hairStyle: validStyle(baseStyle, r.hairStyle) };
+    if (r.appearances && typeof r.appearances === "object" && !Array.isArray(r.appearances)) {
+      const entries = r.appearances as Record<string, unknown>;
+      config.appearances = {};
+      for (const character of ["feminine", "masculine"] as const) {
+        const saved = entries[character];
+        if (saved && typeof saved === "object" && !Array.isArray(saved)) {
+          config.appearances[character] = appearanceFor({...config, appearances: {[character]: saved} as AvatarConfig["appearances"]}, character);
+        }
+      }
+      config.hairStyle = appearanceFor(config, baseStyle).hairStyle;
+    }
+    return config;
+  }
+  // Do not opt existing users into new artwork without their choice.
   return { baseStyle, skinTone, hairStyle };
 }

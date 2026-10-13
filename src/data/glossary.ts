@@ -1,3 +1,4 @@
+import {NUTRIENTS} from "./knowledge";
 export const TERMS = [
   ["potassium", "Potassium", "A mineral used by nerves, muscles and the heart. Found in potatoes, beans and bananas. Kidney disease and some medicines can change how much is safe; ask your clinician before increasing it or using potassium salt substitutes.", "https://ods.od.nih.gov/factsheets/Potassium-Consumer/"],
   ["vitamin-c", "Vitamin C", "Helps make collagen and supports normal immune function. It also helps your body absorb iron from plant foods. Peppers, citrus fruit and berries provide vitamin C.", "https://ods.od.nih.gov/factsheets/VitaminC-Consumer/"],
@@ -12,6 +13,9 @@ export const TERMS = [
   ["folate", "Folate", "A B vitamin needed to make DNA and new cells. Leafy greens, beans and fortified grains provide folate.", "https://ods.od.nih.gov/factsheets/Folate-Consumer/"],
   ["calcium", "Calcium", "A mineral needed for bones, teeth, muscles and nerves. Dairy, fortified alternatives and some vegetables provide calcium.", "https://ods.od.nih.gov/factsheets/Calcium-Consumer/"],
 ] .map(([id, name, definition, source]) => ({ id, name, definition, source }));
+for (const [id,n] of Object.entries(NUTRIENTS)) {
+ if (!TERMS.some(t=>t.id===id)) TERMS.push({id,name:n.label,definition:n.explanation,source:n.source.sourceURL!});
+}
 export function termFor(text: string) {
  const lower = text.toLowerCase();
  return TERMS.find(t => lower.includes(t.name.toLowerCase())) ?? (/carb/i.test(text) ? TERMS.find(t => t.id === "carbohydrates") : undefined);

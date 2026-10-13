@@ -26,7 +26,7 @@ export default function AvatarEditorPage() {
         </button>
         <div>
           <h1 className="font-display text-xl font-extrabold">Edit Avatar</h1>
-          <p className="text-xs text-white/70">Choose from three preset characters</p>
+          <p className="text-xs text-white/70">Choose your character, hair, and colors</p>
         </div>
       </div>
 

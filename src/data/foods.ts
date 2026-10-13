@@ -1,3 +1,4 @@
+import { enrichFood } from "../lib/catalog";
 import type { Food } from "../types";
 
 // Local structured food data. Nutrition framing intentionally avoids any
@@ -14,7 +15,7 @@ export const FOODS: Food[] = [
     nutrients: ["Omega-3 fatty acids", "Vitamin D", "Protein", "B12"],
     description:
       "A rich source of omega-3 fatty acids, which are involved in normal brain function and can be part of a balanced, nutrient-rich diet.",
-    servingSuggestion: "3–4 oz grilled or baked, twice a week.",
+    servingSuggestion: "3–4 oz grilled or baked.",
     moodTags: ["sad", "worried", "tired", "nervous"],
   },
   {
@@ -425,7 +426,7 @@ export const FOODS: Food[] = [
     servingSuggestion: "2 tbsp soaked in milk overnight.",
     moodTags: ["happy", "excited", "bored"],
   },
-];
+].map(enrichFood);
 
 export function getFoodById(id: string): Food | undefined {
   return FOODS.find((f) => f.id === id);

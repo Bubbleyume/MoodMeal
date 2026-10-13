@@ -7,7 +7,7 @@ import { useNavigate } from "../lib/router";
 import { useProfile } from "../hooks/useProfile";
 import { useAvatar } from "../hooks/useAvatar";
 import { clearAllMoodMealData } from "../lib/storage";
-import { getAvatarPreset } from "../data/avatarPresets";
+import { getAvatarLabel } from "../data/modularAvatars";
 import { DEFAULT_AVATAR_CONFIG } from "../data/avatarOptions";
 import { Bell, Trash2 } from "../components/icons";
 import type { DietaryPreference } from "../types";
@@ -44,7 +44,7 @@ export default function ProfilePage() {
         <p className="mt-0.5 text-xs text-white/70">Your MoodMeal settings</p>
       </div>
       <div className="screen-scroll -mt-4 rounded-t-[2rem] bg-transparent px-4 pt-5">
-        <Button fullWidth className="mb-4" variant="secondary" onClick={() => navigate("/wellness")}>My health, reminders & wellness</Button>
+        <Button fullWidth className="mb-4" variant="secondary" onClick={() => navigate("/wellness")}>Food & wellness</Button>
         <div className="card flex items-center gap-3">
           {hasAvatar && avatar ? (
             <AvatarPreview config={avatar} size={56} variant="bust" className="shrink-0" />
@@ -73,7 +73,7 @@ export default function ProfilePage() {
             <div>
               <p className="text-sm font-semibold text-slate-800">Your Avatar</p>
               <p className="text-xs text-slate-400">
-                {hasAvatar ? getAvatarPreset(avatar?.baseStyle).label : "Not created yet"}
+                {hasAvatar ? getAvatarLabel(avatar!) : "Not created yet"}
               </p>
             </div>
           </div>
@@ -82,28 +82,8 @@ export default function ProfilePage() {
           </Button>
         </div>
 
-        <div className="card mt-4">
-          <h2 className="section-title">Dietary Preference</h2>
-          <p className="mt-1 text-xs text-slate-400">
-            Used to filter food and meal suggestions. Placeholder for now — more detailed
-            preferences are coming soon.
-          </p>
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            {DIETARY_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => updateProfile({ dietaryPreference: opt.value })}
-                className={`rounded-2xl px-3 py-2 text-xs font-semibold transition-colors ${
-                  profile.dietaryPreference === opt.value
-                    ? "bg-brand-600 text-white"
-                    : "bg-slate-50 text-slate-500 hover:bg-slate-100"
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        <div className="card mt-4"><h2 className="section-title">Food preferences</h2><p className="my-3 text-sm text-slate-500">Diet, allergies, favorites, cooking time and budget.</p><Button onClick={()=>navigate('/preferences')}>Edit food preferences</Button></div>
+        <div className="card mt-4"><h2 className="section-title">Internal library</h2><p className="my-3 text-sm text-slate-500">Import research, write original explanations and review sources locally.</p><Button variant="secondary" onClick={()=>navigate('/library')}>Open content workspace</Button></div>
 
         <div className="card mt-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -136,9 +116,7 @@ export default function ProfilePage() {
             <h2 className="section-title">About MoodMeal</h2>
           </div>
           <p className="mt-2 text-xs leading-relaxed text-slate-500">
-            MoodMeal v0.1 (MVP). Recommendations currently come from local, structured sample
-            data. This is built so it can be connected to Supabase and an AI model later without
-            changing how the app screens work.
+            MoodMeal uses a local, sourced food library and transparent support-goal rules. No AI generates your recommendations and no live internet search runs when you check in. Artwork is illustrated; nutrition totals are not yet calculated.
           </p>
         </div>
 

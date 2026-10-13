@@ -1,3 +1,4 @@
+import { enrichRecipe } from "../lib/catalog";
 import type { Recipe } from "../types";
 
 export const RECIPES: Recipe[] = [
@@ -21,7 +22,7 @@ export const RECIPES: Recipe[] = [
     ],
     instructions: [
       "Pat the salmon dry and season both sides with salt and pepper.",
-      "Heat 1/2 tbsp olive oil in a pan over medium-high heat and sear the salmon 4 minutes per side, until it flakes easily.",
+      "Heat 1/2 tbsp olive oil in a pan over medium-high heat and sear the salmon 4 minutes per side, until the thickest part reaches 145°F (63°C).",
       "While the salmon cooks, warm the quinoa and wilt the spinach in a separate small pan for 1–2 minutes.",
       "Assemble the bowl: quinoa on the bottom, spinach and avocado on top, salmon placed over everything.",
       "Drizzle with lemon juice and remaining olive oil before serving.",
@@ -42,7 +43,7 @@ export const RECIPES: Recipe[] = [
     prepTimeMinutes: 5,
     cookTimeMinutes: 10,
     ingredients: [
-      { name: "Steel-cut oats", quantity: "1/2 cup" },
+      { name: "Rolled oats", quantity: "1/2 cup" },
       { name: "Milk or milk alternative", quantity: "1 cup" },
       { name: "Mixed berries", quantity: "1/2 cup" },
       { name: "Walnuts", quantity: "1 tbsp, chopped" },
@@ -81,7 +82,7 @@ export const RECIPES: Recipe[] = [
     instructions: [
       "Roast diced sweet potato at 400°F (200°C) for 20 minutes, tossed in a little oil, until tender.",
       "Massage kale with a small drizzle of olive oil until it softens slightly.",
-      "Fry or soft-boil the egg to your liking.",
+      "Cook the egg until both the white and yolk are firm.",
       "Layer warm brown rice, kale, and sweet potato in a bowl, then top with the egg.",
       "Finish with sesame seeds and a small drizzle of soy sauce.",
     ],
@@ -110,7 +111,7 @@ export const RECIPES: Recipe[] = [
     ],
     instructions: [
       "Heat oil in a wok or large skillet over high heat.",
-      "Add the beef strips and sear 2–3 minutes until browned; remove and set aside.",
+      "Add the beef strips and sear until browned and the thickest strips reach 145°F (63°C); remove and rest for at least 3 minutes.",
       "Add garlic to the same pan and cook 30 seconds, then add spinach and wilt for 1–2 minutes.",
       "Return the beef to the pan, add soy sauce, and toss to combine.",
       "Serve hot over brown rice.",
@@ -162,7 +163,7 @@ export const RECIPES: Recipe[] = [
     ingredients: [
       { name: "Sweet potato", quantity: "1, diced" },
       { name: "Egg", quantity: "2" },
-      { name: "Turkey breast", quantity: "3 oz, diced" },
+      { name: "Cooked turkey breast", quantity: "3 oz, diced" },
       { name: "Olive oil", quantity: "1 tbsp" },
       { name: "Paprika", quantity: "1/2 tsp" },
       { name: "Salt & pepper", quantity: "to taste" },
@@ -170,8 +171,8 @@ export const RECIPES: Recipe[] = [
     instructions: [
       "Heat olive oil in a skillet over medium heat and add the diced sweet potato.",
       "Cover and cook 8–10 minutes, stirring occasionally, until fork-tender and lightly browned.",
-      "Push the potatoes to one side, add the turkey, and cook 3–4 minutes until warmed through.",
-      "Make two small wells and crack the eggs directly into the pan; cover and cook until set to your liking.",
+      "Push the potatoes to one side, add the turkey, and heat until the turkey reaches 165°F (74°C).",
+      "Make two small wells and crack the eggs directly into the pan; cover and cook until whites and yolks are firm; egg dishes should reach 160°F (71°C).",
       "Season with paprika, salt, and pepper before serving.",
     ],
     nutritionHighlights: [
@@ -227,7 +228,7 @@ export const RECIPES: Recipe[] = [
     ],
     instructions: [
       "Season the beef with salt and pepper and let it rest at room temperature for 10 minutes.",
-      "Heat half the olive oil in a skillet over medium-high heat and sear the beef 3–4 minutes per side; rest before slicing.",
+      "Heat half the olive oil in a skillet over medium-high heat and sear until the thickest part reaches 145°F (63°C), then rest for at least 3 minutes before slicing.",
       "In the same pan, add remaining oil and garlic, then sauté the Swiss chard for 3–4 minutes until wilted.",
       "Slice the beef and serve over the sautéed chard.",
     ],
@@ -273,6 +274,7 @@ export const RECIPES: Recipe[] = [
     prepTimeMinutes: 10,
     cookTimeMinutes: 10,
     ingredients: [
+      { name: "Olive oil", quantity: "1 tsp" },
       { name: "Brown rice", quantity: "3/4 cup cooked" },
       { name: "Swiss chard", quantity: "1 cup, sautéed" },
       { name: "Pumpkin seeds", quantity: "2 tbsp" },
@@ -309,9 +311,9 @@ export const RECIPES: Recipe[] = [
     ],
     instructions: [
       "Toast the bread to your preferred crispness.",
-      "Soft-boil the egg for 6–7 minutes, then peel and halve.",
+      "Hard-boil the egg until the white and yolk are firm, then cool, peel and halve.",
       "Mash the avocado directly onto the toast with a pinch of salt.",
-      "Top with the soft-boiled egg and a pinch of chili flakes.",
+      "Top with the cooked egg and a pinch of chili flakes.",
     ],
     nutritionHighlights: [
       "Avocado provides healthy fats and potassium",
@@ -329,7 +331,7 @@ export const RECIPES: Recipe[] = [
     prepTimeMinutes: 15,
     cookTimeMinutes: 0,
     ingredients: [
-      { name: "Turkey breast", quantity: "4 oz, sliced" },
+      { name: "Cooked turkey breast", quantity: "4 oz, sliced" },
       { name: "Butter lettuce leaves", quantity: "4" },
       { name: "Rainbow carrots", quantity: "1/2 cup, shredded" },
       { name: "Almonds", quantity: "1 tbsp, chopped" },
@@ -483,6 +485,7 @@ export const RECIPES: Recipe[] = [
     prepTimeMinutes: 10,
     cookTimeMinutes: 10,
     ingredients: [
+      { name: "Olive oil", quantity: "1 tsp" },
       { name: "Banana", quantity: "1, mashed" },
       { name: "Eggs", quantity: "2" },
       { name: "Oat flour", quantity: "1/2 cup" },
@@ -493,7 +496,7 @@ export const RECIPES: Recipe[] = [
       "Whisk mashed banana and eggs together in a bowl.",
       "Fold in oat flour and cinnamon until just combined.",
       "Heat a lightly oiled nonstick pan over medium heat and pour small rounds of batter.",
-      "Cook 2 minutes per side until golden, flipping once bubbles form on the surface.",
+      "Cook until golden on both sides and fully set through the center, flipping when bubbles form. The egg-containing batter should reach 160°F (71°C).",
       "Top with fresh berries before serving.",
     ],
     nutritionHighlights: [
@@ -512,6 +515,7 @@ export const RECIPES: Recipe[] = [
     prepTimeMinutes: 10,
     cookTimeMinutes: 10,
     ingredients: [
+      { name: "Olive oil", quantity: "1 tsp" },
       { name: "Swiss chard", quantity: "2 cups, sautéed" },
       { name: "Quinoa", quantity: "3/4 cup cooked" },
       { name: "Pumpkin seeds", quantity: "2 tbsp" },
@@ -538,16 +542,16 @@ export const RECIPES: Recipe[] = [
     prepTimeMinutes: 15,
     cookTimeMinutes: 0,
     ingredients: [
-      { name: "Steel-cut oats", quantity: "1 cup" },
+      { name: "Rolled oats", quantity: "1 cup" },
       { name: "Almond butter", quantity: "1/2 cup" },
       { name: "Honey", quantity: "1/4 cup" },
       { name: "Matcha or green tea powder", quantity: "1 tsp" },
     ],
     instructions: [
       "Mix all ingredients together in a bowl until a thick, sticky dough forms.",
-      "Roll into 8 small balls, about 1 tablespoon each.",
+      "Divide into 8 equal portions and roll into balls.",
       "Refrigerate for at least 30 minutes to firm up before eating.",
-      "Store in an airtight container in the fridge for up to a week.",
+      "Keep refrigerated in a covered container and use within 3–4 days.",
     ],
     nutritionHighlights: [
       "Green tea powder contains L-theanine, often associated with calm alertness",
@@ -657,7 +661,7 @@ export const RECIPES: Recipe[] = [
       "A small amount of dark chocolate adds flavonoid antioxidants",
     ],
   },
-];
+].map(enrichRecipe);
 
 export function getRecipeById(id: string): Recipe | undefined {
   return RECIPES.find((r) => r.id === id);

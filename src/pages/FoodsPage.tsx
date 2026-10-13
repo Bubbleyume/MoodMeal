@@ -1,5 +1,7 @@
+import {useFoodPreferences} from "../hooks/useFoodPreferences";
+import { readPreferences } from "../lib/preferences";
+import {browseItems,goalsForMood} from "../lib/recommendations";
 import HealthContext from "../components/HealthContext";
-import {useHealth} from "../hooks/useWellness";
 import React, { useMemo } from "react";
 import Header from "../components/Header";
 import FoodCard from "../components/FoodCard";
@@ -11,13 +13,11 @@ import { getRecommendations } from "../lib/recommendations";
 import { FOODS } from "../data/foods";
 import { getEmotionById } from "../data/emotions";
 import type { Food } from "../types";
-import {healthScore} from "../lib/wellness";
-import { matchesDietaryPreference } from "../lib/dietary";
 
 export default function FoodsPage() {
   const { draft } = useDraftMood();
   const { profile } = useProfile();
-  const [health] = useHealth();
+  const preferences = useFoodPreferences();
   const { addItem } = useGroceryList();
 
   const { title, subtitle, foods } = useMemo(() => {
@@ -26,7 +26,7 @@ export default function FoodsPage() {
         emotionId: draft.emotionId,
         intensity: draft.intensity,
         dietaryPreferences: profile.dietaryPreference,
-        health,
+        preferences,
       });
       const emotion = getEmotionById(draft.emotionId)!;
       return {
@@ -38,9 +38,9 @@ export default function FoodsPage() {
     return {
       title: "All Foods",
       subtitle: "Check in with your mood for personalized picks",
-      foods: FOODS.filter((f) => matchesDietaryPreference(f, profile.dietaryPreference)).sort((a,b)=>healthScore(b,health)-healthScore(a,health)),
+      foods: browseItems(FOODS, preferences),
     };
-  }, [draft, profile.dietaryPreference, health]);
+  }, [draft, profile.dietaryPreference, preferences]);
 
   const handleAdd = (food: Food) => {
     addItem(food.name, food.servingSuggestion, draft ? "Mood suggestion" : "Food browsing");
@@ -53,13 +53,12 @@ export default function FoodsPage() {
         <HealthContext />
         {foods.length === 0 ? (
           <div className="mt-10 flex flex-col items-center text-center text-slate-400">
-            <span className="text-4xl">🥗</span>
             <p className="mt-2 text-sm">No foods match your current filters yet.</p>
           </div>
         ) : (
           <div className="space-y-3">
             {foods.map((food) => (
-              <FoodCard key={food.id} food={food} onAddToGroceryList={handleAdd} />
+              <FoodCard goals={draft?goalsForMood(draft.emotionId,draft.intensity):undefined} key={food.id} food={food} onAddToGroceryList={handleAdd} />
             ))}
           </div>
         )}

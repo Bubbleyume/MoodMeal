@@ -45,6 +45,8 @@ if (fs.existsSync(publicDir)) {
   fs.cpSync(publicDir, distDir, { recursive: true });
 }
 
+fs.copyFileSync(path.join(root,"node_modules/pdfjs-dist/build/pdf.worker.min.mjs"),path.join(outdir,"pdf.worker.min.js"));
+
 log("Writing index.html...");
 let html = fs.readFileSync(path.join(root, "index.html"), "utf-8");
 html = html.replace('src="/src/main.tsx"', 'src="/assets/main.js"');

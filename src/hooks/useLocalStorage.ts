@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { readStorage, writeStorage } from "../lib/storage";
 
 /**
@@ -22,13 +22,25 @@ import { readStorage, writeStorage } from "../lib/storage";
 export function useLocalStorage<T>(key: string, initialValue: T) {
   const [value, setValue] = useState<T>(() => readStorage(key, initialValue));
 
+  useEffect(() => {
+    const sync = () => setValue(readStorage(key, initialValue));
+    window.addEventListener("moodmeal-storage", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("moodmeal-storage", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, [key]);
   const setStoredValue = useCallback(
     (update: T | ((prev: T) => T)) => {
-      const next = typeof update === "function" ? (update as (prev: T) => T)(value) : update;
+      const next =
+        typeof update === "function"
+          ? (update as (prev: T) => T)(readStorage(key, value))
+          : update;
       writeStorage(key, next);
       setValue(next);
     },
-    [key, value]
+    [key, value],
   );
 
   const reset = useCallback(() => {

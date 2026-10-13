@@ -1,3 +1,6 @@
+import PreferencesPage from "./pages/PreferencesPage";
+import LibraryPage from "./pages/LibraryPage";
+import EducationPage from "./pages/EducationPage";
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "./lib/router";
 import BottomNavigation from "./components/BottomNavigation";
@@ -44,6 +47,9 @@ function Shell() {
         <Route path="/grocery" element={<GroceryListPage />} />
         <Route path="/history" element={<MoodHistoryPage />} />
         <Route path="/wellness" element={<WellnessPage />} />
+        <Route path="/preferences" element={<PreferencesPage />} />
+        <Route path="/library" element={<LibraryPage />} />
+        <Route path="/learn/:id" element={<EducationPage />} />
         <Route path="/health" element={<HealthPage />} />
         <Route path="/tracking" element={<TrackingPage />} />
         <Route path="/reminders" element={<RemindersPage />} />

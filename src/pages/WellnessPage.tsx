@@ -1,10 +1,71 @@
-import {Link} from "../lib/router";
+import { Link } from "../lib/router";
 import Header from "../components/Header";
-const sections = [
- ["health", "My health profile", "Add conditions and choose whether to tailor food suggestions.", "♡"],
- ["reminders", "Medicine & vitamin reminders", "Daily schedules, in-app alerts and calendar alarms.", "◷"],
- ["tracking", "Health trends", "Record weight, blood pressure and pulse over time.", "↗"],
- ["self-care", "Self-care practices", "Small, manageable steps matched to your needs.", "☀"],
- ["glossary", "Food & wellness glossary", "Understand the nutrients and terms you see.", "Aa"],
-];
-export default function WellnessPage(){return <div className="mm-soft-bg flex h-full flex-1 flex-col"><Header title="Your wellness" subtitle="Learn, plan and notice changes" /><div className="screen-scroll space-y-3 px-4 pt-4"><p className="text-sm text-slate-600">Build routines that work for you, one step at a time.</p>{sections.map(([url,title,description,icon])=><Link className="card flex items-start gap-3" to={`/${url}`} key={url}><span aria-hidden="true" className="rounded-xl bg-brand-100 p-3 text-brand-700">{icon}</span><span><h2 className="font-bold">{title}</h2><p className="mt-1 text-sm text-slate-500">{description}</p></span></Link>)}<p className="text-xs text-slate-500">Your health records stay in this browser on this device. They are not encrypted or backed up to an account. Clearing local data removes them.</p></div></div>;}
+import { LESSONS } from "../data/education";
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import type { Candidate } from "../types/library";
+import { canPublish } from "../lib/libraryReview";
+export default function WellnessPage() {
+  const [library] = useLocalStorage<Candidate[]>("moodmeal:library", []);
+  return (
+    <div className="mm-soft-bg flex h-full flex-1 flex-col">
+      <Header
+        title="Food & wellness"
+        subtitle="Learn, explore and build your own routines"
+      />
+      <div className="screen-scroll space-y-3 px-4 pt-4">
+        <p className="text-sm text-slate-600">
+          Food, sleep, activity and connection all have a place in self-care.
+        </p>
+        {LESSONS.map((l) => (
+          <Link className="card block" key={l.id} to={`/learn/${l.id}`}>
+            <h2 className="font-bold">{l.title}</h2>
+            <p className="mt-1 text-sm text-slate-500">{l.summary}</p>
+          </Link>
+        ))}
+        <Link className="card block" to="/glossary">
+          <h2 className="font-bold">Food & Wellness Glossary</h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Understand the terms on your food cards.
+          </p>
+        </Link>
+        {library
+          .filter(
+            (c) => c.reviewStatus === "published" && canPublish(c).length === 0,
+          )
+          .map((c) => (
+            <Link className="card block" key={c.id} to={`/learn/${c.id}`}>
+              <h2 className="font-bold">{c.title}</h2>
+              <p className="mt-1 text-xs text-slate-500">
+                From your reviewed local library
+              </p>
+            </Link>
+          ))}
+        <details className="card">
+          <summary className="font-semibold">Personal tools</summary>
+          <p className="my-3 text-xs text-slate-500">
+            Your existing records remain on this device. These tools do not
+            recommend medicines or prescribe a diet.
+          </p>
+          {[
+            ["health", "Health notes"],
+            ["reminders", "Your medicine & vitamin reminders"],
+            ["tracking", "Your health measurements"],
+            ["self-care", "Self-care practices"],
+          ].map(([id, label]) => (
+            <Link
+              className="block py-3 text-sm text-brand-700 underline"
+              key={id}
+              to={`/${id}`}
+            >
+              {label}
+            </Link>
+          ))}
+        </details>
+        <p className="text-xs text-slate-500">
+          Your records and imported library stay in this browser. Export library
+          work before clearing local data.
+        </p>
+      </div>
+    </div>
+  );
+}

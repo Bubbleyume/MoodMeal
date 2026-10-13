@@ -1,79 +1,67 @@
-import GlossaryText from "./GlossaryText";
-import React from "react";
+import { useState } from "react";
 import type { Meal } from "../types";
-import ImagePlaceholder from "./ImagePlaceholder";
-import AssetImage from "./AssetImage";
-import { mealImagePath } from "../data/assets";
-import { Clock, ChefHat, ChevronRight } from "./icons";
+import type { GoalId } from "../types/library";
 import { Link } from "../lib/router";
-
-interface MealCardProps {
+import FoodImage from "./FoodImage";
+import { PickExplanation } from "./Knowledge";
+import { getRecipeById } from "../data/recipes";
+import { useGroceryList } from "../hooks/useGroceryList";
+import { recordInteraction } from "../lib/interactions";
+import { ingredientLine } from "../lib/catalog";
+export default function MealCard({
+  meal,
+  goals,
+}: {
   meal: Meal;
-}
-
-const DIFFICULTY_STYLE: Record<Meal["difficulty"], string> = {
-  Easy: "bg-mint-100 text-mint-500",
-  Medium: "bg-sunny-100 text-amber-600",
-  Advanced: "bg-coral-100 text-coral-600",
-};
-
-export default function MealCard({ meal }: MealCardProps) {
+  goals?: GoalId[];
+}) {
+  const { addMany } = useGroceryList();
+  const [added, setAdded] = useState(false);
+  const recipe = getRecipeById(meal.recipeId);
   return (
-    <div className="overflow-hidden rounded-3xl bg-white shadow-card ring-1 ring-slate-100">
-      <AssetImage
-        src={mealImagePath(meal.id)}
-        alt={meal.name}
-        className="h-32 w-full object-cover"
-        fallback={
-          <ImagePlaceholder
-            emoji={meal.emoji}
-            gradient={meal.gradient}
-            className="h-32 w-full"
-            emojiClassName="text-6xl"
-          />
-        }
-      />
+    <article className="overflow-hidden rounded-3xl bg-white shadow-card ring-1 ring-slate-100">
+      <FoodImage src={meal.image} name={meal.name} />
       <div className="p-4">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="font-display text-base font-bold text-slate-900">{meal.name}</h3>
-          <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${DIFFICULTY_STYLE[meal.difficulty]}`}>
-            {meal.difficulty}
-          </span>
-        </div>
-        <p className="mt-1 text-xs leading-snug text-slate-500">{meal.description}</p>
-
-        <p className="mt-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-          Ingredients
+        <h3 className="font-display text-lg font-bold">{meal.name}</h3>
+        <p className="mt-1 text-sm text-slate-500">{meal.description}</p>
+        <p className="mt-2 text-xs">
+          {recipe?.totalTime ?? meal.prepTimeMinutes} min total ·{" "}
+          {meal.difficulty} · {meal.cuisine}
         </p>
-        <p className="line-clamp-1 text-xs text-slate-600">
-          {meal.ingredients.map((i) => i.name).join(", ")}
+        <p className="mt-2 text-xs text-brand-700">
+          {meal.dietaryTags.join(" · ")}
         </p>
-
-        <div className="mt-2 flex flex-wrap gap-1">
-          {meal.nutrients.slice(0, 3).map((n) => (
-            <span key={n} className="chip">
-              <GlossaryText text={n} />
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-3 flex items-center justify-between">
-          <div className="flex items-center gap-3 text-xs text-slate-500">
-            <span className="flex items-center gap-1">
-              <Clock size={14} /> {meal.prepTimeMinutes} min
-            </span>
-            <span className="flex items-center gap-1">
-              <ChefHat size={14} /> {meal.difficulty}
-            </span>
-          </div>
+        <p className="mt-2 text-xs text-slate-600">
+          Allergens / check labels:{" "}
+          {meal.allergens.join(", ") || "None identified in listed ingredients"}
+        </p>
+        <PickExplanation item={meal} goals={goals} />
+        <div className="mt-4 flex flex-wrap gap-3">
           <Link
+            className="rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white"
             to={`/recipe/${meal.recipeId}`}
-            className="flex items-center gap-0.5 rounded-xl bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white transition-transform active:scale-95"
+            onClick={() => recordInteraction(meal, "meal", "view")}
           >
-            View Recipe <ChevronRight size={14} />
+            View Recipe
           </Link>
+          <button
+            className="rounded-xl bg-brand-50 px-4 py-3 text-sm font-semibold text-brand-700"
+            onClick={() => {
+              addMany(
+                (
+                  recipe?.structuredIngredients ?? meal.structuredIngredients
+                ).map(ingredientLine),
+                meal.name,
+              );
+              recordInteraction(meal, "meal", "save");
+              setAdded(true);
+              setTimeout(() => setAdded(false), 1800);
+            }}
+          >
+            {added ? "Ingredients added" : "Add all to Grocery"}
+          </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

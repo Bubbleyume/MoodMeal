@@ -1,3 +1,6 @@
+import {historyInsights} from "../lib/interactions";
+import {useLocalStorage} from "../hooks/useLocalStorage";
+import type {Interaction} from "../types/library";
 import React, { useMemo } from "react";
 import MoodChart from "../components/MoodChart";
 import { useMoodHistory } from "../hooks/useMoodHistory";
@@ -8,6 +11,7 @@ import type { EmotionId } from "../types";
 
 export default function MoodHistoryPage() {
   const { entries, removeEntry } = useMoodHistory();
+  const [events]=useLocalStorage<Interaction[]>("moodmeal:interactions",[]);
 
   const stats = useMemo(() => {
     if (entries.length === 0) return null;
@@ -62,6 +66,7 @@ export default function MoodHistoryPage() {
               </div>
             )}
 
+            <section className="card mt-4"><h2 className="section-title">Your observations</h2><ul className="mt-3 space-y-3 text-sm text-slate-600">{historyInsights(entries,events).map(t=><li key={t}>{t}</li>)}</ul><p className="mt-3 text-xs text-slate-500">These are patterns in your records, not evidence that a food caused a change. Previous demo entries are excluded.</p></section>
             <div className="mt-5">
               <h2 className="section-title mb-2">All Entries</h2>
               <div className="space-y-2">

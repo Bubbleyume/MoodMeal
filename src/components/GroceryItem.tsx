@@ -1,3 +1,4 @@
+import FoodImage from "./FoodImage";
 import React from "react";
 import type { GroceryItem as GroceryItemType } from "../types";
 import { Check, Trash2, ShoppingCart } from "./icons";
@@ -19,19 +20,7 @@ export default function GroceryItem({ item, onToggle, onRemove }: GroceryItemPro
     <div className="flex items-center gap-3 rounded-2xl bg-white px-3 py-2.5 shadow-card ring-1 ring-slate-100 animate-fade-in">
       <div className="h-11 w-11 shrink-0 overflow-hidden rounded-xl">
         {matchedFood ? (
-          <AssetImage
-            src={foodImagePath(matchedFood.id)}
-            alt={matchedFood.name}
-            className="h-full w-full object-cover"
-            fallback={
-              <ImagePlaceholder
-                emoji={matchedFood.emoji}
-                gradient={matchedFood.gradient}
-                className="h-full w-full"
-                emojiClassName="text-xl"
-              />
-            }
-          />
+          <FoodImage src={matchedFood.image} name={matchedFood.name} className="h-full w-full"/>
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-brand-50 text-brand-300">
             <ShoppingCart size={18} />

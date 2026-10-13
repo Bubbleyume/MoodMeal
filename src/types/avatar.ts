@@ -1,5 +1,4 @@
-// Preset identity is stored in baseStyle. Skin/hair fields remain for backward
-// compatibility but do not affect the fixed PNG artwork or appear in the chooser.
+// Unversioned configurations retain their legacy preset artwork.
 import type { EmotionId } from "./index";
 
 /** Body, outfit, and pose presentation. Independent of hairstyle. */
@@ -14,9 +13,24 @@ export type HairStyleId =
   | "short-curly"
   | "short-straight"
   | "buzz-cut"
-  | "bald";
+  | "bald"
+  | "ponytail"
+  | "side-part"
+  | "short-twists"
+  | "short-textured"
+  | "long-straight";
 
+export type CharacterId = "feminine" | "masculine";
+export type HairColorId = "original" | "black" | "brown" | "blonde" | "auburn" | "silver" | "purple";
+export type EyeColorId = "original" | "blue" | "green" | "hazel" | "gray";
+export interface CharacterAppearance {
+  hairStyle: HairStyleId;
+  hairColor: HairColorId;
+  eyeColor: EyeColorId;
+}
 export interface AvatarConfig {
+  appearances?: Partial<Record<CharacterId, CharacterAppearance>>;
+  artworkVersion?: "modular-v1";
   baseStyle: BaseStyleId;
   skinTone: SkinToneId;
   hairStyle: HairStyleId;

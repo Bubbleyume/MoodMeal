@@ -43,6 +43,7 @@ export const HAIR_STYLE_IDS = HAIR_STYLES.map((o) => o.id);
 /** The starting point shown the first time someone opens the Creator, and
  * what "Skip for now" saves during onboarding. */
 export const DEFAULT_AVATAR_CONFIG: AvatarConfig = {
+  artworkVersion: "modular-v1",
   baseStyle: "feminine",
   skinTone: "medium",
   hairStyle: "long-wavy",

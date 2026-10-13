@@ -24,6 +24,7 @@ function notifyReload() {
 }
 
 fs.mkdirSync(outdir, { recursive: true });
+fs.copyFileSync(path.join(root,"node_modules/pdfjs-dist/build/pdf.worker.min.mjs"),path.join(outdir,"pdf.worker.min.js"));
 
 // --- esbuild watch ---
 const ctx = await context({

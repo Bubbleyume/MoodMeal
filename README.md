@@ -1,18 +1,10 @@
 > Wellness features: see [docs/WELLNESS.md](docs/WELLNESS.md) for the glossary, health preferences, tracking, reminders, self-care, privacy and validation.
 
-> Current avatar UI: exactly three transparent PNG presets (Feminine,
-> Androgynous, Masculine). See [AVATAR_MVP.md](AVATAR_MVP.md) for storage,
-> migration and validation details. Older art-system sections below describe
-> the deferred customization pipeline, not the current chooser.
-
 # MoodMeal
 
-MoodMeal is an AI-ready nutrition and wellness app that connects how you're
-feeling with nutrient-rich food and meal suggestions. This is a fully
-functional frontend MVP: every interaction (mood check-in, recommendations,
-grocery list, mood history) works end-to-end against local structured data,
-with an architecture designed to swap that data layer for Supabase + an AI
-model later without touching the UI.
+MoodMeal uses a local, sourced food and wellness library with transparent support-goal matching. Runtime recommendations do not call AI or search the internet. See [docs/KNOWLEDGE-LIBRARY.md](docs/KNOWLEDGE-LIBRARY.md) for the review workflow, storage, current limits and validation.
+
+The current avatar chooser uses Soft Frame and Bold Frame with independent hairstyles and hair/eye colors. Internal avatar IDs remain compatible with existing saved choices. See [docs/AVATARS.md](docs/AVATARS.md).
 
 ## Running it
 
@@ -23,9 +15,7 @@ npm run preview   # serve the production build, http://localhost:4173
 npm run typecheck # tsc --noEmit
 ```
 
-No `npm install` step is required to run these — see **"About this
-environment"** below for why, and what to do once you have normal npm
-access.
+Run `npm install` to install the PDF/EPUB import and browser-test dependencies. Some original framework fallbacks remain vendored; see **"About this environment"** below.
 
 ## Tech stack
 

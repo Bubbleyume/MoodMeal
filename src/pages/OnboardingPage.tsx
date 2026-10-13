@@ -63,7 +63,7 @@ export default function OnboardingPage() {
           <>
             <h1 className="font-display text-xl font-extrabold text-slate-800">Choose Your Avatar</h1>
             <p className="mt-1 text-sm text-slate-500">
-              Pick Feminine, Androgynous, or Masculine. Your character will represent you throughout MoodMeal.
+              Choose a Soft Frame or Bold Frame avatar, then personalize skin tone and hair. Your expressions follow your mood check-ins.
             </p>
             <AvatarCreator
               mode="onboarding"
@@ -148,6 +148,7 @@ export default function OnboardingPage() {
                 );
               })}
             </div>
+            <p className="mt-4 text-xs text-slate-500">After setup, open Food preferences in Profile to add allergies, intolerances and cooking preferences.</p>
             <div className="mt-8 space-y-2 pb-6">
               <Button fullWidth onClick={finish}>
                 Start checking in

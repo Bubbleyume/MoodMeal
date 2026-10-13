@@ -1,46 +1,129 @@
-import type { RecommendationInput, RecommendationResult } from "../types";
-import {healthScore} from "./wellness";
+import type {
+  RecommendationInput,
+  RecommendationResult,
+  Food,
+  Meal,
+  EmotionId,
+} from "../types";
+import type { GoalId, FoodPreferences } from "../types/library";
 import { FOODS } from "../data/foods";
 import { MEALS } from "../data/meals";
 import { getEmotionById } from "../data/emotions";
-import { matchesDietaryPreference } from "./dietary";
-
-/**
- * The single entry point for turning a mood into food/meal recommendations.
- *
- * Today this reads from local structured data (src/data). Later, this is
- * the function to swap for a call to Supabase + an AI model: keep the same
- * input/output shape (RecommendationInput -> RecommendationResult) and
- * every screen that calls getRecommendations() keeps working unchanged.
- */
-export function getRecommendations(input: RecommendationInput): RecommendationResult {
-  const { emotionId, intensity, dietaryPreferences = "none" } = input;
-  const emotion = getEmotionById(emotionId);
-
-  if (!emotion) {
-    throw new Error(`Unknown emotion id: ${emotionId}`);
-  }
-
-  const matchingFoods = FOODS.filter(
-    (food) => (food.moodTags.includes(emotionId) || (input.health && healthScore(food,input.health)>0)) && matchesDietaryPreference(food, dietaryPreferences)
-  );
-  const matchingMeals = MEALS.filter(
-    (meal) => (meal.moodTags.includes(emotionId) || (input.health && healthScore(meal,input.health)>0)) && matchesDietaryPreference(meal, dietaryPreferences)
-  );
-
-  // Higher intensity -> surface a few more options, within what's available.
-  const foodCount = intensity >= 7 ? 6 : intensity >= 4 ? 5 : 4;
-  const mealCount = intensity >= 7 ? 4 : 3;
-
-  if (input.health) { matchingFoods.sort((a,b)=>healthScore(b,input.health!)-healthScore(a,input.health!)); matchingMeals.sort((a,b)=>healthScore(b,input.health!)-healthScore(a,input.health!)); }
-  const foods = matchingFoods.slice(0, foodCount);
-  const meals = matchingMeals.slice(0, mealCount);
-
-  const intensityWord = intensity >= 8 ? "really" : intensity >= 5 ? "fairly" : "a little";
-
-  const explanation = `You're feeling ${intensityWord} ${emotion.name.toLowerCase()} today (${intensity}/10). ${
-    emotion.description
-  } We've focused on foods and meals with ${emotion.nutrientFocus.slice(0, 3).join(", ")}.`;
-
-  return { emotion, foods, meals, explanation };
+import { GOALS, NUTRIENTS } from "../data/knowledge";
+import { eligible, readPreferences } from "./preferences";
+export function goalsForMood(mood: EmotionId, intensity: number): GoalId[] {
+  const primary: Record<EmotionId, GoalId> = {
+    happy: "balanced-nutrition",
+    sad: "everyday-mood-support",
+    tired: "steady-energy",
+    scared: "calm-grounded",
+    angry: "calm-grounded",
+    nervous: "calm-grounded",
+    shy: "everyday-mood-support",
+    excited: "hydration",
+    bored: "focus-attention",
+    silly: "balanced-nutrition",
+    worried: "calm-grounded",
+    sick: "hydration",
+  };
+  const goals = [primary[mood]];
+  if (intensity >= 8 && ["worried", "nervous", "angry"].includes(mood))
+    goals.push("wind-down");
+  return goals;
+}
+export function matchingNutrients(item: Food | Meal, goals: GoalId[]) {
+  return item.nutrientFacts
+    .filter(
+      (f) =>
+        f.reviewStatus === "published" &&
+        f.sourceProvenance.some(
+          (s) =>
+            s.reviewStatus === "published" &&
+            ["source-supported", "independently-verified"].includes(
+              s.evidenceStatus,
+            ),
+        ) &&
+        goals.some((g) => GOALS[g].nutrients.includes(f.nutrientId)),
+    )
+    .map((f) => f.nutrientId);
+}
+export function whyPick(
+  item: Food | Meal,
+  goals: GoalId[] = ["balanced-nutrition"],
+) {
+  const ids = matchingNutrients(item, goals);
+  if (!ids.length)
+    return "An ingredient to explore. No verified match to the current support goal is recorded.";
+  const matched = ids
+    .slice(0, 3)
+    .map((n) => NUTRIENTS[n].label)
+    .join(", ");
+  const basis =
+    "ingredients" in item
+      ? "Its ingredients contribute"
+      : "This food contributes";
+  return `${basis} ${matched} — nutrients matched to your ${goals.map((g) => GOALS[g].label).join(" / ")} food picks.`;
+}
+export function browseItems<T extends Food | Meal>(
+  items: T[],
+  p: FoodPreferences,
+) {
+  return items
+    .filter((i) => eligible(i, p))
+    .sort(
+      (a, b) =>
+        Number(
+          p.cuisines.some((c) =>
+            b.cuisine.toLowerCase().includes(c.toLowerCase()),
+          ),
+        ) -
+        Number(
+          p.cuisines.some((c) =>
+            a.cuisine.toLowerCase().includes(c.toLowerCase()),
+          ),
+        ),
+    );
+}
+export function getRecommendations(
+  input: RecommendationInput,
+): RecommendationResult {
+  const emotion = getEmotionById(input.emotionId);
+  if (!emotion) throw new Error("Unknown mood");
+  const goals = goalsForMood(input.emotionId, input.intensity);
+  const p = {
+    ...(input.preferences ?? readPreferences()),
+    dietaryPattern:
+      input.dietaryPreferences ??
+      input.preferences?.dietaryPattern ??
+      readPreferences().dietaryPattern,
+  };
+  const rank = <T extends Food | Meal>(items: T[]) =>
+    browseItems(items, p)
+      .filter(
+        (i) =>
+          matchingNutrients(i, goals).length > 0 &&
+          !(
+            (goals.includes("wind-down") || goals.includes("calm-grounded")) &&
+            /green-tea|chocolate/.test(i.id)
+          ),
+      )
+      .sort(
+        (a, b) =>
+          matchingNutrients(b, goals).length -
+          matchingNutrients(a, goals).length,
+      );
+  const foods = rank(FOODS).slice(0, 6),
+    meals = rank(MEALS).slice(0, 6);
+  return {
+    emotion,
+    foods,
+    meals,
+    goals,
+    nutrientIds: [
+      ...new Set(
+        [...foods, ...meals].flatMap((i) => matchingNutrients(i, goals)),
+      ),
+    ],
+    explanation: goals.map((g) => GOALS[g].explanation).join(" "),
+  };
 }

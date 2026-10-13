@@ -20,8 +20,8 @@ export default function MoodSelectionPage() {
 
   const handleContinue = () => {
     if (!selected) return;
-    addEntry(selected.id, intensity, note);
-    submitMood(selected.id, intensity, note);
+    const entry = addEntry(selected.id, intensity, note);
+    submitMood(selected.id, intensity, note, entry.id);
     navigate("/analyzing");
   };
 

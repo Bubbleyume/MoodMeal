@@ -1,0 +1,15 @@
+{
+  "version": "modular-v1",
+  "approved": true,
+  "count": 312,
+  "size": [
+    512,
+    768
+  ],
+  "sourceSize": [
+    1024,
+    1536
+  ],
+  "encoding": "WebP quality 90, alpha retained",
+  "sourcePackage": "MoodMeal-Approved-Modular-v1.zip"
+}

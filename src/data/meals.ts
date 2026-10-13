@@ -1,3 +1,5 @@
+import { RECIPES } from "./recipes";
+import { enrichMeal } from "../lib/catalog";
 import type { Meal } from "../types";
 
 export const MEALS: Meal[] = [
@@ -445,7 +447,7 @@ export const MEALS: Meal[] = [
     moodTags: ["happy", "bored"],
     recipeId: "recipe-dark-chocolate-trail-mix",
   },
-];
+].map(raw=>{const recipe=RECIPES.find(r=>r.id===raw.recipeId)!;return enrichMeal({...raw,ingredients:recipe.ingredients,prepTimeMinutes:recipe.totalTime});});
 
 export function getMealById(id: string): Meal | undefined {
   return MEALS.find((m) => m.id === id);

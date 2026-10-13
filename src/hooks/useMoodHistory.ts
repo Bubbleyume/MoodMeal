@@ -11,7 +11,7 @@ function makeId() {
 export function useMoodHistory() {
   const [entries, setEntries] = useLocalStorage<MoodHistoryEntry[]>(
     STORAGE_KEYS.moodHistory,
-    SAMPLE_MOOD_HISTORY
+    []
   );
 
   const addEntry = useCallback(
@@ -36,7 +36,7 @@ export function useMoodHistory() {
     [setEntries]
   );
 
-  const sorted = [...entries].sort(
+  const sorted = entries.filter(e => !/^seed-\d+$/.test(e.id)).sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 

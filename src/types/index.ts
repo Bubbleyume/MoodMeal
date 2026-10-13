@@ -1,3 +1,4 @@
+import type { LibraryMetadata, FoodPreferences, GoalId } from "./library";
 // Central type definitions for MoodMeal. Kept separate from UI and from
 // data so the local mock data below can later be swapped for Supabase
 // queries / an AI recommendation API without touching component code.
@@ -42,7 +43,7 @@ export type FoodCategory =
   | "nuts-seeds"
   | "other";
 
-export interface Food {
+export interface Food extends LibraryMetadata {
   id: string;
   name: string;
   emoji: string;
@@ -61,7 +62,7 @@ export interface IngredientLine {
   quantity: string;
 }
 
-export interface Meal {
+export interface Meal extends LibraryMetadata {
   id: string;
   name: string;
   emoji: string;
@@ -75,7 +76,11 @@ export interface Meal {
   description: string;
 }
 
-export interface Recipe {
+export interface Recipe extends LibraryMetadata {
+  description: string;
+  prepTime: number;
+  cookTime: number;
+  totalTime: number;
   id: string;
   mealId: string;
   name: string;
@@ -124,6 +129,7 @@ export interface RecommendationInput {
   emotionId: EmotionId;
   intensity: number;
   dietaryPreferences?: DietaryPreference;
+  preferences?: FoodPreferences;
   health?: import("../lib/wellness").HealthProfile;
 }
 
@@ -132,4 +138,6 @@ export interface RecommendationResult {
   foods: Food[];
   meals: Meal[];
   explanation: string;
+  goals: GoalId[];
+  nutrientIds: string[];
 }

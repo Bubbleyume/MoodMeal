@@ -11,3 +11,13 @@ dist/
 # README.md "About this environment". Once you have normal npm access,
 # feel free to delete node_modules, add it to .gitignore, and run
 # `npm install` for a standard setup instead.
+
+# Local QA artifacts and registry-installed additions (npm ci uses package-lock).
+work/
+node_modules/@napi-rs/
+node_modules/fflate/
+node_modules/pdfjs-dist/
+node_modules/playwright/
+node_modules/playwright-core/
+
+node_modules/.bin/playwright*

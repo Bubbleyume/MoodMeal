@@ -1,5 +1,8 @@
+import {useFoodPreferences} from "../hooks/useFoodPreferences";
+import {NutrientChips,Sources} from "../components/Knowledge";
+import {GOALS} from "../data/knowledge";
+import {recordInteraction} from "../lib/interactions";
 import HealthContext from "../components/HealthContext";
-import {useHealth} from "../hooks/useWellness";
 import GlossaryText from "../components/GlossaryText";
 import React, { useMemo, useState } from "react";
 import { Navigate, useNavigate } from "../lib/router";
@@ -17,7 +20,7 @@ import type { Food } from "../types";
 export default function MoodResultPage() {
   const { draft } = useDraftMood();
   const { profile } = useProfile();
-  const [health] = useHealth();
+  const preferences = useFoodPreferences();
   const { addMany } = useGroceryList();
   const navigate = useNavigate();
   const [added, setAdded] = useState(false);
@@ -28,15 +31,15 @@ export default function MoodResultPage() {
       emotionId: draft.emotionId,
       intensity: draft.intensity,
       dietaryPreferences: profile.dietaryPreference,
-        health,
+        preferences,
     });
-  }, [draft, profile.dietaryPreference, health]);
+  }, [draft, profile.dietaryPreference, preferences]);
 
   if (!draft || !recommendation) {
     return <Navigate to="/mood" replace />;
   }
 
-  const { emotion, foods, meals, explanation } = recommendation;
+  const { emotion, foods, meals, explanation, goals, nutrientIds } = recommendation;
 
   const handleAddFood = (food: Food) => {
     addMany([{ name: food.name, quantity: food.servingSuggestion }], `${emotion.name} check-in`);
@@ -47,6 +50,7 @@ export default function MoodResultPage() {
       foods.map((f) => ({ name: f.name, quantity: f.servingSuggestion })),
       `${emotion.name} check-in`
     );
+    foods.forEach(f=>recordInteraction(f,"food","save"));
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2000);
   };
@@ -75,25 +79,22 @@ export default function MoodResultPage() {
       <div className="screen-scroll -mt-4 rounded-t-[2rem] bg-white px-4 pt-5">
         <HealthContext />
         <div className="card">
-          <p className="text-sm leading-relaxed text-slate-600">{explanation}</p>
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {emotion.nutrientFocus.map((n) => (
-              <span key={n} className="chip">
-                <GlossaryText text={n} />
-              </span>
-            ))}
-          </div>
+          <h2 className="section-title">{goals.map(g=>GOALS[g].label).join(" · ")}</h2><p className="mt-2 text-sm leading-relaxed text-slate-600">{explanation}</p>
+          <NutrientChips ids={nutrientIds}/>
+          <Sources sources={goals.flatMap(g=>GOALS[g].sourceProvenance)}/>
         </div>
 
         <div className="mt-5 flex items-center justify-between">
           <h2 className="section-title">Foods for you</h2>
           <span className="text-xs text-slate-400">{foods.length} suggestions</span>
         </div>
+        {!foods.length&&<p className="mt-3 text-sm">No food picks match these preferences. Try the meal ideas or edit your preferences.</p>}
         <div className="mt-3 space-y-3">
           {foods.map((food, i) => (
             <FoodDiscoveryCard
               key={food.id}
               food={food}
+              goals={goals}
               featured={i === 0}
               onAddToGroceryList={handleAddFood}
             />
@@ -104,6 +105,7 @@ export default function MoodResultPage() {
           fullWidth
           variant="secondary"
           className="mt-3"
+          disabled={!foods.length}
           onClick={handleAddAll}
           icon={added ? <Check size={16} /> : <ShoppingCart size={16} />}
         >
@@ -120,7 +122,7 @@ export default function MoodResultPage() {
             </span>
             <span>
               <span className="block text-sm font-bold text-slate-800">View Meal Ideas</span>
-              <span className="block text-[11px] text-slate-400">{meals.length} recipes matched to this mood</span>
+              <span className="block text-[11px] text-slate-400">{meals.length} recipes for your support goal</span>
             </span>
           </span>
         </button>

@@ -31,11 +31,11 @@ export const EMOTION_IMAGE_MAP: Record<EmotionId, string> = {
 
 /** Food/meal image paths are derived from their id: /assets/foods/<id>.png */
 export function foodImagePath(foodId: string): string {
-  return `/assets/foods/${foodId}.png`;
+  return `/assets/foods/${foodId}.webp`;
 }
 
 export function mealImagePath(mealId: string): string {
-  return `/assets/meals/${mealId}.png`;
+  return `/assets/meals/${mealId}.webp`;
 }
 
 /**

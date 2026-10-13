@@ -12,7 +12,7 @@ import { useDraftMood } from "../hooks/useDraftMood";
 import BrandLogo from "../components/BrandLogo";
 import { Search } from "../components/icons";
 
-const STEPS = ["Understanding your mood…", "Finding nutrient-rich options…"];
+const STEPS = ["Choosing your support goal…", "Matching documented food facts…"];
 const STEP_DURATION_MS = 750;
 
 export default function AnalysisTransitionPage() {
