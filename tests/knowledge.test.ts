@@ -7,7 +7,12 @@ import {
   matchingNutrients,
   whyPick,
   goalsForMood,
+  explainPick,
+  displayedNutrients,
+  USDA_NUTRIENT_IDS,
 } from "../src/lib/recommendations";
+import type { RecipeNutritionEstimate } from "../src/types/nutrition";
+import type { GoalId } from "../src/types/library";
 import { FOODS } from "../src/data/foods";
 import { MEALS } from "../src/data/meals";
 import { RECIPES } from "../src/data/recipes";
@@ -22,7 +27,7 @@ import {
   importDraftRecords,
 } from "../src/lib/libraryReview";
 import { historyInsights } from "../src/lib/interactions";
-import { NUTRIENTS, source } from "../src/data/knowledge";
+import { NUTRIENTS, GOALS, source } from "../src/data/knowledge";
 
 let checks = 0;
 const test = (name: string, fn: () => void) => {
@@ -318,5 +323,63 @@ test("approved small measurements parse and conditional recipes remain without t
   const popcorn=RECIPES.find(r=>r.id==="recipe-loaded-popcorn-mix")!;
   assert.equal(popcorn.structuredIngredients.find(i=>i.name==="Sea salt")!.quantity,.4);
   assert.equal(popcorn.nutrientTotals,null);
+});
+const DEFS = Object.values(USDA_NUTRIENT_IDS).map(n => ({id:n.id,name:n.id,unit:n.unit}));
+const synthetic = (inputs: {name:string; grams:number|null; per100g:Record<string,number|null>}[], servings = 2): RecipeNutritionEstimate => {
+  const ingredients = inputs.map(i => ({name:i.name,fdcId:"test",grams:i.grams,portionId:"test",portionDescription:"test",
+    nutrients:Object.fromEntries(DEFS.map(d => [d.id,{amount:i.per100g[d.id] ?? null,unit:d.unit,sourceRowId:"row"}]))}));
+  return {status:"approved-pilot-estimate",servings,ingredients,values:calculateNutrition(ingredients,DEFS,servings),sources:[]};
+};
+const meal = (id: string) => MEALS.find(m => m.id === id)!;
+const FORBIDDEN = /\b(treat|treats|cure|cures|heal|heals|prevent|prevents|fixes|reduces anxiety|improves? (your )?mood|the fruit)\b/i;
+const ALL_GOALS = Object.keys(GOALS) as GoalId[];
+test("pilot explanation keeps fiber from its verified estimate without fruit-specific wording", () => {
+  const pilot = RECIPES.find(r => r.id === PILOT_RECIPE_ID)!;
+  const text = explainPick(meal("rainbow-fruit-skewers"), ["balanced-nutrition"], pilot.nutritionEstimate);
+  assert.match(text, /about 3\.5 g of fiber/);
+  assert.match(text, /estimated from the reviewed USDA portions/);
+  assert(!FORBIDDEN.test(text), text);
+  for (const i of pilot.nutritionEstimate!.ingredients) assert(!text.includes(i.name), text);
+});
+test("estimate explanations cite only displayed goal nutrients with known values across ingredient types", () => {
+  const cases: [string, ReturnType<typeof synthetic>][] = [
+    ["brown-rice-veggie-bowl", synthetic([{name:"Cooked brown rice",grams:150,per100g:{"1003":2.7,"1079":1.6,"1090":39,"1089":0.5}},{name:"Raw Swiss chard",grams:72,per100g:{"1003":1.8,"1079":1.6,"1090":81,"1089":1.8}}])],
+    ["salmon-quinoa-bowl", synthetic([{name:"Cooked salmon",grams:120,per100g:{"1003":22,"1079":0,"1178":3.2,"1089":0.3}},{name:"Cooked quinoa",grams:90,per100g:{"1003":4.4,"1079":2.8,"1178":0,"1089":1.5}}])],
+    ["steak-and-greens", synthetic([{name:"Cooked steak",grams:110,per100g:{"1003":27,"1089":2.6,"1178":2.5,"1079":0}},{name:"Raw greens",grams:72,per100g:{"1003":1.8,"1089":1.8,"1178":0,"1079":1.6}}])],
+    ["berry-yogurt-parfait", synthetic([{name:"Greek yogurt",grams:245,per100g:{"1003":9,"1087":110,"1079":0,"1162":0}},{name:"Mixed berries",grams:74,per100g:{"1003":0.7,"1087":6,"1079":2.4,"1162":9.7}}])],
+  ];
+  for (const [id, estimate] of cases) for (const goals of ALL_GOALS.map(g => [g])) {
+    const item = meal(id);
+    const text = explainPick(item, goals, estimate);
+    assert(!FORBIDDEN.test(text), text);
+    for (const i of estimate.ingredients) assert(!text.includes(i.name), `${id}: ${text}`);
+    const shown = new Set(displayedNutrients(item, goals));
+    for (const [nutrient, usda] of Object.entries(USDA_NUTRIENT_IDS)) {
+      const label = NUTRIENTS[nutrient].label.replace(/^./, c => c.toLowerCase());
+      if (!text.includes(`of ${label}`)) continue;
+      assert(shown.has(nutrient) && matchingNutrients(item, goals).includes(nutrient), `${id}/${goals}: ${nutrient} not displayed`);
+      assert(estimate.values.find(v => v.id === usda.id)!.perServing! > 0, `${id}: ${nutrient} unknown or zero`);
+    }
+    if (!/per serving, estimated/.test(text)) assert.equal(text, whyPick(item, goals));
+  }
+  const bowl = explainPick(meal("brown-rice-veggie-bowl"), ["calm-grounded"], cases[0][1]);
+  assert.match(bowl, /This recipe provides about \d.* per serving/, bowl);
+});
+test("missing, zero and unmapped nutrition falls back to safe goal-based wording", () => {
+  const item = meal("brown-rice-veggie-bowl");
+  const goals: GoalId[] = ["calm-grounded"];
+  const partial = synthetic([{name:"Rice",grams:150,per100g:{"1079":1.6,"1003":2.7}},{name:"Unweighed chard",grams:null,per100g:{"1079":1.6,"1003":1.8}}]);
+  assert.equal(explainPick(item, goals, partial), whyPick(item, goals));
+  const fiberUnknown = synthetic([{name:"Rice",grams:150,per100g:{"1079":null,"1003":2.7,"1090":39}}]);
+  const text = explainPick(item, goals, fiberUnknown);
+  assert(!/fiber/.test(text) || text === whyPick(item, goals), text);
+  const traces = synthetic([{name:"Rice",grams:1,per100g:{"1079":0.01,"1003":0.01,"1090":0.01}}]);
+  assert.equal(explainPick(item, goals, traces), whyPick(item, goals));
+  assert.equal(explainPick(item, goals, null), whyPick(item, goals));
+  assert.equal(explainPick(item, goals, undefined), whyPick(item, goals));
+  assert.equal(explainPick(meal("cooling-cucumber-salad"), ["hydration"], partial), whyPick(meal("cooling-cucumber-salad"), ["hydration"]));
+  const empty = {...item, nutrientFacts: []};
+  assert.match(explainPick(empty, goals, partial), /^A meal idea to explore\. No verified nutrient match/);
+  for (const m of MEALS) for (const g of ALL_GOALS) assert(!FORBIDDEN.test(explainPick(m, [g], null)));
 });
 console.log(`${checks} knowledge-system tests passed`);

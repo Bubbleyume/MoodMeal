@@ -4,7 +4,7 @@ import { NUTRIENTS, GOALS } from "../data/knowledge";
 import type { Provenance, GoalId } from "../types/library";
 import type { Food, Meal } from "../types";
 import type { RecipeNutritionEstimate } from "../types/nutrition";
-import { whyPick, matchingNutrients } from "../lib/recommendations";
+import { explainPick, displayedNutrients } from "../lib/recommendations";
 export function Sources({ sources }: { sources: Provenance[] }) {
   const unique = sources.filter(
     (s, i) =>
@@ -102,20 +102,10 @@ export function PickExplanation({
   goals?: GoalId[];
   nutritionEstimate?: RecipeNutritionEstimate | null;
 }) {
-  const ids = matchingNutrients(item, goals);
-  const fiber = nutritionEstimate?.values.find(n => n.id === "1079");
-  const explanation = fiber?.perServing != null && fiber.perServing > 0
-    ? `The fruit provides fiber—about ${fiber.perServing.toFixed(1)} g per serving, estimated from the reviewed USDA portions.`
-    : whyPick(item, goals);
+  const explanation = explainPick(item, goals, nutritionEstimate);
   return (
     <>
-      <NutrientChips
-        ids={
-          ids.length
-            ? ids.slice(0, 3)
-            : item.nutrientFacts.map((n) => n.nutrientId).slice(0, 3)
-        }
-      />
+      <NutrientChips ids={displayedNutrients(item, goals)} />
       <div className="mt-3 text-sm">
         <h4 className="font-semibold">
           {"ingredients" in item ? "Why this meal?" : "Why this pick?"}

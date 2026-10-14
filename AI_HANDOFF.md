@@ -1,5 +1,9 @@
 # MoodMeal AI Handoff
 
+## Checkpoint and reusable nutrition explanations (Claude Code, 2026-10-14)
+
+Checkpoint 48a442d committed the previously uncommitted USDA duplicate-row handling, batch review docs/scripts, wording and tests; AGENTS.md left untracked and untouched; pending-review evidence remains local and ignored. The hardcoded "The fruit provides fiber" text was replaced by `explainPick` and `displayedNutrients` in src/lib/recommendations.ts. Estimate-based explanations cite only displayed, goal-matched nutrients with a known, non-zero per-serving value, attribute amounts to the whole recipe (never an ingredient), and otherwise fall back to `whyPick`. `USDA_NUTRIENT_IDS` maps knowledge nutrients to FDC IDs; omega-3 and water are intentionally unmapped. Meals with no verified match now say "A meal idea to explore…". Pilot text under Balanced Nutrition: "about 85 mg of vitamin C and about 3.5 g of fiber per serving". Validation: typecheck, 22 knowledge tests, avatar tests, 14 USDA tests, 22 FatSecret tests, build and browser suite pass. No batch approvals or new nutrition estimates. Branch is still not pushed.
+
 ## FatSecret checkpoint and resumed USDA approval review
 
 Committed only docs/fatsecret (client, tests, README, ignore rule) as d733311 on knowledge-system-foundation. User confirmed live validation; no live response or comparison data persisted. Licensing restrictions remain unchanged. Unrelated dirty files and AGENTS.md preserved; other branches unchanged, no push/merge. Revalidated 21 saved USDA candidate IDs and comparison summaries offline for the same 15-label batch; 15 clean comparisons and six source-review flags remain. NEXT-BATCH-REVIEW.md now includes an actionable approval package, current frequency checks, corrected historical seasoning context and conditional Chamomile & Sweet Potato Toast pilot recommendation. No new recipe eligible yet, no live nutrition changes. All relevant automated checks pass.
