@@ -1,3 +1,5 @@
+import { calculateNutrition } from "../src/lib/nutrition";
+import { approvedPilotNutrition, PILOT_RECIPE_ID } from "../src/data/usdaPilot";
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import {
@@ -166,7 +168,7 @@ test("every meal uses canonical recipe quantity and time", () => {
     assert(r);
     assert.equal(m.prepTimeMinutes, r.totalTime);
     assert.deepEqual(m.structuredIngredients, r.structuredIngredients);
-    assert(r.nutrientTotals === null);
+    assert(r.id === PILOT_RECIPE_ID ? r.nutrientTotals !== null : r.nutrientTotals === null);
     assert(existsSync("public" + m.image));
   }
   for (const f of FOODS) assert(existsSync("public" + f.image));
@@ -270,5 +272,51 @@ test("restored JSON retains sources but resets publishing decisions", () => {
 test("snack-only picks exclude cooking ingredients", () => {
   const prefs = { ...DEFAULT_PREFERENCES, recommendationType: "snack" as const };
   for (const food of FOODS.filter(f => /salmon|turkey|beef/.test(f.id))) assert.equal(eligible(food, prefs), false);
+});
+test("only approved raw-fruit pilot exposes USDA nutrition with preserved unknowns", () => {
+  const pilot = RECIPES.find(r => r.id === PILOT_RECIPE_ID)!;
+  const estimate = pilot.nutritionEstimate!;
+  assert.equal(RECIPES.filter(r => r.nutritionEstimate).length, 1);
+  assert.equal(estimate.servings, 2);
+  assert.deepEqual(estimate.ingredients.map(i => [i.fdcId,i.grams,i.portionId]), [["167762",144,"81922"],["169124",165,"84287"],["171711",74,"89238"]]);
+  const expected: Record<string,number> = {"1008":85.38,"1003":1.2017,"1005":21.7149,"1004":0.4371,"1079":3.483,"1162":85.36};
+  for(const [id, amount] of Object.entries(expected)) assert(Math.abs(estimate.values.find(n => n.id === id)!.perServing! - amount) < 1e-9);
+  assert.equal(estimate.values.find(n => n.id === "1235")!.perServing, null);
+  assert.equal(estimate.values.find(n => n.id === "1178")!.perServing, 0);
+  assert.equal(pilot.nutrientTotals!.find(n => n.nutrientId === "1235")!.amount,null);
+  assert(estimate.sources.every(s => s.evidenceStatus === "source-supported" && s.reviewStatus === "reviewed"));
+  assert(MEALS.every(m => m.nutrientTotals === null));
+});
+test("recipe changes invalidate the approved pilot instead of showing stale totals", () => {
+  const pilot = RECIPES.find(r => r.id === PILOT_RECIPE_ID)!;
+  assert.equal(approvedPilotNutrition({...pilot,servings:3}),null);
+  assert.equal(approvedPilotNutrition({...pilot,cookTimeMinutes:5}),null);
+  assert.equal(approvedPilotNutrition({...pilot,instructions:["Cook the fruit"]}),null);
+  assert.equal(approvedPilotNutrition({...pilot,ingredients:[...pilot.ingredients,{name:"Sugar",quantity:"1 tsp"}]}),null);
+  assert.equal(approvedPilotNutrition({...pilot,ingredients:pilot.ingredients.map((i,n) => n===0 ? {...i,quantity:"2 cups"}:i)}),null);
+});
+test("nutrition calculations propagate missing weights, units and values without losing actual zeros", () => {
+  const base = {name:"Test food",fdcId:"test",grams:100,portionId:"test",portionDescription:"test",nutrients:{n:{amount:0,unit:"G",sourceRowId:"row"}}};
+  const defs = [{id:"n",name:"Test",unit:"G"}];
+  assert.equal(calculateNutrition([base],defs,2)[0].perServing,0);
+  assert.equal(calculateNutrition([base,{...base,grams:null}],defs,2)[0].total,null);
+  assert.equal(calculateNutrition([{...base,nutrients:{}}],defs,2)[0].total,null);
+  assert.equal(calculateNutrition([{...base,nutrients:{n:{amount:1,unit:"MG",sourceRowId:"row"}}}],defs,2)[0].total,null);
+  assert.equal(calculateNutrition([base],defs,0)[0].perServing,null);
+  assert.equal(calculateNutrition([],defs,2)[0].total,null);
+});
+test("approved small measurements parse and conditional recipes remain without totals", () => {
+  for(const id of ["recipe-warm-oatmeal-berries","recipe-chamomile-comfort-toast"]) {
+    const recipe=RECIPES.find(r => r.id===id)!;
+    const cinnamon=recipe.structuredIngredients.find(i=>i.name==="Ground cinnamon")!;
+    assert.equal(cinnamon.quantity,1/16); assert.equal(cinnamon.unit,"tsp");
+    assert.equal(recipe.nutrientTotals,null);
+  }
+  const toast=RECIPES.find(r=>r.id==="recipe-gentle-avocado-toast")!;
+  assert.equal(toast.structuredIngredients.find(i=>i.name==="Crushed chili flakes")!.quantity,1/16);
+  assert.equal(toast.structuredIngredients.find(i=>i.name==="Fine table salt")!.quantity,1/16);
+  const popcorn=RECIPES.find(r=>r.id==="recipe-loaded-popcorn-mix")!;
+  assert.equal(popcorn.structuredIngredients.find(i=>i.name==="Sea salt")!.quantity,.4);
+  assert.equal(popcorn.nutrientTotals,null);
 });
 console.log(`${checks} knowledge-system tests passed`);

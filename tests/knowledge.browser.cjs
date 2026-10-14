@@ -191,6 +191,25 @@ const { zipSync, strToU8 } = require("fflate");
           await page.screenshot({ path: `work/qa-${route}.png` });
       }
     }
+    for (const width of [320, 390, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(baseURL + "/recipe/recipe-rainbow-fruit-skewers");
+      const nutrition = page.locator('[aria-label="Estimated nutrition per serving"]');
+      await nutrition.waitFor();
+      for (const value of ["85 kcal", "1.2 g", "21.7 g", "0.4 g", "3.5 g", "Unknown"])
+        assert((await nutrition.innerText()).includes(value), value);
+      await nutrition.getByText("Portions & calculation", { exact: true }).click();
+      for (const id of ["167762", "169124", "171711"])
+        assert((await nutrition.innerText()).includes(id));
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `pilot overflow ${width}`);
+      await nutrition.screenshot({ path: `work/qa-usda-pilot-${width}.png` });
+      await page.reload();
+      await nutrition.waitFor();
+      assert((await nutrition.innerText()).includes("85 kcal"));
+    }
+    await page.goto(baseURL + "/recipe/recipe-gentle-avocado-toast");
+    await page.getByText(/Nutrition totals: not calculated/).waitFor();
+    assert.equal(await page.locator('[aria-label="Estimated nutrition per serving"]').count(), 0);
     console.log("BROWSER ERRORS", errors);
     assert.deepEqual(errors, []);
     console.log(

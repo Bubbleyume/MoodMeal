@@ -72,7 +72,7 @@ export interface LibraryMetadata {
     | null
     | {
         nutrientId: string;
-        amount: number;
+        amount: number | null;
         unit: string;
         basis: string;
         sourceProvenance: Provenance[];

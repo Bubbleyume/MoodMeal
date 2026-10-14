@@ -50,3 +50,6 @@ Production dependency audit reported zero vulnerabilities. Existing development-
 ## Branch status
 
 Work remains uncommitted on avatar-redesign-phase-2, HEAD 7edaaf7. No merge or push was performed in this phase. master remains 7d49790.
+# USDA pilot exception — 2026-10-14
+
+Rainbow Fruit Skewers now exposes user-approved USDA-derived nutrition estimates for its exact reviewed recipe, using three generic source records and reference weights. All other recipe and meal totals remain uncalculated. Missing nutrients remain null. See [USDA review decisions](usda/README.md) for provenance, conditional measurement approvals and the documentation-only remaining ingredient queue. Earlier statements that all totals are null predate this pilot.

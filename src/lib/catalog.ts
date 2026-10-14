@@ -5,6 +5,7 @@ import type {
   GoalId,
 } from "../types/library";
 import { FOOD_FACTS, NUTRIENTS, GOALS, source } from "../data/knowledge";
+import { approvedPilotNutrition } from "../data/usdaPilot";
 
 const aliases: [RegExp, string][] = [
   [/salmon/i, "wild-salmon"],
@@ -229,6 +230,7 @@ export function enrichMeal(raw: unknown): Meal {
 }
 export function enrichRecipe(raw: unknown): Recipe {
   const r = raw as Recipe;
+  const nutritionEstimate = approvedPilotNutrition(r);
   const m = metadata(r.mealId, "meals", r.name, r.ingredients);
   const recipeSource = source(
     "MoodMeal original recipe collection",
@@ -244,6 +246,12 @@ export function enrichRecipe(raw: unknown): Recipe {
   return {
     ...r,
     ...m,
+    nutritionEstimate,
+    nutrientTotals: nutritionEstimate ? nutritionEstimate.values.map(n => ({
+      nutrientId: n.id, amount: n.perServing, unit: n.unit,
+      basis: "per serving; two equal servings; USDA reference weights",
+      sourceProvenance: nutritionEstimate.sources,
+    })) : null,
     name: rename[r.mealId] ?? r.name,
     description: `A home-cooking idea using ${r.ingredients
       .slice(0, 3)

@@ -77,6 +77,7 @@ export interface Meal extends LibraryMetadata {
 }
 
 export interface Recipe extends LibraryMetadata {
+  nutritionEstimate?: import("./nutrition").RecipeNutritionEstimate | null;
   description: string;
   prepTime: number;
   cookTime: number;

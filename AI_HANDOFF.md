@@ -1,5 +1,15 @@
 # MoodMeal AI Handoff
 
+## 2026-10-14 USDA pilot integration checkpoint
+
+Current checkout confirmed: `knowledge-system-foundation`, HEAD `3292282`. It is one checkpoint ahead of `avatar-redesign-phase-2` (`7edaaf7`); master remains `7d49790`. No branch switching, resets, merges, commits or pushes performed. Pilot changes below are uncommitted. Pre-existing untracked AGENTS.md was preserved. Older branch/worktree descriptions below are historical.
+
+User approved only Rainbow Fruit Skewers for USDA integration testing: FDC 167762/144 g whole raw hulled strawberries, 169124/165 g raw pineapple chunks, 171711/74 g raw blueberries, two equal servings. Recipe Detail shows calculated USDA estimates (85 kcal, 1.2 g protein, 21.7 g carbs, 0.4 g fat, 3.5 g fiber), reference weights and provenance. Added sugars remain null/Unknown. These are not laboratory-verified or kitchen-tested.
+
+Implemented exact-recipe approval gating, null-preserving calculation and source records. Standardized five approved recipe measurements; chili-flake gram conversion and sea-salt composition remain unresolved, with no dependent nutrition published. No storage migration or expansion to other recipe totals. See docs/usda/README.md for decisions, retained calculation/source files and remaining 61-label review-only queue. Existing external review report also updated.
+
+Validation passed: typecheck, build, 19 knowledge tests, avatar tests, full browser suite with pilot at 320/390/1440 px, reloads and other-recipe fallback. Browser reported no errors. Mobile pilot screenshot inspected. Further ingredient approvals are required before expanding nutrition coverage.
+
 _Last updated: 2026-10-13 by Claude Code (inspection only, no app code changed)._
 
 ## Current Project Status

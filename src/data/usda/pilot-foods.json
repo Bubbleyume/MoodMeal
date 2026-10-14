@@ -1,0 +1,663 @@
+{
+  "snapshot": "FoodData_Central_csv_2026-04-30",
+  "definitions": [
+    {
+      "id": "1008",
+      "name": "Energy",
+      "unit": "KCAL"
+    },
+    {
+      "id": "1003",
+      "name": "Protein",
+      "unit": "G"
+    },
+    {
+      "id": "1005",
+      "name": "Carbohydrate, by difference",
+      "unit": "G"
+    },
+    {
+      "id": "1004",
+      "name": "Total lipid (fat)",
+      "unit": "G"
+    },
+    {
+      "id": "1079",
+      "name": "Fiber, total dietary",
+      "unit": "G"
+    },
+    {
+      "id": "2000",
+      "name": "Total Sugars",
+      "unit": "G"
+    },
+    {
+      "id": "1235",
+      "name": "Sugars, added",
+      "unit": "G"
+    },
+    {
+      "id": "1087",
+      "name": "Calcium, Ca",
+      "unit": "MG"
+    },
+    {
+      "id": "1089",
+      "name": "Iron, Fe",
+      "unit": "MG"
+    },
+    {
+      "id": "1090",
+      "name": "Magnesium, Mg",
+      "unit": "MG"
+    },
+    {
+      "id": "1092",
+      "name": "Potassium, K",
+      "unit": "MG"
+    },
+    {
+      "id": "1093",
+      "name": "Sodium, Na",
+      "unit": "MG"
+    },
+    {
+      "id": "1162",
+      "name": "Vitamin C, total ascorbic acid",
+      "unit": "MG"
+    },
+    {
+      "id": "1175",
+      "name": "Vitamin B-6",
+      "unit": "MG"
+    },
+    {
+      "id": "1178",
+      "name": "Vitamin B-12",
+      "unit": "UG"
+    },
+    {
+      "id": "1177",
+      "name": "Folate, total",
+      "unit": "UG"
+    }
+  ],
+  "foods": {
+    "167762": {
+      "fdcId": "167762",
+      "description": "Strawberries, raw",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "portions": [
+        {
+          "id": "81919",
+          "fdc_id": "167762",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, halves",
+          "gram_weight": "152.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "81920",
+          "fdc_id": "167762",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, pureed",
+          "gram_weight": "232.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "81921",
+          "fdc_id": "167762",
+          "seq_num": "3",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, sliced",
+          "gram_weight": "166.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "81922",
+          "fdc_id": "167762",
+          "seq_num": "4",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, whole",
+          "gram_weight": "144.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "81923",
+          "fdc_id": "167762",
+          "seq_num": "5",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "extra large (1-5/8\" dia)",
+          "gram_weight": "27.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "81924",
+          "fdc_id": "167762",
+          "seq_num": "6",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "large (1-3/8\" dia)",
+          "gram_weight": "18.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "81925",
+          "fdc_id": "167762",
+          "seq_num": "7",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "medium (1-1/4\" dia)",
+          "gram_weight": "12.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "81926",
+          "fdc_id": "167762",
+          "seq_num": "8",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "pint as purchased, yields",
+          "gram_weight": "357.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "81927",
+          "fdc_id": "167762",
+          "seq_num": "9",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "small (1\" dia)",
+          "gram_weight": "7.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "81928",
+          "fdc_id": "167762",
+          "seq_num": "10",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "NLEA serving",
+          "gram_weight": "147.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 32.0,
+          "unit": "KCAL",
+          "sourceRowId": "1303238"
+        },
+        "1003": {
+          "amount": 0.67,
+          "unit": "G",
+          "sourceRowId": "1303225"
+        },
+        "1005": {
+          "amount": 7.68,
+          "unit": "G",
+          "sourceRowId": "1303237"
+        },
+        "1004": {
+          "amount": 0.3,
+          "unit": "G",
+          "sourceRowId": "1303221"
+        },
+        "1079": {
+          "amount": 2.0,
+          "unit": "G",
+          "sourceRowId": "1303222"
+        },
+        "2000": {
+          "amount": 4.89,
+          "unit": "G",
+          "sourceRowId": "1303235"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 16.0,
+          "unit": "MG",
+          "sourceRowId": "1303236"
+        },
+        "1089": {
+          "amount": 0.41,
+          "unit": "MG",
+          "sourceRowId": "1303267"
+        },
+        "1090": {
+          "amount": 13.0,
+          "unit": "MG",
+          "sourceRowId": "1303223"
+        },
+        "1092": {
+          "amount": 153.0,
+          "unit": "MG",
+          "sourceRowId": "1303233"
+        },
+        "1093": {
+          "amount": 1.0,
+          "unit": "MG",
+          "sourceRowId": "1303232"
+        },
+        "1162": {
+          "amount": 58.8,
+          "unit": "MG",
+          "sourceRowId": "1303228"
+        },
+        "1175": {
+          "amount": 0.047,
+          "unit": "MG",
+          "sourceRowId": "1303216"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1303277"
+        },
+        "1177": {
+          "amount": 24.0,
+          "unit": "UG",
+          "sourceRowId": "1303231"
+        }
+      }
+    },
+    "169124": {
+      "fdcId": "169124",
+      "description": "Pineapple, raw, all varieties",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "portions": [
+        {
+          "id": "84287",
+          "fdc_id": "169124",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, chunks",
+          "gram_weight": "165.0",
+          "data_points": "34",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "84288",
+          "fdc_id": "169124",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "fruit",
+          "gram_weight": "905.0",
+          "data_points": "26",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "84289",
+          "fdc_id": "169124",
+          "seq_num": "3",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "slice (4-2/3\" dia x 3/4\" thick)",
+          "gram_weight": "166.0",
+          "data_points": "11",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "84290",
+          "fdc_id": "169124",
+          "seq_num": "4",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "slice (3-1/2\" dia x 3/4\" thick)",
+          "gram_weight": "84.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "84291",
+          "fdc_id": "169124",
+          "seq_num": "5",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "slice, thin (3-1/2\" dia x 1/2\" thick)",
+          "gram_weight": "56.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 50.0,
+          "unit": "KCAL",
+          "sourceRowId": "1415319"
+        },
+        "1003": {
+          "amount": 0.54,
+          "unit": "G",
+          "sourceRowId": "1415284"
+        },
+        "1005": {
+          "amount": 13.12,
+          "unit": "G",
+          "sourceRowId": "1415318"
+        },
+        "1004": {
+          "amount": 0.12,
+          "unit": "G",
+          "sourceRowId": "1415300"
+        },
+        "1079": {
+          "amount": 1.4,
+          "unit": "G",
+          "sourceRowId": "1415308"
+        },
+        "2000": {
+          "amount": 9.85,
+          "unit": "G",
+          "sourceRowId": "1415293"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 13.0,
+          "unit": "MG",
+          "sourceRowId": "1415294"
+        },
+        "1089": {
+          "amount": 0.29,
+          "unit": "MG",
+          "sourceRowId": "1415286"
+        },
+        "1090": {
+          "amount": 12.0,
+          "unit": "MG",
+          "sourceRowId": "1415287"
+        },
+        "1092": {
+          "amount": 109.0,
+          "unit": "MG",
+          "sourceRowId": "1415295"
+        },
+        "1093": {
+          "amount": 1.0,
+          "unit": "MG",
+          "sourceRowId": "1415289"
+        },
+        "1162": {
+          "amount": 47.8,
+          "unit": "MG",
+          "sourceRowId": "1415277"
+        },
+        "1175": {
+          "amount": 0.112,
+          "unit": "MG",
+          "sourceRowId": "1415304"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1415340"
+        },
+        "1177": {
+          "amount": 18.0,
+          "unit": "UG",
+          "sourceRowId": "1415280"
+        }
+      }
+    },
+    "171711": {
+      "fdcId": "171711",
+      "description": "Blueberries, raw",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "portions": [
+        {
+          "id": "89238",
+          "fdc_id": "171711",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup",
+          "gram_weight": "148.0",
+          "data_points": "12",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        },
+        {
+          "id": "89239",
+          "fdc_id": "171711",
+          "seq_num": "2",
+          "amount": "50.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "berries",
+          "gram_weight": "68.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": "",
+          "unitDefinition": {
+            "id": "9999",
+            "name": "undetermined"
+          },
+          "sourceFile": "food_portion.csv"
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 57.0,
+          "unit": "KCAL",
+          "sourceRowId": "1633245"
+        },
+        "1003": {
+          "amount": 0.74,
+          "unit": "G",
+          "sourceRowId": "1633328"
+        },
+        "1005": {
+          "amount": 14.49,
+          "unit": "G",
+          "sourceRowId": "1633244"
+        },
+        "1004": {
+          "amount": 0.33,
+          "unit": "G",
+          "sourceRowId": "1633289"
+        },
+        "1079": {
+          "amount": 2.4,
+          "unit": "G",
+          "sourceRowId": "1633313"
+        },
+        "2000": {
+          "amount": 9.96,
+          "unit": "G",
+          "sourceRowId": "1633283"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 6.0,
+          "unit": "MG",
+          "sourceRowId": "1633284"
+        },
+        "1089": {
+          "amount": 0.28,
+          "unit": "MG",
+          "sourceRowId": "1633314"
+        },
+        "1090": {
+          "amount": 6.0,
+          "unit": "MG",
+          "sourceRowId": "1633315"
+        },
+        "1092": {
+          "amount": 77.0,
+          "unit": "MG",
+          "sourceRowId": "1633234"
+        },
+        "1093": {
+          "amount": 1.0,
+          "unit": "MG",
+          "sourceRowId": "1633235"
+        },
+        "1162": {
+          "amount": 9.7,
+          "unit": "MG",
+          "sourceRowId": "1633236"
+        },
+        "1175": {
+          "amount": 0.052,
+          "unit": "MG",
+          "sourceRowId": "1633282"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1633248"
+        },
+        "1177": {
+          "amount": 6.0,
+          "unit": "UG",
+          "sourceRowId": "1633302"
+        }
+      }
+    }
+  }
+}

@@ -3,6 +3,7 @@ import { useParams, Navigate } from "../lib/router";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import FoodImage from "../components/FoodImage";
+import RecipeNutrition from "../components/RecipeNutrition";
 import { PickExplanation, Sources } from "../components/Knowledge";
 import { getRecipeById } from "../data/recipes";
 import { getMealById } from "../data/meals";
@@ -59,10 +60,7 @@ export default function RecipeDetailPage() {
                   : undefined
               }
             />
-            <p className="mt-3 text-xs text-slate-500">
-              Nutrition totals: not calculated. Nutrient tags describe
-              documented ingredients, not measured amounts per serving.
-            </p>
+            <RecipeNutrition estimate={recipe.nutritionEstimate} />
           </section>
           <section className="card">
             <h2 className="section-title">Ingredients</h2>

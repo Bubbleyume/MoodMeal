@@ -48,13 +48,13 @@ export const RECIPES: Recipe[] = [
       { name: "Mixed berries", quantity: "1/2 cup" },
       { name: "Walnuts", quantity: "1 tbsp, chopped" },
       { name: "Honey", quantity: "1 tsp" },
-      { name: "Cinnamon", quantity: "pinch" },
+      { name: "Ground cinnamon", quantity: "1/16 tsp" },
     ],
     instructions: [
       "Bring the milk to a gentle simmer in a small saucepan.",
       "Stir in the oats and reduce heat to low; cook 8–10 minutes, stirring occasionally, until creamy.",
       "Spoon into a bowl and top with berries, walnuts, and a drizzle of honey.",
-      "Finish with a pinch of cinnamon.",
+      "Finish with 1/16 tsp ground cinnamon.",
     ],
     nutritionHighlights: [
       "Complex carbohydrates support steady, sustained energy",
@@ -136,13 +136,13 @@ export const RECIPES: Recipe[] = [
       { name: "Almond butter", quantity: "2 tbsp" },
       { name: "Banana", quantity: "1/2, sliced" },
       { name: "Chamomile tea bag", quantity: "1" },
-      { name: "Cinnamon", quantity: "pinch" },
+      { name: "Ground cinnamon", quantity: "1/16 tsp" },
     ],
     instructions: [
       "Toast the sweet potato slices in a toaster or toaster oven on high for 2–3 cycles, until fork-tender.",
       "Meanwhile, steep the chamomile tea bag in hot water for 4–5 minutes.",
       "Spread almond butter over each sweet potato \"toast\".",
-      "Top with banana slices and a pinch of cinnamon.",
+      "Top with banana slices and 1/16 tsp ground cinnamon.",
       "Enjoy warm alongside the cup of chamomile tea.",
     ],
     nutritionHighlights: [
@@ -306,14 +306,14 @@ export const RECIPES: Recipe[] = [
       { name: "Whole-grain bread", quantity: "1 slice" },
       { name: "Avocado", quantity: "1/2" },
       { name: "Egg", quantity: "1" },
-      { name: "Chili flakes", quantity: "pinch" },
-      { name: "Salt", quantity: "pinch" },
+      { name: "Crushed chili flakes", quantity: "1/16 tsp" },
+      { name: "Fine table salt", quantity: "1/16 tsp" },
     ],
     instructions: [
       "Toast the bread to your preferred crispness.",
       "Hard-boil the egg until the white and yolk are firm, then cool, peel and halve.",
-      "Mash the avocado directly onto the toast with a pinch of salt.",
-      "Top with the cooked egg and a pinch of chili flakes.",
+      "Mash the avocado directly onto the toast with 1/16 tsp fine table salt.",
+      "Top with the cooked egg and 1/16 tsp crushed chili flakes.",
     ],
     nutritionHighlights: [
       "Avocado provides healthy fats and potassium",
@@ -439,12 +439,12 @@ export const RECIPES: Recipe[] = [
       { name: "Air-popped popcorn", quantity: "2 cups" },
       { name: "Almonds", quantity: "2 tbsp" },
       { name: "Dark chocolate chips", quantity: "1 tbsp" },
-      { name: "Sea salt", quantity: "pinch" },
+      { name: "Sea salt", quantity: "0.4 g, weighed" },
     ],
     instructions: [
       "Air-pop the popcorn according to package instructions.",
       "Toss with almonds and dark chocolate chips while still slightly warm.",
-      "Finish with a light pinch of sea salt.",
+      "Finish with 0.4 g weighed sea salt.",
     ],
     nutritionHighlights: [
       "Whole-grain popcorn provides fiber",
@@ -461,9 +461,9 @@ export const RECIPES: Recipe[] = [
     prepTimeMinutes: 10,
     cookTimeMinutes: 0,
     ingredients: [
-      { name: "Strawberries", quantity: "1 cup" },
-      { name: "Pineapple", quantity: "1 cup, cubed" },
-      { name: "Blueberries", quantity: "1/2 cup" },
+      { name: "Strawberries", quantity: "1 cup, whole, hulled (144 g USDA reference weight)" },
+      { name: "Pineapple", quantity: "1 cup, raw chunks (165 g USDA reference weight)" },
+      { name: "Blueberries", quantity: "1/2 cup, raw (74 g USDA reference weight)" },
       { name: "Wooden skewers", quantity: "4" },
     ],
     instructions: [
