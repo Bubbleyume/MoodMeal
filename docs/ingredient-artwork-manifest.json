@@ -1,0 +1,282 @@
+[
+  {
+    "id": "almond-butter",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-9b1cfea5-9052-4a0f-ba25-69df2f8b3cef.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Smooth almond butter in a small cream ceramic bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/almond-butter.png"
+  },
+  {
+    "id": "chili-flakes",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-07c0cf9a-d421-49cf-9b6d-7a0fe291d3ac.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Crushed red chili flakes with visible seeds in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/chili-flakes.png"
+  },
+  {
+    "id": "butter-lettuce",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-570c0bbe-6ba6-4ae2-be90-793fdd9b1199.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Fresh butter lettuce leaves. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/butter-lettuce.png"
+  },
+  {
+    "id": "ground-cinnamon",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-aa53aea8-c5cd-428c-8fa0-0f55ee732240.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Ground cinnamon powder in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/ground-cinnamon.png"
+  },
+  {
+    "id": "chia-seeds",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-7068661d-1b5a-4f25-9761-bd3fa5c9542c.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Dry black and white chia seeds in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/chia-seeds.png"
+  },
+  {
+    "id": "dark-chocolate-chips",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-1aa9839e-c33b-4660-8407-cb4bc4cf0ef6.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Dark chocolate baking chips in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/dark-chocolate-chips.png"
+  },
+  {
+    "id": "honey",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-2493ecf7-7cb7-4263-a1f0-364b4154bd77.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Golden honey in a small clear glass jar with plain wooden honey dipper. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/honey.png"
+  },
+  {
+    "id": "feta-cheese",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-b6e91c8a-fb97-4e72-9d30-3794542e2b16.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Crumbled feta cheese in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/feta-cheese.png"
+  },
+  {
+    "id": "dried-cranberries",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-10cc9cb4-2b2f-4a16-8b87-02e5f20d86e2.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Dried cranberries in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/dried-cranberries.png"
+  },
+  {
+    "id": "table-salt",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-ff01a43a-80e3-416d-9640-887069ffc03b.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Fine white table salt in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/table-salt.png"
+  },
+  {
+    "id": "granola",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-1dc03f8f-1dce-47ab-91e7-0541f36482a9.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Golden oat granola clusters in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/granola.png"
+  },
+  {
+    "id": "hummus",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-0e8c5d1f-0ffa-4045-bd80-82cce8fe5e9f.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Smooth hummus in a small cream bowl, no garnish. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/hummus.png"
+  },
+  {
+    "id": "lime-juice",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-dc8c6826-d471-4319-b6be-063d252762d7.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Pale lime juice in a small clear glass pitcher with a lime half alongside. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/lime-juice.png"
+  },
+  {
+    "id": "matcha",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-0274fac6-6607-4bad-8f5c-ae7a344b915d.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Fine green matcha tea powder in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/matcha.png"
+  },
+  {
+    "id": "lemon-juice",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-abb891c2-8108-4e6b-ac41-05ee13589b7f.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Pale yellow lemon juice in a small clear glass pitcher with a lemon half alongside. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/lemon-juice.png"
+  },
+  {
+    "id": "ice",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-7a020526-c9f0-4b9f-b42d-08dbcd7432f9.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: A small pile of clear ice cubes. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/ice.png"
+  },
+  {
+    "id": "lemon",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-68165fdc-eb40-4ca8-8e0c-ecf400adf560.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: One whole yellow lemon and one half lemon. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/lemon.png"
+  },
+  {
+    "id": "lime",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-4a6af609-59cf-4fde-af9c-fdf789763ee6.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: One whole green lime and one half lime. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/lime.png"
+  },
+  {
+    "id": "milk",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-874d7c91-00dd-42cc-a76e-611139a46bcc.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Plain milk in a clear drinking glass, no packaging. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/milk.png"
+  },
+  {
+    "id": "rolled-oats",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-c4e7a911-929b-481a-b02a-e1b7e01a7791.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Dry whole flattened rolled oat flakes in a small cream bowl, distinctly flat flakes not steel-cut grains. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/rolled-oats.png"
+  },
+  {
+    "id": "sea-salt",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-2e4b4efc-f1af-4439-8b72-7452b0bea708.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: White sea salt crystals in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/sea-salt.png"
+  },
+  {
+    "id": "sesame-seeds",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-fe0beede-1b98-44a4-b3ce-879b2a51098d.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Pale sesame seeds in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/sesame-seeds.png"
+  },
+  {
+    "id": "mint-leaves",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-2255e496-a3bb-47d5-81f4-98f34376404d.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Small fresh sprigs of mint leaves. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/mint-leaves.png"
+  },
+  {
+    "id": "olive-oil",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-3c3fbc3c-d479-4f6a-9713-7af3a4bfc386.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Golden olive oil in a small clear unlabelled glass cruet. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/olive-oil.png"
+  },
+  {
+    "id": "oat-flour",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-3fd82654-6fc5-4ddf-8c35-a369524ad6f3.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Fine pale oat flour in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/oat-flour.png"
+  },
+  {
+    "id": "paprika",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-90eb9e88-ad3d-4477-bc82-ecec23cebf41.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Red paprika powder in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/paprika.png"
+  },
+  {
+    "id": "soy-sauce",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-e7cf377c-0cbf-413e-8122-3f1e2877259d.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Dark liquid soy sauce in a small cream dipping bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/soy-sauce.png"
+  },
+  {
+    "id": "whole-grain-bread",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-058a96c6-3bb8-411a-b100-9ff79fa3a580.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Two slices of brown whole-grain bread. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/whole-grain-bread.png"
+  },
+  {
+    "id": "wooden-skewers",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-7e734e82-f56f-46c5-b7c9-1dccfa8902c6.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: A neat small fan of plain wooden food skewers, equipment only. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/wooden-skewers.png"
+  },
+  {
+    "id": "black-pepper",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-f1aebeb5-5bcd-44ba-aacf-6cd0458b807a.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Black peppercorns and a small mound of ground pepper. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/black-pepper.png"
+  },
+  {
+    "id": "tahini",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-43552f93-f844-436f-83be-807f9761eff6.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Smooth beige tahini in a small cream bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/tahini.png"
+  },
+  {
+    "id": "hoisin-sauce",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-fa2e331c-1bf7-473e-9812-7c94cb45c5bd.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Thick glossy dark brown hoisin sauce in a small cream dipping bowl. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/hoisin-sauce.png"
+  },
+  {
+    "id": "vegetable-broth",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-b4f3acf9-1206-4358-8ae8-1827c762c33b.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Clear golden vegetable broth in a small cream bowl, no solid ingredients. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/vegetable-broth.png"
+  },
+  {
+    "id": "vegetable-oil",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-3f812c81-17a2-4b10-8413-fd7b0bf03391.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Pale yellow vegetable oil in a small clear unlabelled glass cruet. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/vegetable-oil.png"
+  },
+  {
+    "id": "tea-bag",
+    "source": "C:\\Users\\Shakh\\.codex\\generated_images\\01a10acc-35d7-78f0-a81d-0bfb70cd8037\\exec-74f89f51-e593-498e-bcd8-0eb86f8f4796.png",
+    "prompt": "Use case: stylized-concept. Single square ingredient illustration for MoodMeal. Subject: Plain unlabelled chamomile tea bag with visible dried herbal contents and string, no cup. Match an illustrated cookbook library: appetizing hand-painted gouache with realistic ingredient texture, soft rounded shapes, natural colors, warm ivory #fffaf3 background, soft lavender contact shadow, three-quarter overhead view. Complete centered subject with 15 percent breathing room. No lettering, logos, faces, emoji, borders, unrelated foods or decorative props. This is an ingredient asset, not a finished meal.",
+    "tool": "built-in image_gen",
+    "illustrative": true,
+    "asset": "/assets/ingredients/tea-bag.png"
+  }
+]

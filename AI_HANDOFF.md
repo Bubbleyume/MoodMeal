@@ -1,5 +1,12 @@
 # MoodMeal AI Handoff
 
+## Synchronization protocol and artwork checkpoint (2026-10-14)
+
+Shared rules: docs/AI_SYNC_PROTOCOL.md, linked by CLAUDE.md. Starting state reconciled: local c55d24f was one commit ahead of origin 8638684, no divergence. Claude honey approval preserved. Completed artwork: 35 PNGs plus prompt manifest, 72-label coverage and gallery; no screen integration yet. This checkpoint includes those assets/docs and the protocol, not the pre-existing untracked AGENTS.md. Validation: 22 FatSecret, 14 USDA, 26 knowledge tests, avatar checks, TypeScript and build pass; only outdated Browserslist warning. All 24 pending USDA JSON files match the separate private backup at ../backups/usda-pending-review-2026-10-14. No FatSecret data persisted.
+
+Outstanding: 14 batch labels still need decisions; honey is approved but no additional recipe totals are published. Next: review artwork and integrate ingredient images separately; continue USDA approvals. Commit/push verification recorded in the follow-up handoff entry.
+
+
 ## Honey approved, no new totals (Claude Code, 2026-10-14)
 
 User decisions: H1 approved FDC 169640 as generic honey; H2 approved derived conversions, 1 tsp = 7 g and 1/4 cup = 84.75 g; H3 kept missing added sugars null/Unknown. Added `src/data/usda/approved-ingredients.json`, built by `docs/usda/build-approved-ingredients.py` from the CSV snapshot. The build stops on any disagreement with the saved API report. It is read by `src/data/usdaApprovals.ts` (`approvedIngredientInput` for an exact name, quantity, unit and no notes; `recipeReviewCoverage` for coverage information only). It is not wired into recipe totals: **no recipe totals until every ingredient is reviewed** (user rule). Review JSON/MD records updated (approved: true, publishable: false). Rainbow Fruit Skewers remains the only estimate. Remaining 14 labels in the batch still await decisions.
@@ -197,3 +204,7 @@ Do not reverse these without explicit instruction.
 - FatSecret review now has source IDs/preparation overview, nutrient and serving tables, selected-basis counts, expandable technical details and an expiration countdown. Data remains memory-only; USDA records and publication logic are unchanged.
 - Missing amounts take precedence over unit checks. Unknown units are distinct from incompatible known units.
 - Validation: 22 FatSecret tests including real Tk UI/closure, 14 USDA tests, 19 knowledge tests, avatar tests, TypeScript and build pass. Build reports outdated Browserslist data. No authenticated requests, branch changes or commits for this interface work.
+
+
+## Ingredient artwork extension (2026-10-14)
+Generated 35 separate PNG illustrations with built-in image generation in public/assets/ingredients. Existing 35 food and 24 meal WebPs preserved; all catalog paths exist. docs/ingredient-artwork-manifest.json retains prompts/source paths; coverage JSON maps all 72 current recipe labels to illustrative assets, with alternatives kept explicit. Gallery HTML supports visual review. New ingredient images are not wired into app screens yet; no nutrition or recipe identity decisions changed. Files remain uncommitted.
