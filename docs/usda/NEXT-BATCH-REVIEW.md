@@ -252,6 +252,10 @@ No additional complete recipe becomes eligible without further decisions. Sugges
 API tool checkpoint: ae01366. Duplicate recovery changes and this report remain uncommitted. Fourteen Python tests, 19 knowledge tests and TypeScript validation pass. The earlier build passed; this phase changed only review documents/scripts. Pending report evidence and original API payloads remain intact.
 
 
+## Honey approved (2026-10-14)
+
+User decisions: **H1** FDC 169640 approved as generic honey. **H2** derived conversions approved: 1 tsp = 7 g, 1/4 cup = 84.75 g. **H3** missing added sugars remain null/Unknown, not zero. Recorded in `src/data/usda/approved-ingredients.json` with source rows, portions and API report reference; see README.md. No recipe totals are published; every recipe using honey still has unreviewed ingredients. The other 14 labels in this batch remain pending.
+
 ## Resumed USDA review after FatSecret checkpoint (2026-10-14)
 
 FatSecret checkpoint: `d733311`, restricted to docs/fatsecret. No FatSecret evidence is used in this USDA batch. Rechecked all 21 saved API records against exact IDs and retained CSV baselines offline; comparison summaries still match: 15 clean nutritional comparisons, six source-review flags. No new API requests. Existing per-ID retrieval dates, units and portion references above remain authoritative. Current recipe usage counts match all 15 selected labels. Egg and Eggs are separate recipe labels sharing records (four uses combined). The 61-label queue is a review backlog, not 61 approved or distinct food identities; the live recipe source currently contains 72 exact ingredient labels overall.

@@ -12,6 +12,16 @@ Only Rainbow Fruit Skewers is approved for integration testing. Its estimates ar
 
 Total edible weight: 383 g. Two equal servings: 191.5 g each. Wooden skewers are equipment, excluded from nutrition. Display rounds to 85 kcal, 1.2 g protein, 21.7 g carbohydrate, 0.4 g fat and 3.5 g fiber per serving. Added sugars remain null/Unknown.
 
+### Approved ingredient records (no recipe totals)
+
+User decisions H1–H3, 2026-10-14. Stored in `src/data/usda/approved-ingredients.json` (built by `build-approved-ingredients.py` from the retained CSV snapshot and checked against the saved API report) and read through `src/data/usdaApprovals.ts`. Approval covers identity and listed conversions only. **No recipe totals are published until every ingredient in that recipe is reviewed.**
+
+| Ingredient | FDC ID | Approved conversions | Notes |
+|---|---|---|---|
+| Honey (generic) | 169640 | 1 tsp = 7 g (derived from portion 85265, 21 g/tbsp ÷ 3); 1/4 cup = 84.75 g (derived from portion 85264, 339 g/cup ÷ 4) | Added sugars (1235) absent in USDA: null/Unknown, never zero. Other quantities, units, notes or honey types are unreviewed. |
+
+Honey appears in Warm Oatmeal, Calming Kefir Smoothie, Green Tea Energy Bites, Immune-Support Smoothie and Berry Yogurt Parfait. Each still has unreviewed ingredients, so none shows nutrition totals.
+
 | Recipe | Approved measurement | Remaining restriction |
 |---|---|---|
 | Warm Oatmeal | 1/16 tsp ground cinnamon | No complete recipe nutrition approved |

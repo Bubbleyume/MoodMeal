@@ -4,7 +4,7 @@ Twelve most-used remaining labels, selected by recipe frequency. Direct CSV rech
 
 | Ingredient (uses) | Proposed USDA descriptions / IDs | Group | Decision needed / proposed conversion |
 |---|---|---|---|
-| Honey (5) | 169640: Honey | verified candidate, approval pending | 1 tsp = 7 g derived from native 21 g/tbsp; 1/4 cup = 84.75 g from native 339 g/cup. Preserve native measures rather than forcing density consistency. |
+| Honey (5) | 169640: Honey | **approved 2026-10-14 (H1–H3, see README); recipe totals not published** | 1 tsp = 7 g derived from native 21 g/tbsp; 1/4 cup = 84.75 g from native 339 g/cup. Preserve native measures rather than forcing density consistency. |
 | Banana (4) | 173944: Bananas, raw | ambiguous match or preparation/portion | Size unspecified. Medium reference = 118 g, half = 59 g if adopted. Pancakes cook the raw input; smoothies use it raw. |
 | Almonds (3) | 170567: Nuts, almonds | ambiguous match or preparation/portion | Confirm raw/roasted and salted state. Whole, sliced, slivered and ground cup weights differ; chopped tbsp is not an exact listed portion. 1/4 cup whole would be 35.75 g only if whole is intended. |
 | Brown rice (3) | 169704: Rice, brown, long-grain, cooked (Includes foods for USDA's Food Distribution Program); 168875: Rice, brown, medium-grain, cooked (Includes foods for USDA's Food Distribution Program) | ambiguous match or preparation/portion | Recipe explicitly measures cooked rice. Long-grain 3/4 cup = 151.5 g; medium-grain = 146.25 g. Choose grain type; never use a dry-rice record with cooked cups. |

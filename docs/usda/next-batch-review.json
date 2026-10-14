@@ -2,12 +2,12 @@
   {
     "ingredient": "Honey",
     "recipeUseCount": 5,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "ingredient-approved; recipe totals not published",
     "review": {
       "ids": [
         "169640"
       ],
-      "status": "Candidate",
+      "status": "Approved",
       "state": "Ready-to-use",
       "note": "1 tsp = 7 g derived from native 21 g/tbsp; 1/4 cup = 84.75 g from native 339 g/cup. Preserve native measures rather than forcing density consistency.",
       "uses": [
@@ -33,7 +33,7 @@
         }
       ],
       "proposedDefaultFdcId": "169640",
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "approved-by-user",
       "sourceVerificationStatus": "source-records-rechecked",
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
@@ -55,10 +55,10 @@
     "apiRetrievedAt": [
       "2026-10-14T08:19:29.620184+00:00"
     ],
-    "approved": false,
+    "approved": true,
     "publishable": false,
     "confidence": "high source identity; recipe quantities directly convertible",
-    "proposedApproval": "ready for user approval; not approved",
+    "proposedApproval": "approved 2026-10-14 (H1-H3); recipe totals not published",
     "apiEvidence": {
       "169640": {
         "report": "20261014T081929Z-7f956233da664e6aaca7d65dd0475f96.json",
@@ -77,6 +77,18 @@
           "metadataScope": "Compared identity, publication date, nutrient names/units/amounts and portions; not byte-for-byte API/CSV equality."
         }
       }
+    },
+    "userApproval": {
+      "decisions": {
+        "H1": "Approved FDC 169640 as generic honey.",
+        "H2": "Approved derived conversions: 1 tsp = 7 g (21 g tbsp / 3); 1/4 cup = 84.75 g (339 g cup / 4).",
+        "H3": "Missing USDA added-sugars value kept null/Unknown, not zero."
+      },
+      "approvedBy": "User (project owner)",
+      "approvedDate": "2026-10-14",
+      "runtimeRecord": "src/data/usda/approved-ingredients.json",
+      "recipeTotalsPublished": false,
+      "restriction": "No recipe totals until every ingredient in that recipe is reviewed."
     }
   },
   {

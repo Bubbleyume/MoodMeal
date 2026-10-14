@@ -1,5 +1,6 @@
 import { calculateNutrition } from "../src/lib/nutrition";
 import { approvedPilotNutrition, PILOT_RECIPE_ID } from "../src/data/usdaPilot";
+import { APPROVED_INGREDIENTS, approvedIngredientInput, recipeReviewCoverage } from "../src/data/usdaApprovals";
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import {
@@ -433,5 +434,30 @@ test("unverified nutrient facts never appear as chips for any goal", () => {
   }
   const multi = nutrientDisplay(item, ["hydration", "steady-energy"]);
   assert(multi.matched.length > 0 && multi.otherVerified.length === 0);
+});
+test("approved honey converts only its approved portions and publishes no new recipe totals", () => {
+  const honey = APPROVED_INGREDIENTS.find(i => i.ingredient === "Honey")!;
+  assert.equal(honey.fdcId, "169640");
+  assert.equal(honey.recipeTotalsPublished, false);
+  assert.equal(honey.nutrients["1235"].amount, null);
+  assert.equal(honey.nutrients["1008"].amount, 304);
+  assert(Object.values(honey.nutrients).every(n => n.amount === null || n.sourceRowId));
+  const uses = RECIPES.flatMap(r => r.structuredIngredients.filter(i => i.name === "Honey").map(i => [r.id, approvedIngredientInput(i)?.grams] as const));
+  assert.deepEqual(Object.fromEntries(uses), {
+    "recipe-warm-oatmeal-berries": 7, "recipe-calming-kefir-smoothie": 7, "recipe-green-tea-oat-bites": 84.75,
+    "recipe-immune-boost-smoothie": 7, "recipe-berry-yogurt-parfait": 7,
+  });
+  const line = RECIPES.flatMap(r => r.structuredIngredients).find(i => i.name === "Honey")!;
+  for (const changed of [{...line, quantity: 2}, {...line, unit: "tbsp"}, {...line, quantity: null}, {...line, name: "Raw manuka honey"}, {...line, notes: "warmed"}])
+    assert.equal(approvedIngredientInput(changed), null);
+  const [contribution] = calculateNutrition([approvedIngredientInput(line)!], [{id:"1235",name:"Sugars, added",unit:"G"},{id:"1008",name:"Energy",unit:"KCAL"}], 1);
+  assert.equal(contribution.total, null);
+  for (const r of RECIPES.filter(r => r.structuredIngredients.some(i => i.name === "Honey"))) {
+    assert.equal(r.nutritionEstimate, null);
+    assert.equal(r.nutrientTotals, null);
+    const coverage = recipeReviewCoverage(r);
+    assert(coverage.approved.includes("Honey") && coverage.unreviewed.length > 0, r.id);
+  }
+  assert.equal(RECIPES.filter(r => r.nutritionEstimate).length, 1);
 });
 console.log(`${checks} knowledge-system tests passed`);

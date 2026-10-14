@@ -1,0 +1,164 @@
+{
+  "snapshot": "FoodData_Central_csv_2026-04-30",
+  "note": "Approved ingredient records only. Recipe totals require every ingredient to be reviewed.",
+  "ingredients": [
+    {
+      "ingredient": "Honey",
+      "fdcId": "169640",
+      "identity": "Generic honey (USDA SR Legacy \"Honey\"); no brand, floral source or processing claims.",
+      "preparation": "Ready-to-use",
+      "approvedBy": "User (project owner) decisions H1-H3",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T081929Z-7f956233da664e6aaca7d65dd0475f96.json",
+      "conversions": [
+        {
+          "quantity": 1,
+          "unit": "tsp",
+          "grams": 7.0,
+          "basePortionId": "85265",
+          "derivation": "Derived: USDA 1 tbsp = 21 g (portion 85265) divided by 3 tsp per tbsp."
+        },
+        {
+          "quantity": 0.25,
+          "unit": "cup",
+          "grams": 84.75,
+          "basePortionId": "85264",
+          "derivation": "Derived: USDA 1 cup = 339 g (portion 85264) divided by 4."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars."
+      },
+      "description": "Honey",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/169640/nutrients",
+      "portions": [
+        {
+          "id": "85264",
+          "fdc_id": "169640",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup",
+          "gram_weight": "339.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "85265",
+          "fdc_id": "169640",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "tbsp",
+          "gram_weight": "21.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "85266",
+          "fdc_id": "169640",
+          "seq_num": "3",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "packet (0.5 oz)",
+          "gram_weight": "14.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 304.0,
+          "unit": "KCAL",
+          "sourceRowId": "1458583"
+        },
+        "1003": {
+          "amount": 0.3,
+          "unit": "G",
+          "sourceRowId": "1458556"
+        },
+        "1005": {
+          "amount": 82.4,
+          "unit": "G",
+          "sourceRowId": "1458582"
+        },
+        "1004": {
+          "amount": 0.0,
+          "unit": "G",
+          "sourceRowId": "1458581"
+        },
+        "1079": {
+          "amount": 0.2,
+          "unit": "G",
+          "sourceRowId": "1458558"
+        },
+        "2000": {
+          "amount": 82.12,
+          "unit": "G",
+          "sourceRowId": "1458604"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 6.0,
+          "unit": "MG",
+          "sourceRowId": "1458585"
+        },
+        "1089": {
+          "amount": 0.42,
+          "unit": "MG",
+          "sourceRowId": "1458559"
+        },
+        "1090": {
+          "amount": 2.0,
+          "unit": "MG",
+          "sourceRowId": "1458560"
+        },
+        "1092": {
+          "amount": 52.0,
+          "unit": "MG",
+          "sourceRowId": "1458586"
+        },
+        "1093": {
+          "amount": 4.0,
+          "unit": "MG",
+          "sourceRowId": "1458562"
+        },
+        "1162": {
+          "amount": 0.5,
+          "unit": "MG",
+          "sourceRowId": "1458566"
+        },
+        "1175": {
+          "amount": 0.024,
+          "unit": "MG",
+          "sourceRowId": "1458590"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1458570"
+        },
+        "1177": {
+          "amount": 2.0,
+          "unit": "UG",
+          "sourceRowId": "1458569"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    }
+  ]
+}

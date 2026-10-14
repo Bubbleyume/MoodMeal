@@ -4,7 +4,7 @@ Prior source-review classifications; only batch 02 was re-read against CSVs in t
 
 ## Candidate
 
-- Honey (5 recipe uses): 1 tsp = 7 g derived from native 21 g/tbsp; 1/4 cup = 84.75 g from native 339 g/cup. Preserve native measures rather than forcing density consistency.
+- Honey (5 recipe uses) — **approved 2026-10-14 (H1–H3, see README); no recipe totals published**: 1 tsp = 7 g derived from native 21 g/tbsp; 1/4 cup = 84.75 g from native 339 g/cup. Preserve native measures rather than forcing density consistency.
 - Lemon juice (2 recipe uses): 1 tsp = 244/48 = 5.0833 g using US 48 tsp/cup and native cup; weigh for precision.
 - Feta cheese (1 recipe uses): 2 tbsp = 18.75 g derived from 150 g/cup with 16 tbsp/cup; weigh if cup packing differs.
 - Lime juice (1 recipe uses): 1 tbsp = 242/16 = 15.125 g derived from native cup.
