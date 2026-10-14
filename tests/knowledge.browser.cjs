@@ -211,6 +211,17 @@ const { zipSync, strToU8 } = require("fflate");
     await page.goto(baseURL + "/recipe/recipe-gentle-avocado-toast");
     await page.getByText(/Nutrition totals: not calculated/).waitFor();
     assert.equal(await page.locator('[aria-label="Estimated nutrition per serving"]').count(), 0);
+    // A Sick check-in maps to Hydration, which no pilot nutrient matches.
+    await page.evaluate(() => localStorage.setItem("moodmeal:draftMood", JSON.stringify({
+      emotionId: "sick", intensity: 5, note: "", submittedAt: new Date().toISOString(),
+    })));
+    await page.goto(baseURL + "/recipe/recipe-rainbow-fruit-skewers");
+    await page.getByText("No verified nutrient in it matches your hydration food picks yet.").waitFor();
+    const other = page.getByTestId("other-verified-nutrients");
+    assert((await other.innerText()).includes("not matched to your Hydration picks"));
+    assert(!(await page.getByText(/This recipe provides/).count()));
+    assert((await page.locator('[aria-label="Estimated nutrition per serving"]').innerText()).includes("85 kcal"));
+    await page.evaluate(() => localStorage.removeItem("moodmeal:draftMood"));
     console.log("BROWSER ERRORS", errors);
     assert.deepEqual(errors, []);
     console.log(

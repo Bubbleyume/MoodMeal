@@ -4,7 +4,7 @@ import { NUTRIENTS, GOALS } from "../data/knowledge";
 import type { Provenance, GoalId } from "../types/library";
 import type { Food, Meal } from "../types";
 import type { RecipeNutritionEstimate } from "../types/nutrition";
-import { explainPick, displayedNutrients } from "../lib/recommendations";
+import { explainPick, nutrientDisplay } from "../lib/recommendations";
 export function Sources({ sources }: { sources: Provenance[] }) {
   const unique = sources.filter(
     (s, i) =>
@@ -103,9 +103,19 @@ export function PickExplanation({
   nutritionEstimate?: RecipeNutritionEstimate | null;
 }) {
   const explanation = explainPick(item, goals, nutritionEstimate);
+  const { matched, otherVerified } = nutrientDisplay(item, goals);
   return (
     <>
-      <NutrientChips ids={displayedNutrients(item, goals)} />
+      {matched.length > 0 && <NutrientChips ids={matched} />}
+      {otherVerified.length > 0 && (
+        <div className="mt-3" data-testid="other-verified-nutrients">
+          <p className="text-xs text-slate-500">
+            Other verified nutrients, not matched to your{" "}
+            {goals.map((g) => GOALS[g].label).join(" / ")} picks:
+          </p>
+          <NutrientChips ids={otherVerified} />
+        </div>
+      )}
       <div className="mt-3 text-sm">
         <h4 className="font-semibold">
           {"ingredients" in item ? "Why this meal?" : "Why this pick?"}

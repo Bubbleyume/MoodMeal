@@ -9,6 +9,8 @@ import {
   goalsForMood,
   explainPick,
   displayedNutrients,
+  nutrientDisplay,
+  verifiedNutrients,
   USDA_NUTRIENT_IDS,
 } from "../src/lib/recommendations";
 import type { RecipeNutritionEstimate } from "../src/types/nutrition";
@@ -379,7 +381,57 @@ test("missing, zero and unmapped nutrition falls back to safe goal-based wording
   assert.equal(explainPick(item, goals, undefined), whyPick(item, goals));
   assert.equal(explainPick(meal("cooling-cucumber-salad"), ["hydration"], partial), whyPick(meal("cooling-cucumber-salad"), ["hydration"]));
   const empty = {...item, nutrientFacts: []};
-  assert.match(explainPick(empty, goals, partial), /^A meal idea to explore\. No verified nutrient match/);
+  assert.equal(explainPick(empty, goals, partial), "A meal idea to explore. No verified nutrient in it matches your calm & grounded food picks yet.");
   for (const m of MEALS) for (const g of ALL_GOALS) assert(!FORBIDDEN.test(explainPick(m, [g], null)));
+});
+const labelIn = (text: string, id: string) =>
+  new RegExp(`\\b${NUTRIENTS[id].label.replace(/^./, c => c.toLowerCase())}\\b`).test(text);
+test("goals with matching nutrients show only goal-matched chips and cite exactly those", () => {
+  let checked = 0;
+  for (const item of [...FOODS, ...MEALS]) for (const g of ALL_GOALS) {
+    const goals = [g];
+    const { matched, otherVerified } = nutrientDisplay(item, goals);
+    if (!matched.length) continue;
+    checked++;
+    assert.deepEqual(matched, matchingNutrients(item, goals).slice(0, 3));
+    assert.deepEqual(otherVerified, []);
+    assert(matched.every(id => GOALS[g].nutrients.includes(id)));
+    const text = whyPick(item, goals);
+    for (const id of Object.keys(NUTRIENTS)) assert.equal(labelIn(text, id), matched.includes(id), `${item.id}/${g}/${id}: ${text}`);
+    assert(text.includes(GOALS[g].label.toLowerCase()));
+  }
+  assert(checked > 50, `only ${checked} matched combinations`);
+});
+test("goals without matching nutrients label other verified chips and name the goal", () => {
+  let checked = 0;
+  for (const item of [...FOODS, ...MEALS]) for (const g of ALL_GOALS) {
+    const goals = [g];
+    const { matched, otherVerified } = nutrientDisplay(item, goals);
+    if (matched.length) continue;
+    checked++;
+    assert(otherVerified.every(id => verifiedNutrients(item).includes(id) && !GOALS[g].nutrients.includes(id)));
+    const text = explainPick(item, goals, null);
+    assert.match(text, /^(A meal idea|An ingredient) to explore\. No verified nutrient in it matches your .+ food picks yet\.$/);
+    assert(text.includes(GOALS[g].label.toLowerCase()));
+    for (const id of Object.keys(NUTRIENTS)) assert(!labelIn(text, id), `${item.id}/${g}: ${text}`);
+  }
+  assert(checked > 10, `only ${checked} unmatched combinations`);
+  const skewers = meal("rainbow-fruit-skewers");
+  const estimate = RECIPES.find(r => r.id === PILOT_RECIPE_ID)!.nutritionEstimate;
+  assert.deepEqual(nutrientDisplay(skewers, ["hydration"]).matched, []);
+  assert(nutrientDisplay(skewers, ["hydration"]).otherVerified.length > 0);
+  assert.equal(explainPick(skewers, ["hydration"], estimate), "A meal idea to explore. No verified nutrient in it matches your hydration food picks yet.");
+  assert.match(explainPick(skewers, ["balanced-nutrition"], estimate), /about 85 mg of vitamin C and about 3\.5 g of fiber per serving/);
+});
+test("unverified nutrient facts never appear as chips for any goal", () => {
+  const item = meal("salmon-quinoa-bowl");
+  const draft = {...item, nutrientFacts: item.nutrientFacts.map(f => ({...f, reviewStatus: "draft" as const}))};
+  const unsourced = {...item, nutrientFacts: item.nutrientFacts.map(f => ({...f, sourceProvenance: f.sourceProvenance.map(s => ({...s, evidenceStatus: "unverified" as const}))}))};
+  for (const x of [draft, unsourced]) for (const g of ALL_GOALS) {
+    assert.deepEqual(nutrientDisplay(x, [g]), {matched: [], otherVerified: []});
+    assert.match(whyPick(x, [g]), /^A meal idea to explore/);
+  }
+  const multi = nutrientDisplay(item, ["hydration", "steady-energy"]);
+  assert(multi.matched.length > 0 && multi.otherVerified.length === 0);
 });
 console.log(`${checks} knowledge-system tests passed`);
