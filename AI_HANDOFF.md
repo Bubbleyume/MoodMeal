@@ -1,5 +1,48 @@
 # MoodMeal AI Handoff
 
+## FatSecret checkpoint and resumed USDA approval review
+
+Committed only docs/fatsecret (client, tests, README, ignore rule) as d733311 on knowledge-system-foundation. User confirmed live validation; no live response or comparison data persisted. Licensing restrictions remain unchanged. Unrelated dirty files and AGENTS.md preserved; other branches unchanged, no push/merge. Revalidated 21 saved USDA candidate IDs and comparison summaries offline for the same 15-label batch; 15 clean comparisons and six source-review flags remain. NEXT-BATCH-REVIEW.md now includes an actionable approval package, current frequency checks, corrected historical seasoning context and conditional Chamomile & Sweet Potato Toast pilot recommendation. No new recipe eligible yet, no live nutrition changes. All relevant automated checks pass.
+
+
+## FatSecret precision comparison
+
+Added Decimal rounding-interval comparisons preserving raw numeric strings/precision, including JSON numeric lexemes. Serving intervals scale to 100 g using fixed declared gram weight; no blanket percentage tolerance. Nutrient statuses: equivalent-within-precision, meaningful-discrepancy, missing-or-incomparable, with separate exactMatch and displayed precision assumptions. Portion discrepancies and identity-review requirements unchanged. Twenty synthetic FatSecret tests, 14 USDA tests, 19 knowledge tests and typecheck passed. No live API request/data persistence or approved USDA changes; local recheck pending. Follow-up remains uncommitted on knowledge-system-foundation.
+
+## FatSecret Tk lifecycle repair
+
+Reproduced the exact ttk ThemeChanged error from immediately destroying a probe root then creating a second Tk root. Replaced probe/display roots with one lifetime-managed root. Guarded manual/timeout/finally close cancels callbacks and destroys once; 15-minute protection retained. No real FatSecret data persisted or fetched. Source-specific gram comparisons remain separate; synthetic conflict test added. Real Tk manual/timeout subprocess regressions included. USDA data and all branches unchanged; follow-up edits uncommitted.
+
+## Temporary FatSecret development client
+
+Added docs/fatsecret/fatsecret_review.py, synthetic tests, README and cache ignore rule. Separate source IDs; memory-only OAuth token/response/comparison; native attributed Tk display expires after 15 minutes; no file/report export, no data stdout, no publication path. Basic scope default, premier only when explicitly supplied and permitted. Registered IP/account entitlement still required. Eleven synthetic tests, 14 USDA tests, 19 knowledge tests, typecheck and build pass. No authenticated FatSecret call performed; user local testing pending. USDA runtime/calculations unchanged. Licensing questions drafted in chat but not sent; written clarification still required for recommendations, long-term storage and publication. New changes uncommitted on knowledge-system-foundation; other work preserved.
+
+## Next batch API review completed
+
+All 21 candidate IDs for 15 labels were retrieved by the user locally. Offline comparison completed: 15 clean nutritional comparisons; six flagged (almond butter duplicate phytosterol, almonds/avocado unknown phytosterol records, rolled-oats RACC portion, whole/low-fat Greek-yogurt water precision differences). NEXT-BATCH-REVIEW.md and next-batch-review.json now include findings and actual retrieval dates; pending-review/next-batch-comparison.json retains comparisons. Honey is ready for approval, other recipe identities/measurements remain conditional. No new recipe fully eligible, no imports/publication; stop for user approval. Fourteen Python tests, 19 knowledge tests and typecheck pass. API checkpoint remains ae01366; follow-up work uncommitted.
+
+## Candidate fetch recovery
+
+User batch saved FDC 168482 and 168483, then stopped at 168588 with duplicate nutrient IDs. Tool now preserves duplicate rows/raw response, leaves the normalized ambiguous nutrient null and flags manual review; comparisons cannot report clean when duplicates exist. Batch script now skips existing pending reports. Fourteen Python tests, 19 knowledge tests and typecheck passed. User must rerun the same local script to retrieve the remaining evidence. No approved records or branches changed; fixes uncommitted.
+
+## API checkpoint and next review batch
+
+Checkpoint ae01366 contains only docs/usda/fdc_review.py, test_fdc_review.py, API-REVIEW.md and .gitignore. Existing explanation changes, batch-02 work and AGENTS.md remain uncommitted. Twelve Python tests, 19 knowledge tests, typecheck and build passed before commit; master and avatar-redesign-phase-2 unchanged. NEXT-BATCH-REVIEW.md and next-batch-review.json prepare 15 labels/21 candidate IDs using retained CSV evidence. API retrieval dates remain null pending the user running fetch-next-batch.ps1 locally; do not describe these as API-verified. No new recipe is fully eligible yet. Do not import/publish before review approval.
+
+## USDA comparison classification — 2026-10-14
+
+fdc_review.py now groups differences and reports material/informational/missing-value/portion/preparation counts, clean nutrition versus exact compared-fields match. Twelve Python tests pass. Saved live blueberry report reprocessed offline into pending-review/20261014T073837Z-407f7dbb49aa40c19283499dad9b50a9.json; original evidence retained. Result: 13 informational fields (12 empty-category fields and one equivalent publication-date format), zero material differences. No approved nutrition files changed, no API request or credential access, no publication or branch changes. Existing knowledge tests, typecheck, avatar checks and build passed.
+
+## Local USDA API review tool
+
+Added docs/usda/fdc_review.py, test_fdc_review.py, API-REVIEW.md and a local .gitignore for pending-review and Python cache files. Read-only search/exact-ID fetch, process-environment credentials, sanitized errors, pending-only reports and optional comparison against retained pilot CSV records. No runtime imports or publication path. Nine mocked Python tests, 19 knowledge tests and typecheck passed. Live API testing deliberately NOT performed; user must run the PowerShell command in API-REVIEW.md locally for FDC 171711. Existing changes and branches preserved; additions are uncommitted.
+
+## 2026-10-14 follow-up: checkpoint and batch 02
+
+Pilot committed as `f30094a` on knowledge-system-foundation after typecheck, 19 knowledge tests, avatar checks, build and browser checks passed. Other branch refs unchanged; no push. The following follow-up edits remain uncommitted: natural meal explanations and documentation-only USDA batch 02. The pilot explanation now uses its verified fiber estimate without adding health claims. Nutrition cards and disclosures unchanged.
+
+Batch 02 re-read 17 USDA records for the top 12 remaining labels directly from the supplied CSVs, retaining descriptions, portion rows, all nutrient definitions/units and nulls. See docs/usda/BATCH-02-REVIEW.md, batch-02-review.json and batch-02-source-records.json. Honey is a clear candidate awaiting approval; other items need identity, preparation or measurement decisions. No additional recipe is eligible yet. All 61 labels are triaged in docs/usda/REMAINING-TRIAGE.md. Runtime source data was not expanded. Same automated checks passed after wording changes; browser errors empty. Pre-existing AGENTS.md remains untracked and untouched.
+
 ## 2026-10-14 USDA pilot integration checkpoint
 
 Current checkout confirmed: `knowledge-system-foundation`, HEAD `3292282`. It is one checkpoint ahead of `avatar-redesign-phase-2` (`7edaaf7`); master remains `7d49790`. No branch switching, resets, merges, commits or pushes performed. Pilot changes below are uncommitted. Pre-existing untracked AGENTS.md was preserved. Older branch/worktree descriptions below are historical.
@@ -136,3 +179,9 @@ Do not reverse these without explicit instruction.
 - Keep this file concise and current.
 - Treat GitHub as the source of truth for the current codebase. **Exception right now:** significant local work is not yet pushed (see Current Git State). Check `git status` before assuming GitHub is complete.
 - Run `npm run typecheck`, `npm run test:avatars` and `npm run test:knowledge` before handing off.
+
+
+### Temporary nutrition review interface (2026-10-14)
+- FatSecret review now has source IDs/preparation overview, nutrient and serving tables, selected-basis counts, expandable technical details and an expiration countdown. Data remains memory-only; USDA records and publication logic are unchanged.
+- Missing amounts take precedence over unit checks. Unknown units are distinct from incompatible known units.
+- Validation: 22 FatSecret tests including real Tk UI/closure, 14 USDA tests, 19 knowledge tests, avatar tests, TypeScript and build pass. Build reports outdated Browserslist data. No authenticated requests, branch changes or commits for this interface work.

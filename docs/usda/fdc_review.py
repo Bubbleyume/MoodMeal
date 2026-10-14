@@ -47,22 +47,32 @@ def normalize(food, expected=None):
     description = food.get('description') or ''
     detected = states(description)
     nutrients = {}
+    duplicate_rows = {}
     for row in food.get('foodNutrients', []):
         n = row.get('nutrient', {})
         if n.get('id') is None:
             continue
         key = str(n['id'])
-        if key in nutrients:
-            raise ReviewError('Duplicate nutrient ID; manual review required.')
-        nutrients[key] = {'name': n.get('name'), 'unit': unit(n.get('unitName')),
+        value = {'name': n.get('name'), 'unit': unit(n.get('unitName')),
                           'amountPer100g': number(row.get('amount')), 'sourceRowId': row.get('id'),
                           'derivation': row.get('foodNutrientDerivation')}
+        if key in nutrients:
+            if key not in duplicate_rows:
+                duplicate_rows[key] = [nutrients[key].copy()]
+            duplicate_rows[key].append(value)
+            nutrients[key] = {'name':None, 'unit':None, 'amountPer100g':None,
+                              'sourceRowId':None, 'derivation':None,
+                              'resolution':'duplicate-id-manual-review-required'}
+        else:
+            nutrients[key] = value
     return {'fdcId': str(food.get('fdcId')), 'description': description,
             'dataType': food.get('dataType'), 'publicationDate': food.get('publicationDate'),
             'preparationStates': detected or None, 'expectedPreparation': expected,
             'preparationCheck': ('not-requested' if not expected else
                                  'description-consistent' if expected in detected else 'manual-review-required'),
-            'nutrients': nutrients,
+            'nutrients': nutrients, 'duplicateNutrientRows':duplicate_rows,
+            'verificationIssues':[{'type':'duplicate-nutrient-id', 'nutrientId':nid,
+                                   'rowCount':len(rows)} for nid,rows in duplicate_rows.items()],
             'portions': [{'id':str(p.get('id')), 'amount':number(p.get('amount')),
                           'gramWeight':number(p.get('gramWeight')), 'modifier':p.get('modifier') or None,
                           'portionDescription':p.get('portionDescription') or None,
@@ -130,6 +140,11 @@ def compare(record, csv_record):
             group = 'metadata'
         difference['category'] = group
         groups[group].append(difference)
+    for nid, rows in record.get('duplicateNutrientRows', {}).items():
+        issue = {'field':f'nutrient.{nid}.duplicateRows', 'api':rows,
+                 'csv':old.get(nid), 'category':'material-nutrient'}
+        differences.append(issue)
+        groups['material-nutrient'].append(issue)
     informational = len(groups['metadata']) + len(groups['empty-category'])
     material = len(differences) - informational
     summary = {'totalDifferences':len(differences), 'materialDifferences':material,
@@ -177,6 +192,19 @@ def save(document, key):
         f.write(encoded)
     return path
 
+def already_saved(fdc_id):
+    for path in PENDING.glob('*.json'):
+        try:
+            data = json.loads(path.read_text(encoding='utf-8'))
+            if (str(data.get('rawResponse', {}).get('fdcId')) == str(fdc_id)
+                    and str(data.get('record', {}).get('fdcId')) == str(fdc_id)
+                    and data.get('reviewStatus') == 'pending-review'
+                    and data.get('approved') is False and data.get('publishable') is False):
+                return True
+        except (ValueError, OSError, AttributeError):
+            continue
+    return False
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='action', required=True)
@@ -187,9 +215,13 @@ def main():
     fetch.add_argument('fdc_id', type=int)
     fetch.add_argument('--expected-state', choices=['raw','cooked','dried','roasted','boiled','baked','fried','canned','frozen'])
     fetch.add_argument('--compare-pilot', action='store_true')
+    fetch.add_argument('--skip-existing', action='store_true', help='Skip IDs already saved as pending reports; not an approval check.')
     args = parser.parse_args()
     key = os.environ.get('FDC_API_KEY', '').strip()
     try:
+        if args.action == 'fetch' and args.skip_existing and already_saved(args.fdc_id):
+            print('Existing pending report found; skipped fetch. Review is still required.')
+            return 0
         if not key:
             raise ReviewError('FDC_API_KEY is missing from this process environment. Start a local terminal with the variable available.')
         if args.action == 'search':
@@ -214,6 +246,8 @@ def main():
                          'reviewStatus':'pending-review', 'approved':False, 'publishable':False})
         path = save(document, key)
         print('Saved pending-review report: ' + str(path))
+        if document.get('record', {}).get('verificationIssues'):
+            print('Saved with duplicate nutrient rows requiring manual review; no value was selected.')
         if 'comparison' in document:
             print(json.dumps(document['comparison']['summary'], indent=2))
     except ReviewError as exc:

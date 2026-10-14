@@ -196,6 +196,7 @@ const { zipSync, strToU8 } = require("fflate");
       await page.goto(baseURL + "/recipe/recipe-rainbow-fruit-skewers");
       const nutrition = page.locator('[aria-label="Estimated nutrition per serving"]');
       await nutrition.waitFor();
+      await page.getByText(/The fruit provides fiber—about 3.5 g per serving/).waitFor();
       for (const value of ["85 kcal", "1.2 g", "21.7 g", "0.4 g", "3.5 g", "Unknown"])
         assert((await nutrition.innerText()).includes(value), value);
       await nutrition.getByText("Portions & calculation", { exact: true }).click();

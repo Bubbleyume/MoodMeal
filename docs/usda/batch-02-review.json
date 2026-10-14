@@ -1,0 +1,638 @@
+[
+  {
+    "ingredient": "Honey",
+    "recipeUseCount": 5,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [
+        "169640"
+      ],
+      "status": "Candidate",
+      "state": "Ready-to-use",
+      "note": "1 tsp = 7 g derived from native 21 g/tbsp; 1/4 cup = 84.75 g from native 339 g/cup. Preserve native measures rather than forcing density consistency.",
+      "uses": [
+        {
+          "recipeId": "recipe-warm-oatmeal-berries",
+          "quantity": "1 tsp"
+        },
+        {
+          "recipeId": "recipe-calming-kefir-smoothie",
+          "quantity": "1 tsp"
+        },
+        {
+          "recipeId": "recipe-green-tea-oat-bites",
+          "quantity": "1/4 cup"
+        },
+        {
+          "recipeId": "recipe-immune-boost-smoothie",
+          "quantity": "1 tsp"
+        },
+        {
+          "recipeId": "recipe-berry-yogurt-parfait",
+          "quantity": "1 tsp"
+        }
+      ],
+      "proposedDefaultFdcId": "169640",
+      "reviewStatus": "pending-human-approval",
+      "sourceVerificationStatus": "source-records-rechecked",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [
+        {
+          "fdcId": "169640",
+          "description": "Honey",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "85264",
+            "85265",
+            "85266"
+          ]
+        }
+      ],
+      "ambiguity": "1 tsp = 7 g derived from native 21 g/tbsp; 1/4 cup = 84.75 g from native 339 g/cup. Preserve native measures rather than forcing density consistency."
+    },
+    "group": "verified candidate, approval pending",
+    "verification": "Food description, source portions and nutrient rows re-read directly from supplied CSVs; units retained; missing amounts null"
+  },
+  {
+    "ingredient": "Banana",
+    "recipeUseCount": 4,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [
+        "173944"
+      ],
+      "status": "Review",
+      "state": "Raw peeled input",
+      "note": "Size unspecified. Medium reference = 118 g, half = 59 g if adopted. Pancakes cook the raw input; smoothies use it raw.",
+      "uses": [
+        {
+          "recipeId": "recipe-chamomile-comfort-toast",
+          "quantity": "1/2, sliced"
+        },
+        {
+          "recipeId": "recipe-calming-kefir-smoothie",
+          "quantity": "1/2"
+        },
+        {
+          "recipeId": "recipe-tropical-energy-smoothie",
+          "quantity": "1/2"
+        },
+        {
+          "recipeId": "recipe-sunshine-pancakes",
+          "quantity": "1, mashed"
+        }
+      ],
+      "proposedDefaultFdcId": "173944",
+      "reviewStatus": "pending-human-approval",
+      "sourceVerificationStatus": "source-records-rechecked",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [
+        {
+          "fdcId": "173944",
+          "description": "Bananas, raw",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "93511",
+            "93512",
+            "93513",
+            "93514",
+            "93515",
+            "93516",
+            "93517",
+            "93518"
+          ]
+        }
+      ],
+      "ambiguity": "Size unspecified. Medium reference = 118 g, half = 59 g if adopted. Pancakes cook the raw input; smoothies use it raw."
+    },
+    "group": "ambiguous match or preparation/portion",
+    "verification": "Food description, source portions and nutrient rows re-read directly from supplied CSVs; units retained; missing amounts null"
+  },
+  {
+    "ingredient": "Almonds",
+    "recipeUseCount": 3,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [
+        "170567"
+      ],
+      "status": "Review",
+      "state": "Raw kernels assumed",
+      "note": "Confirm raw/roasted and salted state. Whole, sliced, slivered and ground cup weights differ; chopped tbsp is not an exact listed portion. 1/4 cup whole would be 35.75 g only if whole is intended.",
+      "uses": [
+        {
+          "recipeId": "recipe-turkey-lettuce-wraps",
+          "quantity": "1 tbsp, chopped"
+        },
+        {
+          "recipeId": "recipe-loaded-popcorn-mix",
+          "quantity": "2 tbsp"
+        },
+        {
+          "recipeId": "recipe-dark-chocolate-trail-mix",
+          "quantity": "1/4 cup"
+        }
+      ],
+      "proposedDefaultFdcId": "170567",
+      "reviewStatus": "pending-human-approval",
+      "sourceVerificationStatus": "source-records-rechecked",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [
+        {
+          "fdcId": "170567",
+          "description": "Nuts, almonds",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "86863",
+            "86864",
+            "86865",
+            "86866",
+            "86867",
+            "86868"
+          ]
+        }
+      ],
+      "ambiguity": "Confirm raw/roasted and salted state. Whole, sliced, slivered and ground cup weights differ; chopped tbsp is not an exact listed portion. 1/4 cup whole would be 35.75 g only if whole is intended."
+    },
+    "group": "ambiguous match or preparation/portion",
+    "verification": "Food description, source portions and nutrient rows re-read directly from supplied CSVs; units retained; missing amounts null"
+  },
+  {
+    "ingredient": "Brown rice",
+    "recipeUseCount": 3,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [
+        "169704",
+        "168875"
+      ],
+      "status": "Review",
+      "state": "Cooked",
+      "note": "Recipe explicitly measures cooked rice. Long-grain 3/4 cup = 151.5 g; medium-grain = 146.25 g. Choose grain type; never use a dry-rice record with cooked cups.",
+      "uses": [
+        {
+          "recipeId": "recipe-energizing-power-bowl",
+          "quantity": "3/4 cup cooked"
+        },
+        {
+          "recipeId": "recipe-iron-rich-stir-fry",
+          "quantity": "3/4 cup cooked"
+        },
+        {
+          "recipeId": "recipe-brown-rice-veggie-bowl",
+          "quantity": "3/4 cup cooked"
+        }
+      ],
+      "proposedDefaultFdcId": "169704",
+      "reviewStatus": "pending-human-approval",
+      "sourceVerificationStatus": "source-records-rechecked",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [
+        {
+          "fdcId": "169704",
+          "description": "Rice, brown, long-grain, cooked (Includes foods for USDA's Food Distribution Program)",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "85378"
+          ]
+        },
+        {
+          "fdcId": "168875",
+          "description": "Rice, brown, medium-grain, cooked (Includes foods for USDA's Food Distribution Program)",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "83925"
+          ]
+        }
+      ],
+      "ambiguity": "Recipe explicitly measures cooked rice. Long-grain 3/4 cup = 151.5 g; medium-grain = 146.25 g. Choose grain type; never use a dry-rice record with cooked cups."
+    },
+    "group": "ambiguous match or preparation/portion",
+    "verification": "Food description, source portions and nutrient rows re-read directly from supplied CSVs; units retained; missing amounts null"
+  },
+  {
+    "ingredient": "Egg",
+    "recipeUseCount": 3,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [
+        "171287",
+        "173424"
+      ],
+      "status": "Review",
+      "state": "Raw input; hard-boiled for toast",
+      "note": "Choose size; large raw egg = 50 g edible without shell. Pancake/hash use raw ingredient weights before cooking; toast uses hard-boiled record (large 50 g). Power bowl cooking method remains unspecified.",
+      "uses": [
+        {
+          "recipeId": "recipe-energizing-power-bowl",
+          "quantity": "1"
+        },
+        {
+          "recipeId": "recipe-cozy-sweet-potato-hash",
+          "quantity": "2"
+        },
+        {
+          "recipeId": "recipe-gentle-avocado-toast",
+          "quantity": "1"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "pending-human-approval",
+      "sourceVerificationStatus": "source-records-rechecked",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [
+        {
+          "fdcId": "171287",
+          "description": "Egg, whole, raw, fresh",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "88374",
+            "88375",
+            "88376",
+            "88377",
+            "88378",
+            "88379"
+          ]
+        },
+        {
+          "fdcId": "173424",
+          "description": "Egg, whole, cooked, hard-boiled",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "92498",
+            "92499",
+            "92500"
+          ]
+        }
+      ],
+      "ambiguity": "Choose size; large raw egg = 50 g edible without shell. Pancake/hash use raw ingredient weights before cooking; toast uses hard-boiled record (large 50 g). Power bowl cooking method remains unspecified."
+    },
+    "group": "ambiguous match or preparation/portion",
+    "verification": "Food description, source portions and nutrient rows re-read directly from supplied CSVs; units retained; missing amounts null"
+  },
+  {
+    "ingredient": "Pineapple",
+    "recipeUseCount": 3,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [
+        "169124"
+      ],
+      "status": "Review",
+      "state": "Raw edible flesh",
+      "note": "1 cup chunks = 165 g, half = 82.5 g. Confirm diced/cubed treated as chunks; packing can differ. Exclude core/skin; do not substitute canned syrup fruit.",
+      "uses": [
+        {
+          "recipeId": "recipe-tropical-energy-smoothie",
+          "quantity": "1 cup"
+        },
+        {
+          "recipeId": "recipe-quinoa-fruit-salad",
+          "quantity": "1/2 cup, diced"
+        },
+        {
+          "recipeId": "recipe-rainbow-fruit-skewers",
+          "quantity": "1 cup, cubed"
+        }
+      ],
+      "proposedDefaultFdcId": "169124",
+      "reviewStatus": "pending-human-approval",
+      "sourceVerificationStatus": "source-records-rechecked",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [
+        {
+          "fdcId": "169124",
+          "description": "Pineapple, raw, all varieties",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "84287",
+            "84288",
+            "84289",
+            "84290",
+            "84291"
+          ]
+        }
+      ],
+      "ambiguity": "1 cup chunks = 165 g, half = 82.5 g. Confirm diced/cubed treated as chunks; packing can differ. Exclude core/skin; do not substitute canned syrup fruit."
+    },
+    "group": "ambiguous match or preparation/portion",
+    "verification": "Food description, source portions and nutrient rows re-read directly from supplied CSVs; units retained; missing amounts null"
+  },
+  {
+    "ingredient": "Pumpkin seeds",
+    "recipeUseCount": 3,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [
+        "170556"
+      ],
+      "status": "Review",
+      "state": "Dried shelled kernels assumed",
+      "note": "Confirm kernels, raw/dried vs roasted and salt. Conditional 1 tbsp = 8.0625 g and 2 tbsp = 16.125 g from 129 g/cup. No shells.",
+      "uses": [
+        {
+          "recipeId": "recipe-brown-rice-veggie-bowl",
+          "quantity": "2 tbsp"
+        },
+        {
+          "recipeId": "recipe-crunchy-veggie-snack-plate",
+          "quantity": "1 tbsp"
+        },
+        {
+          "recipeId": "recipe-magnesium-boost-bowl",
+          "quantity": "2 tbsp"
+        }
+      ],
+      "proposedDefaultFdcId": "170556",
+      "reviewStatus": "pending-human-approval",
+      "sourceVerificationStatus": "source-records-rechecked",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [
+        {
+          "fdcId": "170556",
+          "description": "Seeds, pumpkin and squash seed kernels, dried",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "86847",
+            "86848"
+          ]
+        }
+      ],
+      "ambiguity": "Confirm kernels, raw/dried vs roasted and salt. Conditional 1 tbsp = 8.0625 g and 2 tbsp = 16.125 g from 129 g/cup. No shells."
+    },
+    "group": "ambiguous match or preparation/portion",
+    "verification": "Food description, source portions and nutrient rows re-read directly from supplied CSVs; units retained; missing amounts null"
+  },
+  {
+    "ingredient": "Salt & pepper",
+    "recipeUseCount": 3,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [
+        "173468",
+        "170931"
+      ],
+      "status": "Hold",
+      "state": "Separate dry seasonings",
+      "note": "Split salt and pepper with separate measured amounts. To taste is unresolved; black pepper and table salt are candidate types only.",
+      "uses": [
+        {
+          "recipeId": "recipe-salmon-quinoa-bowl",
+          "quantity": "to taste"
+        },
+        {
+          "recipeId": "recipe-cozy-sweet-potato-hash",
+          "quantity": "to taste"
+        },
+        {
+          "recipeId": "recipe-steak-and-greens",
+          "quantity": "to taste"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "pending-human-approval",
+      "sourceVerificationStatus": "source-records-rechecked",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [
+        {
+          "fdcId": "173468",
+          "description": "Salt, table",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "92594",
+            "92595",
+            "92596",
+            "92597"
+          ]
+        },
+        {
+          "fdcId": "170931",
+          "description": "Spices, pepper, black",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "87560",
+            "87561",
+            "87562",
+            "87563"
+          ]
+        }
+      ],
+      "ambiguity": "Split salt and pepper with separate measured amounts. To taste is unresolved; black pepper and table salt are candidate types only."
+    },
+    "group": "unresolved measurement",
+    "verification": "Food description, source portions and nutrient rows re-read directly from supplied CSVs; units retained; missing amounts null"
+  },
+  {
+    "ingredient": "Sweet potato",
+    "recipeUseCount": 3,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [
+        "168482",
+        "168483"
+      ],
+      "status": "Review",
+      "state": "Raw input in toast/hash; roasted wording in power bowl",
+      "note": "Need size, skin treatment and point of measurement. Raw reference potato 130 g; cooked medium flesh 114 g. Half roasted is ambiguous because instructions start by roasting it. Do not apply cooked values to raw grams.",
+      "uses": [
+        {
+          "recipeId": "recipe-energizing-power-bowl",
+          "quantity": "1/2, roasted"
+        },
+        {
+          "recipeId": "recipe-chamomile-comfort-toast",
+          "quantity": "1, sliced lengthwise into 1/4-inch planks"
+        },
+        {
+          "recipeId": "recipe-cozy-sweet-potato-hash",
+          "quantity": "1, diced"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "pending-human-approval",
+      "sourceVerificationStatus": "source-records-rechecked",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [
+        {
+          "fdcId": "168482",
+          "description": "Sweet potato, raw, unprepared (Includes foods for USDA's Food Distribution Program)",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "83166",
+            "83167"
+          ]
+        },
+        {
+          "fdcId": "168483",
+          "description": "Sweet potato, cooked, baked in skin, flesh, without salt",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "83168",
+            "83169",
+            "83170",
+            "83171"
+          ]
+        }
+      ],
+      "ambiguity": "Need size, skin treatment and point of measurement. Raw reference potato 130 g; cooked medium flesh 114 g. Half roasted is ambiguous because instructions start by roasting it. Do not apply cooked values to raw grams."
+    },
+    "group": "ambiguous match or preparation/portion",
+    "verification": "Food description, source portions and nutrient rows re-read directly from supplied CSVs; units retained; missing amounts null"
+  },
+  {
+    "ingredient": "Swiss chard",
+    "recipeUseCount": 3,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [
+        "169991",
+        "170401"
+      ],
+      "status": "Hold",
+      "state": "Raw vs sauteed measurement unresolved",
+      "note": "Steak recipe 2 cups chopped raw can use 72 g. Bowl recipes specify sauteed cups but then instruct sauteing. Boiled/drained 175 g/cup is not sauteed. Specify raw weighed inputs plus oil or a validated cooked sauteed record and weight.",
+      "uses": [
+        {
+          "recipeId": "recipe-steak-and-greens",
+          "quantity": "2 cups, chopped"
+        },
+        {
+          "recipeId": "recipe-brown-rice-veggie-bowl",
+          "quantity": "1 cup, saut\u00e9ed"
+        },
+        {
+          "recipeId": "recipe-magnesium-boost-bowl",
+          "quantity": "2 cups, saut\u00e9ed"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "pending-human-approval",
+      "sourceVerificationStatus": "source-records-rechecked",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [
+        {
+          "fdcId": "169991",
+          "description": "Chard, swiss, raw",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "85834",
+            "85835"
+          ]
+        },
+        {
+          "fdcId": "170401",
+          "description": "Chard, swiss, cooked, boiled, drained, without salt",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "86579"
+          ]
+        }
+      ],
+      "ambiguity": "Steak recipe 2 cups chopped raw can use 72 g. Bowl recipes specify sauteed cups but then instruct sauteing. Boiled/drained 175 g/cup is not sauteed. Specify raw weighed inputs plus oil or a validated cooked sauteed record and weight."
+    },
+    "group": "ambiguous match or preparation/portion",
+    "verification": "Food description, source portions and nutrient rows re-read directly from supplied CSVs; units retained; missing amounts null"
+  },
+  {
+    "ingredient": "Almond butter",
+    "recipeUseCount": 2,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [
+        "168588"
+      ],
+      "status": "Review",
+      "state": "Ready-to-eat",
+      "note": "Confirm plain unsalted. 2 tbsp = 32 g; 1/2 cup = 125 g using separate native portions. Do not replace the cup with 8 tbsp: USDA measures are not exactly additive.",
+      "uses": [
+        {
+          "recipeId": "recipe-chamomile-comfort-toast",
+          "quantity": "2 tbsp"
+        },
+        {
+          "recipeId": "recipe-green-tea-oat-bites",
+          "quantity": "1/2 cup"
+        }
+      ],
+      "proposedDefaultFdcId": "168588",
+      "reviewStatus": "pending-human-approval",
+      "sourceVerificationStatus": "source-records-rechecked",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [
+        {
+          "fdcId": "168588",
+          "description": "Nuts, almond butter, plain, without salt added",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "83375",
+            "83376"
+          ]
+        }
+      ],
+      "ambiguity": "Confirm plain unsalted. 2 tbsp = 32 g; 1/2 cup = 125 g using separate native portions. Do not replace the cup with 8 tbsp: USDA measures are not exactly additive."
+    },
+    "group": "ambiguous match or preparation/portion",
+    "verification": "Food description, source portions and nutrient rows re-read directly from supplied CSVs; units retained; missing amounts null"
+  },
+  {
+    "ingredient": "Avocado",
+    "recipeUseCount": 2,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [
+        "171705"
+      ],
+      "status": "Review",
+      "state": "Raw edible flesh",
+      "note": "Variety/size unspecified. USDA generic fruit = 201 g edible; 1/4 = 50.25 g and 1/2 = 100.5 g only if that reference fruit is adopted.",
+      "uses": [
+        {
+          "recipeId": "recipe-salmon-quinoa-bowl",
+          "quantity": "1/4, sliced"
+        },
+        {
+          "recipeId": "recipe-gentle-avocado-toast",
+          "quantity": "1/2"
+        }
+      ],
+      "proposedDefaultFdcId": "171705",
+      "reviewStatus": "pending-human-approval",
+      "sourceVerificationStatus": "source-records-rechecked",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [
+        {
+          "fdcId": "171705",
+          "description": "Avocados, raw, all commercial varieties",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "89223",
+            "89224",
+            "89225",
+            "89226",
+            "89227"
+          ]
+        }
+      ],
+      "ambiguity": "Variety/size unspecified. USDA generic fruit = 201 g edible; 1/4 = 50.25 g and 1/2 = 100.5 g only if that reference fruit is adopted."
+    },
+    "group": "ambiguous match or preparation/portion",
+    "verification": "Food description, source portions and nutrient rows re-read directly from supplied CSVs; units retained; missing amounts null"
+  }
+]

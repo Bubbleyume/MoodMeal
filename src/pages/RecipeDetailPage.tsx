@@ -54,6 +54,7 @@ export default function RecipeDetailPage() {
           <section className="card">
             <PickExplanation
               item={meal}
+              nutritionEstimate={recipe.nutritionEstimate}
               goals={
                 draft
                   ? goalsForMood(draft.emotionId, draft.intensity)

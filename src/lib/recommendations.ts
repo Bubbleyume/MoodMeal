@@ -56,13 +56,15 @@ export function whyPick(
     return "An ingredient to explore. No verified match to the current support goal is recorded.";
   const matched = ids
     .slice(0, 3)
-    .map((n) => NUTRIENTS[n].label)
-    .join(", ");
+    .map((n) => NUTRIENTS[n].label.toLowerCase());
+  const nutrients = matched.length > 1
+    ? `${matched.slice(0, -1).join(", ")} and ${matched[matched.length - 1]}`
+    : matched[0];
   const basis =
     "ingredients" in item
-      ? "Its ingredients contribute"
-      : "This food contributes";
-  return `${basis} ${matched} — nutrients matched to your ${goals.map((g) => GOALS[g].label).join(" / ")} food picks.`;
+      ? "This meal brings together ingredients that provide"
+      : "This food provides";
+  return `${basis} ${nutrients}. These nutrients are part of your ${goals.map((g) => GOALS[g].label.toLowerCase()).join(" / ")} food picks.`;
 }
 export function browseItems<T extends Food | Meal>(
   items: T[],

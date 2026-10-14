@@ -1,5 +1,7 @@
 # Local USDA API review tool
 
+Duplicate nutrient IDs are now retained in duplicateNutrientRows and rawResponse. Their normalized amount/unit remain null until manual resolution; duplicates explicitly prevent a clean nutritional comparison. Identical duplicates are also held rather than silently collapsed. Fetch --skip-existing resumes a batch using saved pending records; it does not approve them or refresh their data. Omit this flag to fetch a fresh report. Fourteen offline tests cover these behaviors.
+
 ## Classified comparisons
 
 Comparisons retain every field difference and group it into material nutrient, portion, identity/preparation, missing/new value, metadata, or empty-category differences. Only the six explicitly recognized category IDs with matching names, null amounts and no nutrient-row evidence qualify as empty categories. Other null-valued nutrient records are never filtered out.

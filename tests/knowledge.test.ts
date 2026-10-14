@@ -47,7 +47,7 @@ test("all moods and intensities have source-backed matching explanations", () =>
           ids
             .slice(0, 3)
             .every((id) =>
-              whyPick(item, r.goals).includes(NUTRIENTS[id].label),
+              whyPick(item, r.goals).toLowerCase().includes(NUTRIENTS[id].label.toLowerCase()),
             ),
         );
       }

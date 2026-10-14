@@ -3,6 +3,7 @@ import { Link } from "../lib/router";
 import { NUTRIENTS, GOALS } from "../data/knowledge";
 import type { Provenance, GoalId } from "../types/library";
 import type { Food, Meal } from "../types";
+import type { RecipeNutritionEstimate } from "../types/nutrition";
 import { whyPick, matchingNutrients } from "../lib/recommendations";
 export function Sources({ sources }: { sources: Provenance[] }) {
   const unique = sources.filter(
@@ -95,11 +96,17 @@ export function NutrientChips({ ids }: { ids: string[] }) {
 export function PickExplanation({
   item,
   goals = ["balanced-nutrition"],
+  nutritionEstimate,
 }: {
   item: Food | Meal;
   goals?: GoalId[];
+  nutritionEstimate?: RecipeNutritionEstimate | null;
 }) {
   const ids = matchingNutrients(item, goals);
+  const fiber = nutritionEstimate?.values.find(n => n.id === "1079");
+  const explanation = fiber?.perServing != null && fiber.perServing > 0
+    ? `The fruit provides fiber—about ${fiber.perServing.toFixed(1)} g per serving, estimated from the reviewed USDA portions.`
+    : whyPick(item, goals);
   return (
     <>
       <NutrientChips
@@ -113,7 +120,7 @@ export function PickExplanation({
         <h4 className="font-semibold">
           {"ingredients" in item ? "Why this meal?" : "Why this pick?"}
         </h4>
-        <p className="mt-1 text-slate-600">{whyPick(item, goals)}</p>
+        <p className="mt-1 text-slate-600">{explanation}</p>
       </div>
       <Sources
         sources={[

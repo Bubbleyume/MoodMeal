@@ -86,6 +86,27 @@ class ReviewTests(unittest.TestCase):
             self.assertEqual(tool.main(),1)
             request.assert_not_called()
 
+    def test_duplicate_rows_retained_without_selection(self):
+        old, raw = self.fixture()
+        row = raw['foodNutrients'][0]
+        raw['foodNutrients'] += [dict(row, amount=999), dict(row, amount=None)]
+        normalized = tool.normalize(raw)
+        nid=str(row['nutrient']['id'])
+        self.assertEqual(len(normalized['duplicateNutrientRows'][nid]),3)
+        self.assertIsNone(normalized['nutrients'][nid]['amountPer100g'])
+        self.assertFalse(normalized['publishable'])
+        self.assertFalse(tool.compare(normalized,old)['summary']['cleanNutritionalComparison'])
+
+    def test_resume_skips_only_saved_pending_record(self):
+        with tempfile.TemporaryDirectory() as temp, patch.object(tool,'PENDING',Path(temp)):
+            self.assertFalse(tool.already_saved(171711))
+            (Path(temp)/'saved.json').write_text(json.dumps({'rawResponse':{'fdcId':171711},'record':{'fdcId':'171711'},'reviewStatus':'pending-review','approved':False,'publishable':False}))
+            self.assertTrue(tool.already_saved(171711))
+            self.assertFalse(tool.already_saved(168588))
+            with patch.object(tool.sys,'argv',['tool','fetch','171711','--skip-existing']), patch.object(tool,'request') as request, contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(tool.main(),0)
+                request.assert_not_called()
+
     def test_empty_categories_are_informational_only(self):
         old, raw = self.fixture()
         for nid, name in tool.EMPTY_CATEGORIES.items():
