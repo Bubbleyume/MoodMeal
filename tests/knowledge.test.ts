@@ -2,7 +2,8 @@ import { calculateNutrition } from "../src/lib/nutrition";
 import { approvedPilotNutrition, PILOT_RECIPE_ID } from "../src/data/usdaPilot";
 import { APPROVED_INGREDIENTS, approvedIngredientInput, recipeReviewCoverage } from "../src/data/usdaApprovals";
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { ingredientImages, COVERED_INGREDIENT_LABELS, thumbnailPath } from "../src/data/ingredientImages";
 import {
   getRecommendations,
   matchingNutrients,
@@ -459,5 +460,50 @@ test("approved honey converts only its approved portions and publishes no new re
     assert(coverage.approved.includes("Honey") && coverage.unreviewed.length > 0, r.id);
   }
   assert.equal(RECIPES.filter(r => r.nutritionEstimate).length, 1);
+});
+test("ingredient artwork coverage matches recipe labels and existing files", () => {
+  const labels = new Set([...RECIPES, ...MEALS].flatMap((r) => r.structuredIngredients.map((i) => i.name)));
+  assert.deepEqual([...COVERED_INGREDIENT_LABELS].sort(), [...labels].sort());
+  const coverage: { ingredient: string; images: string[] }[] = JSON.parse(readFileSync("docs/ingredient-artwork-coverage.json", "utf8"));
+  for (const entry of coverage) {
+    assert(entry.images.length > 0, entry.ingredient);
+    for (const image of entry.images) {
+      assert(existsSync("public" + image), image);
+      assert(existsSync("public" + thumbnailPath(image)), thumbnailPath(image));
+    }
+  }
+  const manifest: { id: string; asset: string }[] = JSON.parse(readFileSync("docs/ingredient-artwork-manifest.json", "utf8"));
+  const pngs = readdirSync("public/assets/ingredients").filter((f) => f.endsWith(".png")).sort();
+  assert.equal(pngs.length, 35);
+  assert.deepEqual(manifest.map((m) => m.asset).sort(), pngs.map((f) => `/assets/ingredients/${f}`));
+  assert(manifest.every((m) => m.asset === `/assets/ingredients/${m.id}.png`));
+  const used = new Set(coverage.flatMap((e) => e.images));
+  for (const f of pngs) {
+    assert(used.has(`/assets/ingredients/${f}`), `unused artwork ${f}`);
+    const thumb = `public/assets/ingredients/thumbs/${f.replace(/\.png$/, ".webp")}`;
+    assert(statSync(thumb).size < 20_000, thumb);
+  }
+});
+test("ingredient image resolver never borrows artwork from another food", () => {
+  const srcs = (name: string) => ingredientImages(name).map((i) => i.src);
+  assert.deepEqual(srcs("Oat flour"), ["/assets/ingredients/thumbs/oat-flour.webp"]);
+  assert.deepEqual(srcs("Rolled oats"), ["/assets/ingredients/thumbs/rolled-oats.webp"]);
+  assert.deepEqual(srcs("Dark chocolate chips"), ["/assets/ingredients/thumbs/dark-chocolate-chips.webp"]);
+  assert.deepEqual(srcs("lemon juice"), ["/assets/ingredients/thumbs/lemon-juice.webp"]);
+  assert.deepEqual(srcs("Salt & pepper"), ["/assets/ingredients/thumbs/table-salt.webp", "/assets/ingredients/thumbs/black-pepper.webp"]);
+  assert.deepEqual(srcs("Wild Salmon"), ["/assets/foods/thumbs/wild-salmon.webp"]);
+  assert.deepEqual(srcs("Saffron threads"), []);
+  assert.deepEqual(srcs("Oats"), []);
+  for (const label of COVERED_INGREDIENT_LABELS)
+    for (const image of ingredientImages(label)) {
+      assert.match(image.alt, /^Illustration of [a-z]/);
+      assert(!image.src.endsWith(".png"), image.src);
+    }
+  // A food named exactly like a recipe label uses the label's coverage entry
+  // (Chia Seeds -> chia-seeds.png); every other food uses its own artwork.
+  const covered = new Set(COVERED_INGREDIENT_LABELS.map((l) => l.toLowerCase()));
+  for (const food of FOODS)
+    if (!covered.has(food.name.toLowerCase()))
+      assert.equal(ingredientImages(food.name)[0]?.original, food.image, food.name);
 });
 console.log(`${checks} knowledge-system tests passed`);

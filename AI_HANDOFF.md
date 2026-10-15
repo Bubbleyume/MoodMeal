@@ -1,5 +1,20 @@
 # MoodMeal AI Handoff
 
+## Ingredient artwork integrated into screens (Claude Code, 2026-10-14)
+
+Started from 760a339, equal to origin. The 35 ingredient illustrations now appear in the app. `src/data/ingredientImages.ts` is the central resolver: it reads `docs/ingredient-artwork-coverage.json` directly and matches exact labels (case-insensitive) only, with no fuzzy aliases, so oat flour never shows steel-cut oats. Grocery items added from a Food card fall back to that food's own artwork, and anything else returns no image. `IngredientThumb` shows the image on the ivory artwork background. It overlaps two images for labels such as "Salt & pepper" and "Hoisin or soy sauce", and shows a neutral leaf when there is no artwork or an image fails to load. It uses alt text "Illustration of …", lazy loading and fixed 160×160 dimensions.
+
+Where the images appear: every Recipe Detail ingredient row, Grocery rows (replacing the full-resolution food image previously used there), and a strip of up to six ingredient thumbnails on each Meal card. Food cards and all meal/recipe hero images are unchanged, because every one of the 35 foods already has its own artwork.
+
+Thumbnails: `scripts/make-thumbnails.py` (Pillow) builds 160 px WebP images, about 5 KB each, in `public/assets/ingredients/thumbs/` and `public/assets/foods/thumbs/`. The original PNG and WebP files are untouched and are never requested by the UI. The coverage manifest was already accurate: it covers all 72 recipe/meal labels, and all 35 PNGs are used.
+
+Validation:
+- Typecheck, avatar tests and the production build pass.
+- 28 knowledge tests pass, including new coverage and resolver tests.
+- The browser suite passes. New checks cover Recipe Detail ×2, Grocery, Meals and Foods at 320, 390 and 1440 px: no broken, distorted or oversized thumbnails, no overflow, no requests for full-resolution ingredient PNGs, and no console errors.
+
+The pre-existing duplicate "Salt & pepper" ("to taste") grocery rows are aggregation behaviour and were not changed. No USDA approvals or nutrition changes.
+
 ## Synchronization protocol and artwork checkpoint (2026-10-14)
 
 Shared rules: docs/AI_SYNC_PROTOCOL.md, linked by CLAUDE.md. Starting state reconciled: local c55d24f was one commit ahead of origin 8638684, no divergence. Claude honey approval preserved. Completed artwork: 35 PNGs plus prompt manifest, 72-label coverage and gallery; no screen integration yet. This checkpoint includes those assets/docs and the protocol, not the pre-existing untracked AGENTS.md. Validation: 22 FatSecret, 14 USDA, 26 knowledge tests, avatar checks, TypeScript and build pass; only outdated Browserslist warning. All 24 pending USDA JSON files match the separate private backup at ../backups/usda-pending-review-2026-10-14. No FatSecret data persisted.
@@ -151,7 +166,7 @@ Do not reverse these without explicit instruction.
 - `.gitignore` excludes `work/` and `node_modules/{fflate,pdfjs-dist,@napi-rs}`, so a fresh clone may lack the runtime deps `fflate` and `pdfjs-dist`. Check this before pushing.
 - `nutrientTotals` is `null` for every recipe (`src/lib/catalog.ts`), so recipes have no verified nutrition totals yet.
 - Seeded knowledge provenance is mostly NIH/ODS fact sheets. There is no `reviewedBy` workflow with real reviewers, and library review state lives only in localStorage.
-- `src/data/foods.ts` and `meals.ts` still contain `emoji` fields. `GroceryItem.tsx` and `AssetImage.tsx` still use `ImagePlaceholder`, so the Grocery list visuals may still be emoji/gradient based.
+- `src/data/foods.ts` and `meals.ts` still contain `emoji` fields. Grocery rows now use painted ingredient/food thumbnails (2026-10-14); `ImagePlaceholder` is no longer imported by any screen.
 - Profile has a "Daily mood check-in reminder (placeholder)" toggle (`src/pages/ProfilePage.tsx:95`).
 - The mood → goal mapping is hard-coded in `goalsForMood` (only worried, nervous and angry at intensity 8+ add `wind-down`), and some mappings are questionable (e.g. `excited → hydration`).
 - Docs are stale or inconsistent. `README.md` and `AVATAR_MVP.md` describe older SVG and 3-preset avatar systems. `docs/AVATARS.md` says "Girl/Boy" while the UI uses Soft/Bold Frame. `package.json` `notes` has mojibake and references a missing `VENDORING.md`.
@@ -168,7 +183,7 @@ Do not reverse these without explicit instruction.
 1. Review and commit the uncommitted work in logical commits (knowledge system, food art, modular avatars, wellness refocus). Confirm `.gitignore` doesn't drop required runtime deps, then push.
 2. Update `README.md`, `AVATAR_MVP.md` and `docs/AVATARS.md` so they match the current system (Soft/Bold Frame, support goals, library workflow).
 3. Add verified `nutrientTotals` for recipes, with provenance.
-4. Finish replacing emojis and placeholders (Grocery items, the leftover `emoji` fields in the data, and `ImagePlaceholder` usage).
+4. Finish replacing emojis and placeholders (the leftover `emoji` fields in the data and the now-unused `ImagePlaceholder` component; Grocery items are done).
 5. Move the mood → support-goal mapping into reviewable data and revisit questionable mappings.
 6. Add "Sources / Learn why" drawers consistently on Food, Meal, Recipe and Result screens.
 7. Expand Wellness education content for all 11 target categories (Food & Mood Basics, Steady Energy, Focus, Sleep & Wind-Down, Calm, Cooking as Self-Care, Gut & Digestion, Sensitivities & Special Diets, Balanced Nutrition, Hydration, Glossary).

@@ -20,6 +20,10 @@ const { zipSync, strToU8 } = require("fflate");
       if (m.type() === "error") errors.push(m.text());
     });
     page.setDefaultTimeout(10000);
+    const fullArtwork = [];
+    page.on("request", (r) => {
+      if (/\/assets\/ingredients\/[^/]+\.png$/.test(r.url())) fullArtwork.push(r.url());
+    });
     await page.goto(baseURL + "/mood");
     await page.getByRole("button", { name: "Tired mood", exact: true }).click();
     await page.getByRole("button", { name: /Find|Continue|Show|Get/ }).click();
@@ -222,10 +226,63 @@ const { zipSync, strToU8 } = require("fflate");
     assert(!(await page.getByText(/This recipe provides/).count()));
     assert((await page.locator('[aria-label="Estimated nutrition per serving"]').innerText()).includes("85 kcal"));
     await page.evaluate(() => localStorage.removeItem("moodmeal:draftMood"));
+    // Ingredient artwork: every image loads, thumbnails stay square and small.
+    for (const width of [320, 390, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const route of [
+        "recipe/recipe-salmon-quinoa-bowl",
+        "recipe/recipe-turkey-lettuce-wraps",
+        "grocery",
+        "meals",
+        "foods",
+      ]) {
+        await page.goto(baseURL + "/" + route);
+        await page.locator("img").first().waitFor();
+        const images = await page.evaluate(async () => {
+          const imgs = [...document.querySelectorAll("img")];
+          imgs.forEach((img) => (img.loading = "eager"));
+          await Promise.all(imgs.map((img) => img.decode().catch(() => {})));
+          return imgs.map((img) => ({
+            src: img.getAttribute("src"),
+            alt: img.alt,
+            ok: img.complete && img.naturalWidth > 0,
+            w: img.getBoundingClientRect().width,
+            h: img.getBoundingClientRect().height,
+          }));
+        });
+        for (const img of images) {
+          assert(img.ok, `broken image ${img.src} on ${route}`);
+          assert(img.alt, `missing alt ${img.src}`);
+          if (img.src.includes("/thumbs/")) {
+            assert(Math.abs(img.w - img.h) < 1, `distorted ${img.src}`);
+            assert(img.w <= 48, `thumbnail too large ${img.src}`);
+          }
+        }
+        if (route.startsWith("recipe/")) {
+          const rows = page
+            .locator("section")
+            .filter({ has: page.getByRole("heading", { name: "Ingredients", exact: true }) })
+            .locator("li");
+          for (let i = 0; i < (await rows.count()); i++)
+            assert((await rows.nth(i).locator('img[src*="/thumbs/"]').count()) > 0, `row ${i} ${route}`);
+        }
+        if (route === "grocery")
+          assert(images.some((i) => i.src.includes("/assets/ingredients/thumbs/")));
+        if (route === "meals")
+          assert((await page.getByRole("list", { name: /^Ingredients in / }).count()) > 0);
+        assert(
+          await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+          `overflow ${width} ${route}`,
+        );
+        if (width !== 1440 && route !== "foods")
+          await page.screenshot({ path: `work/qa-artwork-${route.replace("/", "-")}-${width}.png` });
+      }
+    }
+    assert.deepEqual(fullArtwork, [], "full-resolution ingredient PNGs requested");
     console.log("BROWSER ERRORS", errors);
     assert.deepEqual(errors, []);
     console.log(
-      "PASS browser: mobile/desktop, mood, nutrient disclosure, preferences, grocery aggregation, history, publishing, EPUB/PDF imports, reloads",
+      "PASS browser: mobile/desktop, mood, nutrient disclosure, preferences, grocery aggregation, history, publishing, EPUB/PDF imports, reloads, ingredient artwork",
     );
   } finally {
     await browser.close();

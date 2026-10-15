@@ -3,6 +3,7 @@ import { useParams, Navigate } from "../lib/router";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import FoodImage from "../components/FoodImage";
+import IngredientThumb from "../components/IngredientThumb";
 import RecipeNutrition from "../components/RecipeNutrition";
 import { PickExplanation, Sources } from "../components/Knowledge";
 import { getRecipeById } from "../data/recipes";
@@ -69,9 +70,10 @@ export default function RecipeDetailPage() {
               {recipe.structuredIngredients.map((i, index) => (
                 <li
                   key={`${i.ingredientId}-${index}`}
-                  className="flex flex-wrap items-start justify-between gap-2 py-3 text-sm"
+                  className="flex items-center gap-3 py-3 text-sm"
                 >
-                  <div>
+                  <IngredientThumb name={i.name} />
+                  <div className="min-w-0 flex-1">
                     <strong>{i.name}</strong>
                     <p className="text-xs text-slate-500">
                       {i.quantity ?? ""}{" "}
@@ -86,7 +88,7 @@ export default function RecipeDetailPage() {
                   </div>
                   <button
                     aria-label={`Add ${i.name} to Grocery`}
-                    className="rounded-xl bg-brand-50 px-3 py-2 text-brand-700"
+                    className="shrink-0 rounded-xl bg-brand-50 px-3 py-2 text-brand-700"
                     onClick={() => {
                       addMany([ingredientLine(i)], recipe.name);
                       setAdded(true);

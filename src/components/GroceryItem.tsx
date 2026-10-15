@@ -1,11 +1,7 @@
-import FoodImage from "./FoodImage";
 import React from "react";
 import type { GroceryItem as GroceryItemType } from "../types";
-import { Check, Trash2, ShoppingCart } from "./icons";
-import { getFoodByName } from "../data/foods";
-import AssetImage from "./AssetImage";
-import ImagePlaceholder from "./ImagePlaceholder";
-import { foodImagePath } from "../data/assets";
+import { Check, Trash2 } from "./icons";
+import IngredientThumb from "./IngredientThumb";
 
 interface GroceryItemProps {
   item: GroceryItemType;
@@ -14,19 +10,9 @@ interface GroceryItemProps {
 }
 
 export default function GroceryItem({ item, onToggle, onRemove }: GroceryItemProps) {
-  const matchedFood = getFoodByName(item.name);
-
   return (
     <div className="flex items-center gap-3 rounded-2xl bg-white px-3 py-2.5 shadow-card ring-1 ring-slate-100 animate-fade-in">
-      <div className="h-11 w-11 shrink-0 overflow-hidden rounded-xl">
-        {matchedFood ? (
-          <FoodImage src={matchedFood.image} name={matchedFood.name} className="h-full w-full"/>
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-brand-50 text-brand-300">
-            <ShoppingCart size={18} />
-          </div>
-        )}
-      </div>
+      <IngredientThumb name={item.name} />
 
       <button
         onClick={() => onToggle(item.id)}
