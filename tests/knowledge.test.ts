@@ -461,6 +461,75 @@ test("approved honey converts only its approved portions and publishes no new re
   }
   assert.equal(RECIPES.filter(r => r.nutritionEstimate).length, 1);
 });
+test("batch approvals B1-B14/C1-C2 apply only to their exact approved uses", () => {
+  const approvedUses: Record<string, string> = {};
+  for (const r of RECIPES)
+    for (const i of r.structuredIngredients) {
+      const input = approvedIngredientInput(i, r.id);
+      if (input && i.name !== "Honey") approvedUses[`${r.id} | ${i.name}`] = `${input.fdcId} ${input.grams}`;
+    }
+  assert.deepEqual(approvedUses, {
+    "recipe-chamomile-comfort-toast | Sweet potato": "168482 130",
+    "recipe-chamomile-comfort-toast | Almond butter": "168588 32",
+    "recipe-chamomile-comfort-toast | Banana": "173944 59",
+    "recipe-chamomile-comfort-toast | Chamomile tea bag": "174156 237",
+    "recipe-chamomile-comfort-toast | Ground cinnamon": "171320 0.1625",
+    "recipe-calming-kefir-smoothie | Banana": "173944 59",
+    "recipe-tropical-energy-smoothie | Banana": "173944 59",
+    "recipe-tropical-energy-smoothie | Pineapple": "169124 165",
+    "recipe-sunshine-pancakes | Banana": "173944 118",
+    "recipe-sunshine-pancakes | Eggs": "171287 100",
+    "recipe-green-tea-oat-bites | Almond butter": "168588 125",
+    "recipe-green-tea-oat-bites | Rolled oats": "173904 81",
+    "recipe-warm-oatmeal-berries | Rolled oats": "173904 40.5",
+    "recipe-warm-oatmeal-berries | Ground cinnamon": "171320 0.1625",
+    "recipe-cozy-sweet-potato-hash | Sweet potato": "168482 130",
+    "recipe-cozy-sweet-potato-hash | Egg": "171287 100",
+    "recipe-gentle-avocado-toast | Egg": "173424 50",
+    "recipe-gentle-avocado-toast | Whole-wheat bread": "172688 32",
+    "recipe-energizing-power-bowl | Brown rice": "169704 151.5",
+    "recipe-iron-rich-stir-fry | Brown rice": "169704 151.5",
+    "recipe-brown-rice-veggie-bowl | Brown rice": "169704 151.5",
+    "recipe-brown-rice-veggie-bowl | Pumpkin seeds": "170556 16.125",
+    "recipe-magnesium-boost-bowl | Pumpkin seeds": "170556 16.125",
+    "recipe-crunchy-veggie-snack-plate | Pumpkin seeds": "170556 8.0625",
+    "recipe-steak-and-greens | Swiss chard": "169991 72",
+    "recipe-dark-chocolate-trail-mix | Almonds": "170567 35.75",
+    "recipe-loaded-popcorn-mix | Almonds": "170567 17.875",
+  });
+  // Held uses: power-bowl egg and roasted sweet potato, sauteed chard, chopped
+  // almonds, diced pineapple, pancake cinnamon; avocado and Greek yogurt pending.
+  const held = (id: string, name: string) => {
+    const r = RECIPES.find(x => x.id === id)!;
+    return approvedIngredientInput(r.structuredIngredients.find(i => i.name === name)!, id);
+  };
+  for (const [id, name] of [
+    ["recipe-energizing-power-bowl", "Egg"], ["recipe-energizing-power-bowl", "Sweet potato"],
+    ["recipe-brown-rice-veggie-bowl", "Swiss chard"], ["recipe-magnesium-boost-bowl", "Swiss chard"],
+    ["recipe-turkey-lettuce-wraps", "Almonds"], ["recipe-quinoa-fruit-salad", "Pineapple"],
+    ["recipe-sunshine-pancakes", "Cinnamon"], ["recipe-gentle-avocado-toast", "Avocado"],
+    ["recipe-salmon-quinoa-bowl", "Avocado"], ["recipe-berry-yogurt-parfait", "Greek yogurt"],
+    ["recipe-immune-boost-smoothie", "Greek yogurt"],
+  ]) assert.equal(held(id, name), null, `${id} ${name}`);
+  // A recipe-scoped conversion never applies without its recipe.
+  const toast = RECIPES.find(r => r.id === "recipe-chamomile-comfort-toast")!;
+  assert.equal(approvedIngredientInput(toast.structuredIngredients[0]), null);
+  assert.equal(approvedIngredientInput({ ...toast.structuredIngredients[0], notes: "" }, toast.id), null);
+  // Every source value is sourced or null; added sugars stay unknown; USDA zeros stay zero.
+  for (const record of APPROVED_INGREDIENTS) {
+    assert.equal(record.nutrients["1235"].amount, null, record.ingredient);
+    assert(Object.values(record.nutrients).every(n => n.amount === null || n.sourceRowId), record.ingredient);
+  }
+  const tea = APPROVED_INGREDIENTS.find(r => r.fdcId === "174156")!;
+  assert.equal(tea.nutrients["1079"].amount, 0);
+  // Chamomile Toast is fully reviewed but publishes nothing until totals are approved.
+  assert.deepEqual(recipeReviewCoverage(toast).unreviewed, []);
+  assert.equal(toast.nutritionEstimate, null);
+  assert.equal(toast.nutrientTotals, null);
+  for (const r of RECIPES.filter(r => r.id !== "recipe-chamomile-comfort-toast" && r.id !== PILOT_RECIPE_ID))
+    assert(recipeReviewCoverage(r).unreviewed.length > 0, r.id);
+  assert.equal(RECIPES.filter(r => r.nutritionEstimate).length, 1);
+});
 test("ingredient artwork coverage matches recipe labels and existing files", () => {
   const labels = new Set([...RECIPES, ...MEALS].flatMap((r) => r.structuredIngredients.map((i) => i.name)));
   assert.deepEqual([...COVERED_INGREDIENT_LABELS].sort(), [...labels].sort());

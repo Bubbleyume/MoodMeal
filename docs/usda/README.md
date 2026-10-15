@@ -20,6 +20,8 @@ User decisions H1–H3, 2026-10-14. Stored in `src/data/usda/approved-ingredient
 |---|---|---|---|
 | Honey (generic) | 169640 | 1 tsp = 7 g (derived from portion 85265, 21 g/tbsp ÷ 3); 1/4 cup = 84.75 g (derived from portion 85264, 339 g/cup ÷ 4) | Added sugars (1235) absent in USDA: null/Unknown, never zero. Other quantities, units, notes or honey types are unreviewed. |
 
+**Batch approvals B1-B14/C1-C2 (2026-10-14):** banana 173944, almond butter 168588, sweet potato 168482, raw egg 171287, hard-boiled egg 173424, long-grain cooked brown rice 169704, rolled oats 173904, fresh pineapple 169124, pumpkin-seed kernels 170556, raw Swiss chard 169991, raw almonds 170567, whole-wheat bread 172688, ground cinnamon 171320 and brewed chamomile 174156 are approved only for the exact uses listed in `BATCH-REMAINING-14-PROPOSAL.md`. Each conversion carries its quantity, unit, notes and recipe IDs. Greek yogurt and avocado are pending. No recipe totals are published from these approvals.
+
 Honey appears in Warm Oatmeal, Calming Kefir Smoothie, Green Tea Energy Bites, Immune-Support Smoothie and Berry Yogurt Parfait. Each still has unreviewed ingredients, so none shows nutrition totals.
 
 | Recipe | Approved measurement | Remaining restriction |

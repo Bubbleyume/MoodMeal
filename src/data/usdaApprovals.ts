@@ -9,25 +9,47 @@ import type { StructuredIngredient } from "../types/library";
  */
 export const APPROVED_INGREDIENTS = data.ingredients;
 
-/** Grams for an exactly approved name, quantity and unit; anything else is unreviewed. */
-export function approvedIngredientInput(line: StructuredIngredient): NutritionInput | null {
-  const record = APPROVED_INGREDIENTS.find(r => r.ingredient === line.name);
-  const conversion = record?.conversions.find(c =>
-    c.unit === line.unit && line.quantity !== null && Math.abs(c.quantity - line.quantity) < 1e-9);
-  if (!record || !conversion || line.notes) return null;
-  return {
-    name: record.ingredient,
-    fdcId: record.fdcId,
-    grams: conversion.grams,
-    portionId: conversion.basePortionId,
-    portionDescription: conversion.derivation,
-    nutrients: record.nutrients as Record<string, UsdaNutrientValue>,
-  };
+interface ApprovedConversion {
+  quantity: number;
+  unit: string;
+  grams: number;
+  basePortionId: string;
+  derivation: string;
+  /** Exact recipe notes the conversion was approved for; absent means none. */
+  notes?: string;
+  /** Recipes the conversion was approved for; absent means any recipe. */
+  recipeIds?: string[];
+}
+
+/**
+ * Grams for an exactly approved name, quantity, unit and notes, in a recipe
+ * the conversion was approved for; anything else is unreviewed. The same
+ * label can map to different records per recipe (raw vs hard-boiled egg).
+ */
+export function approvedIngredientInput(line: StructuredIngredient, recipeId?: string): NutritionInput | null {
+  if (line.quantity === null) return null;
+  for (const record of APPROVED_INGREDIENTS) {
+    if (record.ingredient !== line.name) continue;
+    const conversion = (record.conversions as ApprovedConversion[]).find(c =>
+      c.unit === line.unit && Math.abs(c.quantity - line.quantity!) < 1e-9
+      && (c.notes ?? "") === line.notes
+      && (!c.recipeIds || (recipeId !== undefined && c.recipeIds.includes(recipeId))));
+    if (!conversion) continue;
+    return {
+      name: record.ingredient,
+      fdcId: record.fdcId,
+      grams: conversion.grams,
+      portionId: conversion.basePortionId,
+      portionDescription: conversion.derivation,
+      nutrients: record.nutrients as Record<string, UsdaNutrientValue>,
+    };
+  }
+  return null;
 }
 
 /** Review coverage for a recipe. Informational only; it never produces totals. */
-export function recipeReviewCoverage(recipe: { structuredIngredients: StructuredIngredient[] }) {
-  const approved = recipe.structuredIngredients.filter(i => approvedIngredientInput(i));
+export function recipeReviewCoverage(recipe: { id: string; structuredIngredients: StructuredIngredient[] }) {
+  const approved = recipe.structuredIngredients.filter(i => approvedIngredientInput(i, recipe.id));
   return {
     approved: approved.map(i => i.name),
     unreviewed: recipe.structuredIngredients.filter(i => !approved.includes(i)).map(i => i.name),

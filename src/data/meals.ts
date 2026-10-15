@@ -198,7 +198,7 @@ export const MEALS: Meal[] = [
     gradient: "from-mint-300 to-sunny-200",
     description: "Simple, soft, and satisfying — a low-key plate for a quiet moment.",
     ingredients: [
-      { name: "Whole-grain bread", quantity: "1 slice" },
+      { name: "Whole-wheat bread", quantity: "1 slice" },
       { name: "Avocado", quantity: "1/2" },
       { name: "Egg", quantity: "1, soft-boiled" },
       { name: "Chili flakes", quantity: "pinch" },

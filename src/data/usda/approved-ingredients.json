@@ -159,6 +159,2512 @@
       },
       "status": "ingredient-approved",
       "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Banana",
+      "fdcId": "173944",
+      "identity": "Raw banana, peeled; unspecified size standardized to USDA medium (7 to 7-7/8 in long).",
+      "preparation": "Raw edible flesh",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (B1)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T081944Z-4ff87473cee1422bbe0b53109d36b08c.json",
+      "conversions": [
+        {
+          "quantity": 0.5,
+          "unit": "each",
+          "notes": "sliced",
+          "recipeIds": [
+            "recipe-chamomile-comfort-toast"
+          ],
+          "grams": 59.0,
+          "basePortionId": "93515",
+          "derivation": "Half of USDA medium banana 118 g (portion 93515)."
+        },
+        {
+          "quantity": 0.5,
+          "unit": "each",
+          "notes": "",
+          "recipeIds": [
+            "recipe-calming-kefir-smoothie",
+            "recipe-tropical-energy-smoothie"
+          ],
+          "grams": 59.0,
+          "basePortionId": "93515",
+          "derivation": "Half of USDA medium banana 118 g (portion 93515)."
+        },
+        {
+          "quantity": 1,
+          "unit": "each",
+          "notes": "mashed",
+          "recipeIds": [
+            "recipe-sunshine-pancakes"
+          ],
+          "grams": 118.0,
+          "basePortionId": "93515",
+          "derivation": "USDA medium banana 118 g (portion 93515), raw weight before mashing and cooking."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars."
+      },
+      "description": "Bananas, raw",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/173944/nutrients",
+      "portions": [
+        {
+          "id": "93511",
+          "fdc_id": "173944",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, mashed",
+          "gram_weight": "225.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "93512",
+          "fdc_id": "173944",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, sliced",
+          "gram_weight": "150.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "93513",
+          "fdc_id": "173944",
+          "seq_num": "3",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "extra small (less than 6\" long)",
+          "gram_weight": "81.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "93514",
+          "fdc_id": "173944",
+          "seq_num": "4",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "small (6\" to 6-7/8\" long)",
+          "gram_weight": "101.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "93515",
+          "fdc_id": "173944",
+          "seq_num": "5",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "medium (7\" to 7-7/8\" long)",
+          "gram_weight": "118.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "93516",
+          "fdc_id": "173944",
+          "seq_num": "6",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "large (8\" to 8-7/8\" long)",
+          "gram_weight": "136.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "93517",
+          "fdc_id": "173944",
+          "seq_num": "7",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "extra large (9\" or longer)",
+          "gram_weight": "152.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "93518",
+          "fdc_id": "173944",
+          "seq_num": "8",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "NLEA serving",
+          "gram_weight": "126.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 89.0,
+          "unit": "KCAL",
+          "sourceRowId": "1817900"
+        },
+        "1003": {
+          "amount": 1.09,
+          "unit": "G",
+          "sourceRowId": "1817943"
+        },
+        "1005": {
+          "amount": 22.84,
+          "unit": "G",
+          "sourceRowId": "1817899"
+        },
+        "1004": {
+          "amount": 0.33,
+          "unit": "G",
+          "sourceRowId": "1817956"
+        },
+        "1079": {
+          "amount": 2.6,
+          "unit": "G",
+          "sourceRowId": "1817936"
+        },
+        "2000": {
+          "amount": 12.23,
+          "unit": "G",
+          "sourceRowId": "1817948"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 5.0,
+          "unit": "MG",
+          "sourceRowId": "1817949"
+        },
+        "1089": {
+          "amount": 0.26,
+          "unit": "MG",
+          "sourceRowId": "1817937"
+        },
+        "1090": {
+          "amount": 27.0,
+          "unit": "MG",
+          "sourceRowId": "1817938"
+        },
+        "1092": {
+          "amount": 358.0,
+          "unit": "MG",
+          "sourceRowId": "1817950"
+        },
+        "1093": {
+          "amount": 1.0,
+          "unit": "MG",
+          "sourceRowId": "1817940"
+        },
+        "1162": {
+          "amount": 8.7,
+          "unit": "MG",
+          "sourceRowId": "1817920"
+        },
+        "1175": {
+          "amount": 0.367,
+          "unit": "MG",
+          "sourceRowId": "1817973"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1817905"
+        },
+        "1177": {
+          "amount": 20.0,
+          "unit": "UG",
+          "sourceRowId": "1817923"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Almond butter",
+      "fdcId": "168588",
+      "identity": "Plain almond butter without salt added.",
+      "preparation": "Ready-to-eat",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (B2)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T081925Z-e95481b466524909bda020e686ca70e8.json",
+      "conversions": [
+        {
+          "quantity": 2,
+          "unit": "tbsp",
+          "notes": "",
+          "recipeIds": [
+            "recipe-chamomile-comfort-toast"
+          ],
+          "grams": 32.0,
+          "basePortionId": "83375",
+          "derivation": "USDA 1 tbsp = 16 g (portion 83375) x 2."
+        },
+        {
+          "quantity": 0.5,
+          "unit": "cup",
+          "notes": "",
+          "recipeIds": [
+            "recipe-green-tea-oat-bites"
+          ],
+          "grams": 125.0,
+          "basePortionId": "83376",
+          "derivation": "USDA 1 cup = 250 g (portion 83376) / 2."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars.",
+        "1283": "API response has two phytosterol rows: sourced row 1372134 = 139 mg/100 g (matches CSV) and an empty duplicate with no row ID. Approved: keep the sourced 139 mg row; the empty duplicate stays preserved as evidence in the pending report."
+      },
+      "description": "Nuts, almond butter, plain, without salt added",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/168588/nutrients",
+      "portions": [
+        {
+          "id": "83375",
+          "fdc_id": "168588",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "tbsp",
+          "gram_weight": "16.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "83376",
+          "fdc_id": "168588",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup",
+          "gram_weight": "250.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 614.0,
+          "unit": "KCAL",
+          "sourceRowId": "1372112"
+        },
+        "1003": {
+          "amount": 20.96,
+          "unit": "G",
+          "sourceRowId": "1372094"
+        },
+        "1005": {
+          "amount": 18.82,
+          "unit": "G",
+          "sourceRowId": "1372111"
+        },
+        "1004": {
+          "amount": 55.5,
+          "unit": "G",
+          "sourceRowId": "1372067"
+        },
+        "1079": {
+          "amount": 10.3,
+          "unit": "G",
+          "sourceRowId": "1372074"
+        },
+        "2000": {
+          "amount": 4.43,
+          "unit": "G",
+          "sourceRowId": "1372110"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 347.0,
+          "unit": "MG",
+          "sourceRowId": "1372049"
+        },
+        "1089": {
+          "amount": 3.49,
+          "unit": "MG",
+          "sourceRowId": "1372075"
+        },
+        "1090": {
+          "amount": 279.0,
+          "unit": "MG",
+          "sourceRowId": "1372076"
+        },
+        "1092": {
+          "amount": 748.0,
+          "unit": "MG",
+          "sourceRowId": "1372050"
+        },
+        "1093": {
+          "amount": 7.0,
+          "unit": "MG",
+          "sourceRowId": "1372105"
+        },
+        "1162": {
+          "amount": 0.0,
+          "unit": "MG",
+          "sourceRowId": "1372081"
+        },
+        "1175": {
+          "amount": 0.103,
+          "unit": "MG",
+          "sourceRowId": "1372056"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1372140"
+        },
+        "1177": {
+          "amount": 53.0,
+          "unit": "UG",
+          "sourceRowId": "1372129"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Sweet potato",
+      "fdcId": "168482",
+      "identity": "Raw sweet potato; \"1 sweet potato\" standardized to the USDA 5 in long potato, 130 g edible weight.",
+      "preparation": "Raw input weight before toasting or pan-cooking",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (B3)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T080936Z-897d0fc8b97240bcbee4b640b7552bb8.json",
+      "conversions": [
+        {
+          "quantity": 1,
+          "unit": "each",
+          "notes": "sliced lengthwise into 1/4-inch planks",
+          "recipeIds": [
+            "recipe-chamomile-comfort-toast"
+          ],
+          "grams": 130.0,
+          "basePortionId": "83167",
+          "derivation": "USDA 1 sweetpotato, 5 in long = 130 g edible (portion 83167)."
+        },
+        {
+          "quantity": 1,
+          "unit": "each",
+          "notes": "diced",
+          "recipeIds": [
+            "recipe-cozy-sweet-potato-hash"
+          ],
+          "grams": 130.0,
+          "basePortionId": "83167",
+          "derivation": "USDA 1 sweetpotato, 5 in long = 130 g edible (portion 83167)."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars.",
+        "skin": "Record describes raw flesh. Whether the Toast is peeled or eaten skin-on is not yet decided. \"1/2 roasted\" in Rice, Egg & Greens Bowl remains on hold."
+      },
+      "description": "Sweet potato, raw, unprepared (Includes foods for USDA's Food Distribution Program)",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/168482/nutrients",
+      "portions": [
+        {
+          "id": "83166",
+          "fdc_id": "168482",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, cubes",
+          "gram_weight": "133.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "83167",
+          "fdc_id": "168482",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "sweetpotato, 5\" long",
+          "gram_weight": "130.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 86.0,
+          "unit": "KCAL",
+          "sourceRowId": "1364142"
+        },
+        "1003": {
+          "amount": 1.57,
+          "unit": "G",
+          "sourceRowId": "1364224"
+        },
+        "1005": {
+          "amount": 20.12,
+          "unit": "G",
+          "sourceRowId": "1364141"
+        },
+        "1004": {
+          "amount": 0.05,
+          "unit": "G",
+          "sourceRowId": "1364199"
+        },
+        "1079": {
+          "amount": 3.0,
+          "unit": "G",
+          "sourceRowId": "1364113"
+        },
+        "2000": {
+          "amount": 4.18,
+          "unit": "G",
+          "sourceRowId": "1364140"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 30.0,
+          "unit": "MG",
+          "sourceRowId": "1364200"
+        },
+        "1089": {
+          "amount": 0.61,
+          "unit": "MG",
+          "sourceRowId": "1364217"
+        },
+        "1090": {
+          "amount": 25.0,
+          "unit": "MG",
+          "sourceRowId": "1364218"
+        },
+        "1092": {
+          "amount": 337.0,
+          "unit": "MG",
+          "sourceRowId": "1364201"
+        },
+        "1093": {
+          "amount": 55.0,
+          "unit": "MG",
+          "sourceRowId": "1364179"
+        },
+        "1162": {
+          "amount": 2.4,
+          "unit": "MG",
+          "sourceRowId": "1364175"
+        },
+        "1175": {
+          "amount": 0.209,
+          "unit": "MG",
+          "sourceRowId": "1364210"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1364192"
+        },
+        "1177": {
+          "amount": 11.0,
+          "unit": "UG",
+          "sourceRowId": "1364182"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Egg",
+      "fdcId": "171287",
+      "identity": "Whole raw egg, large, edible portion without shell.",
+      "preparation": "Raw input weight before cooking",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (B4)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T081937Z-45dd515823dc45ed972ba318ef2436ab.json",
+      "conversions": [
+        {
+          "quantity": 2,
+          "unit": "each",
+          "notes": "",
+          "recipeIds": [
+            "recipe-cozy-sweet-potato-hash"
+          ],
+          "grams": 100.0,
+          "basePortionId": "88374",
+          "derivation": "USDA large egg 50 g (portion 88374) x 2."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars.",
+        "hold": "Rice, Egg & Greens Bowl egg stays on hold until a cooking method is chosen."
+      },
+      "description": "Egg, whole, raw, fresh",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/171287/nutrients",
+      "portions": [
+        {
+          "id": "88374",
+          "fdc_id": "171287",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "large",
+          "gram_weight": "50.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "88375",
+          "fdc_id": "171287",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "extra large",
+          "gram_weight": "56.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "88376",
+          "fdc_id": "171287",
+          "seq_num": "3",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "jumbo",
+          "gram_weight": "63.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "88377",
+          "fdc_id": "171287",
+          "seq_num": "5",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup (4.86 large eggs)",
+          "gram_weight": "243.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "88378",
+          "fdc_id": "171287",
+          "seq_num": "6",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "medium",
+          "gram_weight": "44.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "88379",
+          "fdc_id": "171287",
+          "seq_num": "7",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "small",
+          "gram_weight": "38.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 143.0,
+          "unit": "KCAL",
+          "sourceRowId": "1597626"
+        },
+        "1003": {
+          "amount": 12.56,
+          "unit": "G",
+          "sourceRowId": "1597683"
+        },
+        "1005": {
+          "amount": 0.72,
+          "unit": "G",
+          "sourceRowId": "1597748"
+        },
+        "1004": {
+          "amount": 9.51,
+          "unit": "G",
+          "sourceRowId": "1597714"
+        },
+        "1079": {
+          "amount": 0.0,
+          "unit": "G",
+          "sourceRowId": "1597756"
+        },
+        "2000": {
+          "amount": 0.37,
+          "unit": "G",
+          "sourceRowId": "1597710"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 56.0,
+          "unit": "MG",
+          "sourceRowId": "1597711"
+        },
+        "1089": {
+          "amount": 1.75,
+          "unit": "MG",
+          "sourceRowId": "1597688"
+        },
+        "1090": {
+          "amount": 12.0,
+          "unit": "MG",
+          "sourceRowId": "1597689"
+        },
+        "1092": {
+          "amount": 138.0,
+          "unit": "MG",
+          "sourceRowId": "1597712"
+        },
+        "1093": {
+          "amount": 142.0,
+          "unit": "MG",
+          "sourceRowId": "1597691"
+        },
+        "1162": {
+          "amount": 0.0,
+          "unit": "MG",
+          "sourceRowId": "1597755"
+        },
+        "1175": {
+          "amount": 0.17,
+          "unit": "MG",
+          "sourceRowId": "1597736"
+        },
+        "1178": {
+          "amount": 0.89,
+          "unit": "UG",
+          "sourceRowId": "1597653"
+        },
+        "1177": {
+          "amount": 47.0,
+          "unit": "UG",
+          "sourceRowId": "1597754"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Egg",
+      "fdcId": "173424",
+      "identity": "Whole egg, hard-boiled, large.",
+      "preparation": "Cooked, hard-boiled",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (B4)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T081941Z-a496377f151f46c695d72d84d4a8dde1.json",
+      "conversions": [
+        {
+          "quantity": 1,
+          "unit": "each",
+          "notes": "",
+          "recipeIds": [
+            "recipe-gentle-avocado-toast"
+          ],
+          "grams": 50.0,
+          "basePortionId": "92500",
+          "derivation": "USDA hard-boiled large egg 50 g (portion 92500)."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars."
+      },
+      "description": "Egg, whole, cooked, hard-boiled",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/173424/nutrients",
+      "portions": [
+        {
+          "id": "92498",
+          "fdc_id": "173424",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, chopped",
+          "gram_weight": "136.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "92499",
+          "fdc_id": "173424",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "tbsp",
+          "gram_weight": "8.5",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "92500",
+          "fdc_id": "173424",
+          "seq_num": "3",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "large",
+          "gram_weight": "50.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 155.0,
+          "unit": "KCAL",
+          "sourceRowId": "1777847"
+        },
+        "1003": {
+          "amount": 12.58,
+          "unit": "G",
+          "sourceRowId": "1777860"
+        },
+        "1005": {
+          "amount": 1.12,
+          "unit": "G",
+          "sourceRowId": "1777905"
+        },
+        "1004": {
+          "amount": 10.61,
+          "unit": "G",
+          "sourceRowId": "1777904"
+        },
+        "1079": {
+          "amount": 0.0,
+          "unit": "G",
+          "sourceRowId": "1777845"
+        },
+        "2000": {
+          "amount": 1.12,
+          "unit": "G",
+          "sourceRowId": "1777836"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 50.0,
+          "unit": "MG",
+          "sourceRowId": "1777900"
+        },
+        "1089": {
+          "amount": 1.19,
+          "unit": "MG",
+          "sourceRowId": "1777862"
+        },
+        "1090": {
+          "amount": 10.0,
+          "unit": "MG",
+          "sourceRowId": "1777863"
+        },
+        "1092": {
+          "amount": 126.0,
+          "unit": "MG",
+          "sourceRowId": "1777901"
+        },
+        "1093": {
+          "amount": 124.0,
+          "unit": "MG",
+          "sourceRowId": "1777865"
+        },
+        "1162": {
+          "amount": 0.0,
+          "unit": "MG",
+          "sourceRowId": "1777877"
+        },
+        "1175": {
+          "amount": 0.121,
+          "unit": "MG",
+          "sourceRowId": "1777838"
+        },
+        "1178": {
+          "amount": 1.11,
+          "unit": "UG",
+          "sourceRowId": "1777881"
+        },
+        "1177": {
+          "amount": 44.0,
+          "unit": "UG",
+          "sourceRowId": "1777880"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Eggs",
+      "fdcId": "171287",
+      "identity": "Whole raw eggs, large, edible portion without shell.",
+      "preparation": "Raw input to batter",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (B5)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T081937Z-45dd515823dc45ed972ba318ef2436ab.json",
+      "conversions": [
+        {
+          "quantity": 2,
+          "unit": "each",
+          "notes": "",
+          "recipeIds": [
+            "recipe-sunshine-pancakes"
+          ],
+          "grams": 100.0,
+          "basePortionId": "88374",
+          "derivation": "USDA large egg 50 g (portion 88374) x 2."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars."
+      },
+      "description": "Egg, whole, raw, fresh",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/171287/nutrients",
+      "portions": [
+        {
+          "id": "88374",
+          "fdc_id": "171287",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "large",
+          "gram_weight": "50.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "88375",
+          "fdc_id": "171287",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "extra large",
+          "gram_weight": "56.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "88376",
+          "fdc_id": "171287",
+          "seq_num": "3",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "jumbo",
+          "gram_weight": "63.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "88377",
+          "fdc_id": "171287",
+          "seq_num": "5",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup (4.86 large eggs)",
+          "gram_weight": "243.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "88378",
+          "fdc_id": "171287",
+          "seq_num": "6",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "medium",
+          "gram_weight": "44.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "88379",
+          "fdc_id": "171287",
+          "seq_num": "7",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "small",
+          "gram_weight": "38.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 143.0,
+          "unit": "KCAL",
+          "sourceRowId": "1597626"
+        },
+        "1003": {
+          "amount": 12.56,
+          "unit": "G",
+          "sourceRowId": "1597683"
+        },
+        "1005": {
+          "amount": 0.72,
+          "unit": "G",
+          "sourceRowId": "1597748"
+        },
+        "1004": {
+          "amount": 9.51,
+          "unit": "G",
+          "sourceRowId": "1597714"
+        },
+        "1079": {
+          "amount": 0.0,
+          "unit": "G",
+          "sourceRowId": "1597756"
+        },
+        "2000": {
+          "amount": 0.37,
+          "unit": "G",
+          "sourceRowId": "1597710"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 56.0,
+          "unit": "MG",
+          "sourceRowId": "1597711"
+        },
+        "1089": {
+          "amount": 1.75,
+          "unit": "MG",
+          "sourceRowId": "1597688"
+        },
+        "1090": {
+          "amount": 12.0,
+          "unit": "MG",
+          "sourceRowId": "1597689"
+        },
+        "1092": {
+          "amount": 138.0,
+          "unit": "MG",
+          "sourceRowId": "1597712"
+        },
+        "1093": {
+          "amount": 142.0,
+          "unit": "MG",
+          "sourceRowId": "1597691"
+        },
+        "1162": {
+          "amount": 0.0,
+          "unit": "MG",
+          "sourceRowId": "1597755"
+        },
+        "1175": {
+          "amount": 0.17,
+          "unit": "MG",
+          "sourceRowId": "1597736"
+        },
+        "1178": {
+          "amount": 0.89,
+          "unit": "UG",
+          "sourceRowId": "1597653"
+        },
+        "1177": {
+          "amount": 47.0,
+          "unit": "UG",
+          "sourceRowId": "1597754"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Brown rice",
+      "fdcId": "169704",
+      "identity": "Brown rice, long-grain, cooked; never dry rice.",
+      "preparation": "Cooked (recipes measure cooked rice)",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (B6)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T081930Z-46c3fa25d64242f8b794ee1e82e4bfba.json",
+      "conversions": [
+        {
+          "quantity": 0.75,
+          "unit": "cup",
+          "notes": "cooked",
+          "recipeIds": [
+            "recipe-energizing-power-bowl",
+            "recipe-iron-rich-stir-fry",
+            "recipe-brown-rice-veggie-bowl"
+          ],
+          "grams": 151.5,
+          "basePortionId": "85378",
+          "derivation": "USDA 1 cup cooked = 202 g (portion 85378) x 3/4."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars."
+      },
+      "description": "Rice, brown, long-grain, cooked (Includes foods for USDA's Food Distribution Program)",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/169704/nutrients",
+      "portions": [
+        {
+          "id": "85378",
+          "fdc_id": "169704",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup",
+          "gram_weight": "202.0",
+          "data_points": "11",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 123.0,
+          "unit": "KCAL",
+          "sourceRowId": "1462903"
+        },
+        "1003": {
+          "amount": 2.74,
+          "unit": "G",
+          "sourceRowId": "1462868"
+        },
+        "1005": {
+          "amount": 25.58,
+          "unit": "G",
+          "sourceRowId": "1462902"
+        },
+        "1004": {
+          "amount": 0.97,
+          "unit": "G",
+          "sourceRowId": "1462901"
+        },
+        "1079": {
+          "amount": 1.6,
+          "unit": "G",
+          "sourceRowId": "1462853"
+        },
+        "2000": {
+          "amount": 0.24,
+          "unit": "G",
+          "sourceRowId": "1462905"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 3.0,
+          "unit": "MG",
+          "sourceRowId": "1462906"
+        },
+        "1089": {
+          "amount": 0.56,
+          "unit": "MG",
+          "sourceRowId": "1462854"
+        },
+        "1090": {
+          "amount": 39.0,
+          "unit": "MG",
+          "sourceRowId": "1462855"
+        },
+        "1092": {
+          "amount": 86.0,
+          "unit": "MG",
+          "sourceRowId": "1462907"
+        },
+        "1093": {
+          "amount": 4.0,
+          "unit": "MG",
+          "sourceRowId": "1462857"
+        },
+        "1162": {
+          "amount": 0.0,
+          "unit": "MG",
+          "sourceRowId": "1462925"
+        },
+        "1175": {
+          "amount": 0.123,
+          "unit": "MG",
+          "sourceRowId": "1462890"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1462935"
+        },
+        "1177": {
+          "amount": 9.0,
+          "unit": "UG",
+          "sourceRowId": "1462864"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Rolled oats",
+      "fdcId": "173904",
+      "identity": "Old-fashioned rolled oats matched to USDA SR \"Cereals, oats, regular and quick, not fortified, dry\". Foundation 2346396 not used: no fiber, no 1008 energy and no cup portion.",
+      "preparation": "Dry, uncooked",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (B7)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T081942Z-afcb7c03b18b4cfe9ba00398d40bb635.json",
+      "conversions": [
+        {
+          "quantity": 0.5,
+          "unit": "cup",
+          "notes": "",
+          "recipeIds": [
+            "recipe-warm-oatmeal-berries"
+          ],
+          "grams": 40.5,
+          "basePortionId": "93454",
+          "derivation": "USDA 1 cup = 81 g (portion 93454) / 2."
+        },
+        {
+          "quantity": 1,
+          "unit": "cup",
+          "notes": "",
+          "recipeIds": [
+            "recipe-green-tea-oat-bites"
+          ],
+          "grams": 81.0,
+          "basePortionId": "93454",
+          "derivation": "USDA 1 cup = 81 g (portion 93454)."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars."
+      },
+      "description": "Cereals, oats, regular and quick, not fortified, dry",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/173904/nutrients",
+      "portions": [
+        {
+          "id": "93454",
+          "fdc_id": "173904",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup",
+          "gram_weight": "81.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "93455",
+          "fdc_id": "173904",
+          "seq_num": "2",
+          "amount": "0.33",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup",
+          "gram_weight": "27.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 379.0,
+          "unit": "KCAL",
+          "sourceRowId": "1815029"
+        },
+        "1003": {
+          "amount": 13.15,
+          "unit": "G",
+          "sourceRowId": "1815039"
+        },
+        "1005": {
+          "amount": 67.7,
+          "unit": "G",
+          "sourceRowId": "1815028"
+        },
+        "1004": {
+          "amount": 6.52,
+          "unit": "G",
+          "sourceRowId": "1815027"
+        },
+        "1079": {
+          "amount": 10.1,
+          "unit": "G",
+          "sourceRowId": "1814987"
+        },
+        "2000": {
+          "amount": 0.99,
+          "unit": "G",
+          "sourceRowId": "1815009"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 52.0,
+          "unit": "MG",
+          "sourceRowId": "1815030"
+        },
+        "1089": {
+          "amount": 4.25,
+          "unit": "MG",
+          "sourceRowId": "1814988"
+        },
+        "1090": {
+          "amount": 138.0,
+          "unit": "MG",
+          "sourceRowId": "1814989"
+        },
+        "1092": {
+          "amount": 362.0,
+          "unit": "MG",
+          "sourceRowId": "1815010"
+        },
+        "1093": {
+          "amount": 6.0,
+          "unit": "MG",
+          "sourceRowId": "1815032"
+        },
+        "1162": {
+          "amount": 0.0,
+          "unit": "MG",
+          "sourceRowId": "1814980"
+        },
+        "1175": {
+          "amount": 0.1,
+          "unit": "MG",
+          "sourceRowId": "1815008"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1815045"
+        },
+        "1177": {
+          "amount": 32.0,
+          "unit": "UG",
+          "sourceRowId": "1815038"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Pineapple",
+      "fdcId": "169124",
+      "identity": "Fresh raw pineapple, not canned.",
+      "preparation": "Raw edible flesh",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (B9)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T081928Z-9276935574834579a8c63e2135101062.json",
+      "conversions": [
+        {
+          "quantity": 1,
+          "unit": "cup",
+          "notes": "",
+          "recipeIds": [
+            "recipe-tropical-energy-smoothie"
+          ],
+          "grams": 165.0,
+          "basePortionId": "84287",
+          "derivation": "USDA 1 cup chunks = 165 g (portion 84287)."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars.",
+        "hold": "Quinoa Fruit Salad \"1/2 cup diced\" stays on hold (diced-as-chunks convention not approved). Rainbow Fruit Skewers pilot approval is separate and unchanged."
+      },
+      "description": "Pineapple, raw, all varieties",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/169124/nutrients",
+      "portions": [
+        {
+          "id": "84287",
+          "fdc_id": "169124",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, chunks",
+          "gram_weight": "165.0",
+          "data_points": "34",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "84288",
+          "fdc_id": "169124",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "fruit",
+          "gram_weight": "905.0",
+          "data_points": "26",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "84289",
+          "fdc_id": "169124",
+          "seq_num": "3",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "slice (4-2/3\" dia x 3/4\" thick)",
+          "gram_weight": "166.0",
+          "data_points": "11",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "84290",
+          "fdc_id": "169124",
+          "seq_num": "4",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "slice (3-1/2\" dia x 3/4\" thick)",
+          "gram_weight": "84.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "84291",
+          "fdc_id": "169124",
+          "seq_num": "5",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "slice, thin (3-1/2\" dia x 1/2\" thick)",
+          "gram_weight": "56.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 50.0,
+          "unit": "KCAL",
+          "sourceRowId": "1415319"
+        },
+        "1003": {
+          "amount": 0.54,
+          "unit": "G",
+          "sourceRowId": "1415284"
+        },
+        "1005": {
+          "amount": 13.12,
+          "unit": "G",
+          "sourceRowId": "1415318"
+        },
+        "1004": {
+          "amount": 0.12,
+          "unit": "G",
+          "sourceRowId": "1415300"
+        },
+        "1079": {
+          "amount": 1.4,
+          "unit": "G",
+          "sourceRowId": "1415308"
+        },
+        "2000": {
+          "amount": 9.85,
+          "unit": "G",
+          "sourceRowId": "1415293"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 13.0,
+          "unit": "MG",
+          "sourceRowId": "1415294"
+        },
+        "1089": {
+          "amount": 0.29,
+          "unit": "MG",
+          "sourceRowId": "1415286"
+        },
+        "1090": {
+          "amount": 12.0,
+          "unit": "MG",
+          "sourceRowId": "1415287"
+        },
+        "1092": {
+          "amount": 109.0,
+          "unit": "MG",
+          "sourceRowId": "1415295"
+        },
+        "1093": {
+          "amount": 1.0,
+          "unit": "MG",
+          "sourceRowId": "1415289"
+        },
+        "1162": {
+          "amount": 47.8,
+          "unit": "MG",
+          "sourceRowId": "1415277"
+        },
+        "1175": {
+          "amount": 0.112,
+          "unit": "MG",
+          "sourceRowId": "1415304"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1415340"
+        },
+        "1177": {
+          "amount": 18.0,
+          "unit": "UG",
+          "sourceRowId": "1415280"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Pumpkin seeds",
+      "fdcId": "170556",
+      "identity": "Hulled pumpkin seed kernels (pepitas), raw/dried, unroasted, unsalted.",
+      "preparation": "Dried kernels, no shells",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (B10)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T081935Z-80856b5ee34347f7a7be28e51844e945.json",
+      "conversions": [
+        {
+          "quantity": 2,
+          "unit": "tbsp",
+          "notes": "",
+          "recipeIds": [
+            "recipe-brown-rice-veggie-bowl",
+            "recipe-magnesium-boost-bowl"
+          ],
+          "grams": 16.125,
+          "basePortionId": "86847",
+          "derivation": "Derived: USDA 1 cup = 129 g (portion 86847) / 8."
+        },
+        {
+          "quantity": 1,
+          "unit": "tbsp",
+          "notes": "",
+          "recipeIds": [
+            "recipe-crunchy-veggie-snack-plate"
+          ],
+          "grams": 8.0625,
+          "basePortionId": "86847",
+          "derivation": "Derived: USDA 1 cup = 129 g (portion 86847) / 16."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars."
+      },
+      "description": "Seeds, pumpkin and squash seed kernels, dried",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/170556/nutrients",
+      "portions": [
+        {
+          "id": "86847",
+          "fdc_id": "170556",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup",
+          "gram_weight": "129.0",
+          "data_points": "3",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "86848",
+          "fdc_id": "170556",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "oz",
+          "gram_weight": "28.35",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 559.0,
+          "unit": "KCAL",
+          "sourceRowId": "1532854"
+        },
+        "1003": {
+          "amount": 30.23,
+          "unit": "G",
+          "sourceRowId": "1532894"
+        },
+        "1005": {
+          "amount": 10.71,
+          "unit": "G",
+          "sourceRowId": "1532853"
+        },
+        "1004": {
+          "amount": 49.05,
+          "unit": "G",
+          "sourceRowId": "1532981"
+        },
+        "1079": {
+          "amount": 6.0,
+          "unit": "G",
+          "sourceRowId": "1532903"
+        },
+        "2000": {
+          "amount": 1.4,
+          "unit": "G",
+          "sourceRowId": "1532972"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 46.0,
+          "unit": "MG",
+          "sourceRowId": "1532973"
+        },
+        "1089": {
+          "amount": 8.82,
+          "unit": "MG",
+          "sourceRowId": "1532904"
+        },
+        "1090": {
+          "amount": 592.0,
+          "unit": "MG",
+          "sourceRowId": "1532905"
+        },
+        "1092": {
+          "amount": 809.0,
+          "unit": "MG",
+          "sourceRowId": "1532974"
+        },
+        "1093": {
+          "amount": 7.0,
+          "unit": "MG",
+          "sourceRowId": "1532907"
+        },
+        "1162": {
+          "amount": 1.9,
+          "unit": "MG",
+          "sourceRowId": "1532885"
+        },
+        "1175": {
+          "amount": 0.143,
+          "unit": "MG",
+          "sourceRowId": "1532945"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1532887"
+        },
+        "1177": {
+          "amount": 58.0,
+          "unit": "UG",
+          "sourceRowId": "1532886"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Swiss chard",
+      "fdcId": "169991",
+      "identity": "Raw Swiss chard, chopped.",
+      "preparation": "Raw input weight, sauteed in separately listed oil",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (B11)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T081932Z-c145fda132414b8da358fac9a22aa8e7.json",
+      "conversions": [
+        {
+          "quantity": 2,
+          "unit": "cup",
+          "notes": "chopped",
+          "recipeIds": [
+            "recipe-steak-and-greens"
+          ],
+          "grams": 72.0,
+          "basePortionId": "85834",
+          "derivation": "USDA 1 cup = 36 g (portion 85834) x 2."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars.",
+        "hold": "\"Sauteed\" cups in Brown Rice Veggie Bowl and Quinoa & Greens Bowl stay on hold; boiled 170401 is not a sauteed record."
+      },
+      "description": "Chard, swiss, raw",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/169991/nutrients",
+      "portions": [
+        {
+          "id": "85834",
+          "fdc_id": "169991",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup",
+          "gram_weight": "36.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "85835",
+          "fdc_id": "169991",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "leaf",
+          "gram_weight": "48.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 19.0,
+          "unit": "KCAL",
+          "sourceRowId": "1485846"
+        },
+        "1003": {
+          "amount": 1.8,
+          "unit": "G",
+          "sourceRowId": "1485870"
+        },
+        "1005": {
+          "amount": 3.74,
+          "unit": "G",
+          "sourceRowId": "1485866"
+        },
+        "1004": {
+          "amount": 0.2,
+          "unit": "G",
+          "sourceRowId": "1485889"
+        },
+        "1079": {
+          "amount": 1.6,
+          "unit": "G",
+          "sourceRowId": "1485872"
+        },
+        "2000": {
+          "amount": 1.1,
+          "unit": "G",
+          "sourceRowId": "1485914"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 51.0,
+          "unit": "MG",
+          "sourceRowId": "1485891"
+        },
+        "1089": {
+          "amount": 1.8,
+          "unit": "MG",
+          "sourceRowId": "1485873"
+        },
+        "1090": {
+          "amount": 81.0,
+          "unit": "MG",
+          "sourceRowId": "1485874"
+        },
+        "1092": {
+          "amount": 379.0,
+          "unit": "MG",
+          "sourceRowId": "1485892"
+        },
+        "1093": {
+          "amount": 213.0,
+          "unit": "MG",
+          "sourceRowId": "1485876"
+        },
+        "1162": {
+          "amount": 30.0,
+          "unit": "MG",
+          "sourceRowId": "1485884"
+        },
+        "1175": {
+          "amount": 0.099,
+          "unit": "MG",
+          "sourceRowId": "1485896"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1485888"
+        },
+        "1177": {
+          "amount": 14.0,
+          "unit": "UG",
+          "sourceRowId": "1485887"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Almonds",
+      "fdcId": "170567",
+      "identity": "Raw, unsalted whole almonds.",
+      "preparation": "Raw whole kernels",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (B13)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T081936Z-fc3c1a93239c421a880bb39096abc3b4.json",
+      "conversions": [
+        {
+          "quantity": 0.25,
+          "unit": "cup",
+          "notes": "",
+          "recipeIds": [
+            "recipe-dark-chocolate-trail-mix"
+          ],
+          "grams": 35.75,
+          "basePortionId": "86863",
+          "derivation": "USDA 1 cup whole = 143 g (portion 86863) / 4."
+        },
+        {
+          "quantity": 2,
+          "unit": "tbsp",
+          "notes": "",
+          "recipeIds": [
+            "recipe-loaded-popcorn-mix"
+          ],
+          "grams": 17.875,
+          "basePortionId": "86863",
+          "derivation": "Derived: USDA 1 cup whole = 143 g (portion 86863) / 8."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars.",
+        "1283": "API has an empty phytosterol row (null amount); kept unknown, never zero.",
+        "hold": "Turkey Lettuce Wraps \"1 tbsp chopped\" stays on hold (no native chopped portion)."
+      },
+      "description": "Nuts, almonds",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/170567/nutrients",
+      "portions": [
+        {
+          "id": "86863",
+          "fdc_id": "170567",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, whole",
+          "gram_weight": "143.0",
+          "data_points": "23",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "86864",
+          "fdc_id": "170567",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, sliced",
+          "gram_weight": "92.0",
+          "data_points": "4",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "86865",
+          "fdc_id": "170567",
+          "seq_num": "3",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, slivered",
+          "gram_weight": "108.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "86866",
+          "fdc_id": "170567",
+          "seq_num": "4",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, ground",
+          "gram_weight": "95.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "86867",
+          "fdc_id": "170567",
+          "seq_num": "5",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "oz (23 whole kernels)",
+          "gram_weight": "28.35",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "86868",
+          "fdc_id": "170567",
+          "seq_num": "6",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "almond",
+          "gram_weight": "1.2",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 579.0,
+          "unit": "KCAL",
+          "sourceRowId": "1533885"
+        },
+        "1003": {
+          "amount": 21.15,
+          "unit": "G",
+          "sourceRowId": "1533832"
+        },
+        "1005": {
+          "amount": 21.55,
+          "unit": "G",
+          "sourceRowId": "1533884"
+        },
+        "1004": {
+          "amount": 49.93,
+          "unit": "G",
+          "sourceRowId": "1533883"
+        },
+        "1079": {
+          "amount": 12.5,
+          "unit": "G",
+          "sourceRowId": "1533838"
+        },
+        "2000": {
+          "amount": 4.35,
+          "unit": "G",
+          "sourceRowId": "1533925"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 269.0,
+          "unit": "MG",
+          "sourceRowId": "1533888"
+        },
+        "1089": {
+          "amount": 3.71,
+          "unit": "MG",
+          "sourceRowId": "1533839"
+        },
+        "1090": {
+          "amount": 270.0,
+          "unit": "MG",
+          "sourceRowId": "1533840"
+        },
+        "1092": {
+          "amount": 733.0,
+          "unit": "MG",
+          "sourceRowId": "1533889"
+        },
+        "1093": {
+          "amount": 1.0,
+          "unit": "MG",
+          "sourceRowId": "1533917"
+        },
+        "1162": {
+          "amount": 0.0,
+          "unit": "MG",
+          "sourceRowId": "1533913"
+        },
+        "1175": {
+          "amount": 0.137,
+          "unit": "MG",
+          "sourceRowId": "1533882"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1533928"
+        },
+        "1177": {
+          "amount": 44.0,
+          "unit": "UG",
+          "sourceRowId": "1533860"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Whole-wheat bread",
+      "fdcId": "172688",
+      "identity": "Commercially prepared whole-wheat bread (label renamed from \"Whole-grain bread\").",
+      "preparation": "As purchased, then toasted; untoasted slice weight",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (B14)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261014T081940Z-62ae301ba0e14cd491c3434c0c15c7f2.json",
+      "conversions": [
+        {
+          "quantity": 1,
+          "unit": "slice",
+          "notes": "",
+          "recipeIds": [
+            "recipe-gentle-avocado-toast"
+          ],
+          "grams": 32.0,
+          "basePortionId": "91108",
+          "derivation": "USDA 1 slice = 32 g (portion 91108)."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars."
+      },
+      "description": "Bread, whole-wheat, commercially prepared",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/172688/nutrients",
+      "portions": [
+        {
+          "id": "91108",
+          "fdc_id": "172688",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "slice",
+          "gram_weight": "32.0",
+          "data_points": "19",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "91109",
+          "fdc_id": "172688",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "oz",
+          "gram_weight": "28.35",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 252.0,
+          "unit": "KCAL",
+          "sourceRowId": "1715446"
+        },
+        "1003": {
+          "amount": 12.45,
+          "unit": "G",
+          "sourceRowId": "1715490"
+        },
+        "1005": {
+          "amount": 42.71,
+          "unit": "G",
+          "sourceRowId": "1715445"
+        },
+        "1004": {
+          "amount": 3.5,
+          "unit": "G",
+          "sourceRowId": "1715444"
+        },
+        "1079": {
+          "amount": 6.0,
+          "unit": "G",
+          "sourceRowId": "1715498"
+        },
+        "2000": {
+          "amount": 4.34,
+          "unit": "G",
+          "sourceRowId": "1715451"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 161.0,
+          "unit": "MG",
+          "sourceRowId": "1715452"
+        },
+        "1089": {
+          "amount": 2.47,
+          "unit": "MG",
+          "sourceRowId": "1715499"
+        },
+        "1090": {
+          "amount": 75.0,
+          "unit": "MG",
+          "sourceRowId": "1715500"
+        },
+        "1092": {
+          "amount": 254.0,
+          "unit": "MG",
+          "sourceRowId": "1715453"
+        },
+        "1093": {
+          "amount": 455.0,
+          "unit": "MG",
+          "sourceRowId": "1715502"
+        },
+        "1162": {
+          "amount": 0.0,
+          "unit": "MG",
+          "sourceRowId": "1715553"
+        },
+        "1175": {
+          "amount": 0.215,
+          "unit": "MG",
+          "sourceRowId": "1715463"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1715544"
+        },
+        "1177": {
+          "amount": 42.0,
+          "unit": "UG",
+          "sourceRowId": "1715535"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Ground cinnamon",
+      "fdcId": "171320",
+      "identity": "Ground cinnamon spice.",
+      "preparation": "Dry spice",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (C1)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261015T005749Z-f986ddfd4a1543b8b82452e0ceb41585.json",
+      "conversions": [
+        {
+          "quantity": 0.0625,
+          "unit": "tsp",
+          "notes": "",
+          "recipeIds": [
+            "recipe-chamomile-comfort-toast",
+            "recipe-warm-oatmeal-berries"
+          ],
+          "grams": 0.1625,
+          "basePortionId": "88429",
+          "derivation": "Derived: USDA 1 tsp = 2.6 g (portion 88429) / 16."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars.",
+        "hold": "Sunshine Pancakes \"Cinnamon 1/2 tsp\" is not approved."
+      },
+      "description": "Spices, cinnamon, ground",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/171320/nutrients",
+      "portions": [
+        {
+          "id": "88429",
+          "fdc_id": "171320",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "tsp",
+          "gram_weight": "2.6",
+          "data_points": "13",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "88430",
+          "fdc_id": "171320",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "tbsp",
+          "gram_weight": "7.8",
+          "data_points": "12",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 247.0,
+          "unit": "KCAL",
+          "sourceRowId": "1600510"
+        },
+        "1003": {
+          "amount": 3.99,
+          "unit": "G",
+          "sourceRowId": "1600463"
+        },
+        "1005": {
+          "amount": 80.59,
+          "unit": "G",
+          "sourceRowId": "1600509"
+        },
+        "1004": {
+          "amount": 1.24,
+          "unit": "G",
+          "sourceRowId": "1600508"
+        },
+        "1079": {
+          "amount": 53.1,
+          "unit": "G",
+          "sourceRowId": "1600457"
+        },
+        "2000": {
+          "amount": 2.17,
+          "unit": "G",
+          "sourceRowId": "1600433"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 1002.0,
+          "unit": "MG",
+          "sourceRowId": "1600507"
+        },
+        "1089": {
+          "amount": 8.32,
+          "unit": "MG",
+          "sourceRowId": "1600453"
+        },
+        "1090": {
+          "amount": 60.0,
+          "unit": "MG",
+          "sourceRowId": "1600454"
+        },
+        "1092": {
+          "amount": 431.0,
+          "unit": "MG",
+          "sourceRowId": "1600544"
+        },
+        "1093": {
+          "amount": 10.0,
+          "unit": "MG",
+          "sourceRowId": "1600486"
+        },
+        "1162": {
+          "amount": 3.8,
+          "unit": "MG",
+          "sourceRowId": "1600483"
+        },
+        "1175": {
+          "amount": 0.158,
+          "unit": "MG",
+          "sourceRowId": "1600446"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1600431"
+        },
+        "1177": {
+          "amount": 6.0,
+          "unit": "UG",
+          "sourceRowId": "1600449"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Chamomile tea bag",
+      "fdcId": "174156",
+      "identity": "Brewed chamomile tea; the tea bag itself is removed and excluded, like wooden skewers.",
+      "preparation": "Brewed beverage",
+      "approvedBy": "User (project owner) approved recommended rows of BATCH-REMAINING-14-PROPOSAL.md (C2)",
+      "approvedDate": "2026-10-14",
+      "apiReport": "20261015T005750Z-e2564d9ce89245c8a8d69ee81c0d8ca2.json",
+      "conversions": [
+        {
+          "quantity": 1,
+          "unit": "each",
+          "notes": "",
+          "recipeIds": [
+            "recipe-chamomile-comfort-toast"
+          ],
+          "grams": 237.0,
+          "basePortionId": "93843",
+          "derivation": "One bag steeped in 1 cup (8 fl oz) hot water: USDA 1 cup brewed = 237 g (portion 93843)."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars."
+      },
+      "description": "Beverages, tea, herb, brewed, chamomile",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/174156/nutrients",
+      "portions": [
+        {
+          "id": "93841",
+          "fdc_id": "174156",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "fl oz",
+          "gram_weight": "29.6",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "93842",
+          "fdc_id": "174156",
+          "seq_num": "2",
+          "amount": "6.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "fl oz",
+          "gram_weight": "178.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "93843",
+          "fdc_id": "174156",
+          "seq_num": "3",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup (8 fl oz)",
+          "gram_weight": "237.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 1.0,
+          "unit": "KCAL",
+          "sourceRowId": "1836326"
+        },
+        "1003": {
+          "amount": 0.0,
+          "unit": "G",
+          "sourceRowId": "1836312"
+        },
+        "1005": {
+          "amount": 0.2,
+          "unit": "G",
+          "sourceRowId": "1836325"
+        },
+        "1004": {
+          "amount": 0.0,
+          "unit": "G",
+          "sourceRowId": "1836324"
+        },
+        "1079": {
+          "amount": 0.0,
+          "unit": "G",
+          "sourceRowId": "1836304"
+        },
+        "2000": {
+          "amount": 0.0,
+          "unit": "G",
+          "sourceRowId": "1836276"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 2.0,
+          "unit": "MG",
+          "sourceRowId": "1836321"
+        },
+        "1089": {
+          "amount": 0.08,
+          "unit": "MG",
+          "sourceRowId": "1836305"
+        },
+        "1090": {
+          "amount": 1.0,
+          "unit": "MG",
+          "sourceRowId": "1836306"
+        },
+        "1092": {
+          "amount": 9.0,
+          "unit": "MG",
+          "sourceRowId": "1836322"
+        },
+        "1093": {
+          "amount": 1.0,
+          "unit": "MG",
+          "sourceRowId": "1836308"
+        },
+        "1162": {
+          "amount": 0.0,
+          "unit": "MG",
+          "sourceRowId": "1836313"
+        },
+        "1175": {
+          "amount": 0.0,
+          "unit": "MG",
+          "sourceRowId": "1836320"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1836317"
+        },
+        "1177": {
+          "amount": 1.0,
+          "unit": "UG",
+          "sourceRowId": "1836316"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
     }
   ]
 }

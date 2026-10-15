@@ -140,7 +140,7 @@ export const RECIPES: Recipe[] = [
     ],
     instructions: [
       "Toast the sweet potato slices in a toaster or toaster oven on high for 2–3 cycles, until fork-tender.",
-      "Meanwhile, steep the chamomile tea bag in hot water for 4–5 minutes.",
+      "Meanwhile, steep the chamomile tea bag in 1 cup (8 fl oz) hot water for 4–5 minutes, then remove the bag.",
       "Spread almond butter over each sweet potato \"toast\".",
       "Top with banana slices and 1/16 tsp ground cinnamon.",
       "Enjoy warm alongside the cup of chamomile tea.",
@@ -303,7 +303,7 @@ export const RECIPES: Recipe[] = [
     prepTimeMinutes: 5,
     cookTimeMinutes: 8,
     ingredients: [
-      { name: "Whole-grain bread", quantity: "1 slice" },
+      { name: "Whole-wheat bread", quantity: "1 slice" },
       { name: "Avocado", quantity: "1/2" },
       { name: "Egg", quantity: "1" },
       { name: "Crushed chili flakes", quantity: "1/16 tsp" },

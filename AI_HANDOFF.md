@@ -1,5 +1,30 @@
 # MoodMeal AI Handoff
 
+## Remaining 14 USDA labels approved, no new totals (Claude Code, 2026-10-14)
+
+Started at 887a7f9, equal to origin. The user approved every row marked **Approve** in `docs/usda/BATCH-REMAINING-14-PROPOSAL.md` (B1-B7, B9-B11, B13, B14, C1, C2) with their recommended conventions. Held uses stay on hold, and Greek yogurt (B8) and avocado (B12, "Prefer", not "Approve") stay pending. Honey and the skewers pilot are unchanged; the honey record is byte-identical.
+
+How approvals are stored:
+- `build-approved-ingredients.py` now writes 16 records to `src/data/usda/approved-ingredients.json`.
+- Each conversion carries its quantity, unit, notes, recipeIds, grams and USDA portion ID.
+- `approvedIngredientInput(line, recipeId)` matches all of these exactly, so an egg is raw 171287 in the Hash but hard-boiled 173424 in the Avocado Toast.
+- `extract-source-records.py` writes CSV rows for the records not already retained (171320, 171706, 172688, 173904, 174156) to `approved-source-records.json`.
+- The build stops if any CSV nutrient differs from the saved API report.
+- Added sugars stay null for every record; USDA-reported zeros stay zero.
+
+Recipe text changes:
+- The label "Whole-grain bread" is now "Whole-wheat bread" (recipe, meal and artwork coverage). Old grocery items saved under the previous name show the leaf fallback.
+- The Toast tea step now says "1 cup (8 fl oz) hot water… then remove the bag".
+
+Evidence: three API reports were fetched this session (171320, 174156, 171706); all match the CSV. The private backup holds 27 files, SHA256 verified.
+
+Validation:
+- Typecheck, avatar tests, 14 USDA tests, 22 FatSecret tests and the build pass.
+- 29 knowledge tests pass, including a new test that pins every approved recipe/label use and checks the held uses stay null.
+- The browser suite passes with no console errors.
+
+Chamomile & Sweet Potato Toast is now fully reviewed at the ingredient level, but **no totals are calculated or shown**; only Rainbow Fruit Skewers has an estimate. Next, needing the user: decide whether the Toast's sweet potato is peeled, and approve publishing its estimate. Greek yogurt fat level and avocado record are also pending.
+
 ## Ingredient artwork integrated into screens (Claude Code, 2026-10-14)
 
 Started from 760a339, equal to origin. The 35 ingredient illustrations now appear in the app. `src/data/ingredientImages.ts` is the central resolver: it reads `docs/ingredient-artwork-coverage.json` directly and matches exact labels (case-insensitive) only, with no fuzzy aliases, so oat flour never shows steel-cut oats. Grocery items added from a Food card fall back to that food's own artwork, and anything else returns no image. `IngredientThumb` shows the image on the ivory artwork background. It overlaps two images for labels such as "Salt & pepper" and "Hoisin or soy sauce", and shows a neutral leaf when there is no artwork or an image fails to load. It uses alt text "Illustration of …", lazy loading and fixed 160×160 dimensions.

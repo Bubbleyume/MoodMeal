@@ -278,3 +278,7 @@ Sunshine Banana Pancakes remains a later candidate: oat flour identity/half-cup 
 Earlier triage wording about salt/pinches is historical: 1/16 tsp cinnamon and fine table salt instructions were approved; chili flakes have an approved 1/16 tsp instruction but unknown grams/composition; sea salt has an approved weighed 0.4 g instruction but unresolved sodium composition. No table-salt substitution is authorized for sea salt.
 
 No totals calculated, new approvals assigned or runtime records changed. Await user decisions before importing or publishing. Validation on this checkpoint: 22 FatSecret tests, 14 USDA tests, 19 knowledge tests, avatar tests, TypeScript and build pass; only the existing Browserslist age warning remains.
+
+## Remaining labels decided (2026-10-14)
+
+See `BATCH-REMAINING-14-PROPOSAL.md` for the approval table and user decisions. Approved records are in `src/data/usda/approved-ingredients.json`; Greek yogurt and avocado remain pending, and several uses remain on hold. No recipe totals were published.
