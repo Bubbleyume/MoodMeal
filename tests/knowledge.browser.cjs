@@ -472,6 +472,13 @@ const { zipSync, strToU8 } = require("fflate");
         serving_quantity: 103, serving_size: "1 pack (103 g)",
         nutrition: offNutrition("100g", mixedPer100, [offSet("100g", 100, mixedPer100), offSet("serving", 103, mixedPerPack)]),
       }) });
+      if (code === "4006381333948") return json(200, { status: "success", result: { id: "product_found" }, product: offProduct({
+        code: "4006381333948", product_name: "Blocked Crackers",
+        nutrition: offNutrition("100g", { proteins: 10 }, [
+          offSet("100g", 100, { proteins: 10 }), offSet("serving", 30, { proteins: 10 }),
+          { ...offSet("100g", 100, { proteins: 10 }), source: "manufacturer" }, { ...offSet("serving", 30, { proteins: 10 }), source: "manufacturer" },
+        ]),
+      }) });
       if (code === "00012345678905") return json(404, { status: "failure", result: { id: "product_not_found" } });
       if (code === "4006381333931") return json(429, {}, { "Retry-After": "30" });
       return route.abort("failed");
@@ -545,8 +552,9 @@ const { zipSync, strToU8 } = require("fflate");
     await preview.waitFor();
     const conflictText = await page.getByTestId("off-conflicts").innerText();
     assert(conflictText.startsWith("Conflicting source nutrition values."), conflictText);
-    assert(/two packaging entries .*as sold.*per 100 g and one per 103 g serving/s.test(conflictText), conflictText);
-    assert(/Carbohydrates \(conflict\)\s+60 g\s+61\.8 g\s+60 g/.test(conflictText), conflictText);
+    assert(/2 packaging entries .*\(as sold\)/s.test(conflictText), conflictText);
+    assert(conflictText.includes("Carbohydrates: entry 1 (60 g per 100 g) would be 61.8 g per 103 g serving, but entry 2 says 60 g."), conflictText);
+    assert(/Carbohydrates \(conflict\)\s+60 g\s+60 g/.test(conflictText), conflictText);
     assert(!/Protein \(conflict\)/.test(conflictText), "protein differs only within label rounding");
     assert.equal(await page.getByTestId("off-values").count(), 0, "aggregated table hidden while entries conflict");
     // Resolution is required: nothing is chosen automatically.
@@ -558,19 +566,31 @@ const { zipSync, strToU8 } = require("fflate");
     }
     await page.setViewportSize({ width: 390, height: 844 });
     await preview.screenshot({ path: "work/qa-off-conflict-390.png" });
-    await page.getByRole("radio", { name: /Per-serving entry \(103 g, packaging\)/ }).check();
+    await page.getByRole("radio", { name: /Entry 2: packaging, as sold, per serving of 103 g/ }).check();
     assert(!(await addChosen.isDisabled()));
     await addChosen.click();
     await page.keyboard.type("1");
     const conflictRow = page.getByTestId("calc-row").filter({ hasText: "Mixed-basis Noodles" });
-    assert((await conflictRow.innerText()).includes("you chose the Per-serving entry (103 g, packaging)"));
+    assert((await conflictRow.innerText()).includes("you chose Entry 2: packaging, as sold, per serving of 103 g"));
     const conflictMarkers = await page.getByTestId("calc-conflict").allInnerTexts();
-    assert.deepEqual(conflictMarkers, ["Conflicting source nutrition values: Mixed-basis Noodles (you chose the per-serving entry)"]);
+    assert.deepEqual(conflictMarkers, ["Conflicting source nutrition values: Mixed-basis Noodles (you chose Entry 2: packaging, as sold, per serving of 103 g)"]);
     await page.getByText("Ingredient weights & calculation").click();
     const chosenNote = await page.getByTestId("calc-provenance").filter({ hasText: "Mixed-basis Noodles" }).innerText();
-    assert(chosenNote.includes("You chose the Per-serving entry (103 g, packaging). The other entry was not used."), chosenNote);
+    assert(chosenNote.includes("You chose Entry 2: packaging, as sold, per serving of 103 g. No other entry was used."), chosenNote);
     await page.getByRole("button", { name: "Remove Mixed-basis Noodles" }).click();
     assert.equal(await page.getByTestId("calc-conflict").count(), 0);
+    // A record whose conflicts can't be presented as one clear choice is blocked, with an explanation.
+    await page.waitForTimeout(3100);
+    await lookUp("4006381333948");
+    await preview.waitFor();
+    const blockedText = await page.getByTestId("off-conflicts").innerText();
+    assert(blockedText.startsWith("Conflicting source nutrition values."), blockedText);
+    assert(blockedText.includes("can't offer a clear choice for this record, so it can't be added"), blockedText);
+    assert(blockedText.includes("more than one source or preparation state"), blockedText);
+    assert.equal(await page.getByTestId("off-resolution").count(), 0);
+    assert.equal(await page.getByRole("radio").count(), 0);
+    assert(await page.getByRole("button", { name: "Add using chosen entry" }).isDisabled());
+    await page.getByRole("button", { name: "Cancel" }).click();
     // Liquid recorded per 100 ml: explained and not addable.
     await page.waitForTimeout(3100);
     await lookUp("96385074");
@@ -580,7 +600,7 @@ const { zipSync, strToU8 } = require("fflate");
     // Lookups are spaced out by the client limiter; failures are reported once, never retried.
     await lookUp("00012345678905");
     await page.getByText(/wait \d+ s before the next lookup/).waitFor();
-    assert.equal(offRequests.length, 3);
+    assert.equal(offRequests.length, 4);
     await page.waitForTimeout(3100);
     await lookUp("00012345678905");
     await page.getByText("No product with barcode 00012345678905 was found on Open Food Facts.").waitFor();
@@ -598,8 +618,8 @@ const { zipSync, strToU8 } = require("fflate");
     await lookUp("0012345678905");
     await preview.waitFor();
     await page.getByRole("button", { name: "Cancel" }).click();
-    assert.equal(offRequests.length, 6);
-    assert.deepEqual(offRequests.map((r) => r.url.match(/product\/(\d+)/)[1]), ["0012345678905", "0810111890373", "96385074", "00012345678905", "5901234123457", "4006381333931"]);
+    assert.equal(offRequests.length, 7);
+    assert.deepEqual(offRequests.map((r) => r.url.match(/product\/(\d+)/)[1]), ["0012345678905", "0810111890373", "4006381333948", "96385074", "00012345678905", "5901234123457", "4006381333931"]);
     assert(offRequests.every((r) => /\/api\/v3\.5\/product\//.test(r.url)));
     await page.unroute("**/api/v3.5/product/**");
     // Removing the product row drops it; nothing was written to browser storage.

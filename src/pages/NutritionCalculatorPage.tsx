@@ -267,7 +267,7 @@ export default function NutritionCalculatorPage() {
                         {(() => {
                           const conflicting = [...new Set(result.rows
                             .filter((r) => r.food.product?.consistency.conflicts.some((c) => c.id === n.id))
-                            .map((r) => `${r.food.name} (you chose the ${r.food.resolution === "per100g" ? "per-100 g" : "per-serving"} entry)`))];
+                            .map((r) => `${r.food.name} (you chose ${r.food.product!.resolutionOptions.find((o) => o.id === r.food.resolution)?.label ?? "an entry"})`))];
                           return conflicting.length > 0 && (
                             <span className="block text-xs font-normal text-amber-900" data-testid="calc-conflict">
                               Conflicting source nutrition values: {conflicting.join(", ")}

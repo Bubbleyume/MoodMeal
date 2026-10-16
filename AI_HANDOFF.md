@@ -1,5 +1,35 @@
 # MoodMeal AI Handoff
 
+## Multiple-conflict handling for Open Food Facts records (Claude Code, 2026-10-16)
+
+Started at a435c71, equal to origin.
+
+All pairs are now inspected:
+- `checkConsistency` compares every pair of mass-referenced input sets (per 100 g, or per serving with a gram weight) that share a source and preparation: 100 g vs serving, serving vs serving, and 100 g vs 100 g.
+- Every material conflict is listed (`OffConflict` now has `a`/`b` entry refs and `expectedB`).
+- The conflicting group's entries become the choices (`ConsistencyCheck.group`); the old single `pair` field is gone.
+
+Resolution by complete entry:
+- `ConflictResolution` is now an entry id (`entry-<index>`), and each option names one complete input set ("Entry 2: packaging, as sold, per serving of 103 g").
+- Only the chosen entry's values are used. Its missing nutrients stay null, never borrowed from other entries.
+- Per-100 g entries need weight evidence. Serving entries are offered by their serving only. Volume products are offered nothing.
+
+Blocking: `resolvable: false` with a `blockReason`, no options and no calculation, when:
+- conflicts span more than one source or preparation state;
+- schema issues mean not every entry could be checked;
+- there are more than `MAX_RESOLUTION_ENTRIES` (5) entries.
+
+Calculation-layer enforcement:
+- `calculateCustom` re-derives every Open Food Facts food through `productFood(product, resolution)` and rejects it when there's no choice, an invalid choice, a blocked product or no product data.
+- Tampered nutrients are replaced by the re-derived values, and unexpected measures are refused.
+
+Two-entry resolution and consistent records behave as before, apart from the new entry labels. USDA, catalog and FatSecret are unchanged.
+
+Validation:
+- 47 knowledge tests pass: rewritten consistency tests, a new three-or-more-entries / multiple-conflicts / blocked test, and a resolution test with incomplete-entry and calculation-bypass cases.
+- Typecheck, avatar tests, 14 USDA tests, 22 FatSecret tests, the build and the browser suite pass. The browser suite adds a mocked blocked record and uses the entry-based labels (emulation only).
+- No live requests; the saved real noodles record still resolves as two entries.
+
 ## Open Food Facts nutrition-basis conflict detection with required resolution (Claude Code, 2026-10-16)
 
 Started at bd1a52b, equal to origin. The user's brief named 1ef2f8b, but bd1a52b already had a v3.5 mapper with a display-only conflict check; this work builds on it.

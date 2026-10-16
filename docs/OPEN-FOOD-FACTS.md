@@ -63,16 +63,16 @@ Added 2026-10-15. Code: `src/lib/openFoodFacts.ts` (lookup and product mapping),
 - Missing or unexpected set fields become **schema issues** instead of being skipped. For example: an unexpected basis, a missing preparation, an invalid reference quantity, missing or non-list input sets.
 - `readEntry` / `readMapped` convert units explicitly (g, mg, µg, kcal, kJ). They keep null distinct from zero, exclude modifiers and `source: "estimate"` entries, and record each value's **declared precision** from `value_string` ("12" means ±0.5; "11.7" means ±0.05).
 
-**When sets are compared (`checkConsistency`):** a per-100 g set (g) is compared with a per-serving set only when:
-- both sets have the **same source** and the **same preparation state** (as-sold with as-sold, prepared with prepared);
-- the serving set states its **weight in grams** (`per_unit: "g"` with a `per_quantity`).
+**When sets are compared (`checkConsistency`, updated 2026-10-16):** every pair of **mass-referenced** entries is compared: per 100 g, or per serving with a stated gram weight. This covers per-100 g vs serving, serving vs serving, and per-100 g vs per-100 g. Entries are compared only when they share:
+- the **same source**;
+- the **same preparation state** (as sold with as sold, prepared with prepared).
 
 These are never compared:
 - estimate sets;
 - sets from different sources or preparation states;
-- serving sets measured in ml or without a gram weight.
+- sets measured in ml or with no gram weight.
 
-Only nutrients present as exact values in both sets are compared.
+Only nutrients present as exact values in both entries are compared.
 
 **Tolerance:**
 - For each side, the allowance is the larger of half the US label rounding step (21 CFR 101.9) and the value's declared precision. The rounding steps:
@@ -94,12 +94,20 @@ Only nutrients present as exact values in both sets are compared.
 A conflict found in a comparable pair is still reported even when other sets have schema issues.
 
 **When there's a conflict:**
-- The preview shows **"Conflicting source nutrition values."** It explains the two bases (source, preparation, per 100 g vs per N g serving) and shows both entries side by side, with the per-100 g entry scaled to the serving weight. Conflicting nutrients are marked.
-- The usual values table is hidden.
-- **The product can't be added until the user explicitly chooses** which entry matches their package. Choosing the **per-serving entry** offers servings only, using the values as entered. Choosing the **per-100 g entry** offers grams and the serving, and needs weight evidence for the product.
-- For volume products, neither entry can be chosen, because no density is assumed.
-- Nothing is selected, averaged or corrected automatically. Without a choice, `productFood` returns null and `per100gNutrients` returns only nulls.
-- The chosen entry is labelled on the ingredient row ("you chose the Per-serving entry (103 g, packaging)"), on each conflicting nutrient in the results, and in the calculation details ("The other entry was not used").
+- Every material conflict across all compared pairs is listed. For example: "Carbohydrates: entry 1 (60 g per 100 g) would be 61.8 g per 103 g serving, but entry 2 says 60 g."
+- The preview shows **"Conflicting source nutrition values."** with every entry of the conflicting group side by side, as entered. Conflicting nutrients are marked, and the usual values table is hidden.
+- **The user must choose one complete, identifiable entry** (for example "Entry 2: packaging, as sold, per serving of 103 g") before the product can be added.
+  - Only that entry's values are used. Nutrients it doesn't record stay unknown and are never filled from competing entries; the choice warns about this beforehand.
+  - A per-serving entry is offered by its serving only. A per-100 g entry offers grams and the product serving, and needs weight evidence for the product.
+  - Products sold by volume offer no entry, because no density is assumed.
+- **Blocked:** the product can't be added, and the reason is shown, when:
+  - conflicts appear in more than one source or preparation state;
+  - some entries couldn't be read, so not every conflict can be checked;
+  - there are more than 5 competing entries (`MAX_RESOLUTION_ENTRIES`).
+- **Enforced in the calculation layer, not only the UI:** `calculateCustom` re-derives every Open Food Facts food from its product and the chosen entry with `productFood`. It ignores the food's own nutrients and measures.
+  - A food built without a choice, with an invalid choice, for a blocked product, or without product data is rejected with "This product has conflicting source nutrition values. Choose the one entry that matches your package before calculating." (or a general "can't be used" error).
+  - Tampered nutrient values are replaced by the re-derived ones.
+- Nothing is selected, combined, averaged or corrected automatically. The choice is labelled on the ingredient row, on each conflicting nutrient in the results, and in the calculation details ("No other entry was used").
 
 **Not changed:** consistent and single-entry records behave as before: grams for per-100 g products sold by weight, servings only with a gram weight, liquids and unclear bases blocked. The 17 USDA foods, catalog approvals, published nutrition and FatSecret are untouched, and everything stays in memory only.
 

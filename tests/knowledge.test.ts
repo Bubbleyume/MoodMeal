@@ -977,8 +977,10 @@ test("OFF consistency check: comparable sets only, label rounding and precision,
   c = pairCheck({ "energy-kcal": 360 / 103 * 100, proteins: 12, carbohydrates: 60, fat: 8, fiber: 1, sugars: 7 },
     { "energy-kcal": 360, proteins: 12, carbohydrates: 60, fat: 8, fiber: 1, sugars: 7 }, 103);
   assert.equal(c.status, "conflict");
-  assert.deepEqual(c.conflicts.map((x) => [x.label, Number(x.expectedPerServing.toFixed(2)), x.perServing, Number(x.tolerance.toFixed(3))]), [["Carbohydrates", 61.8, 60, 1.015]]);
-  assert.equal(c.pair!.source, "packaging");
+  assert(c.resolvable);
+  assert.deepEqual(c.conflicts.map((x) => [x.label, Number(x.expectedB.toFixed(2)), x.b.value, Number(x.tolerance.toFixed(3))]), [["Carbohydrates", 61.8, 60, 1.015]]);
+  assert.equal(describeConflict(c.conflicts[0]), "Carbohydrates: entry 1 (60 g per 100 g) would be 61.8 g per 103 g serving, but entry 2 says 60 g.");
+  assert.deepEqual(c.group!.entries.map((e) => e.label), ["Entry 1: packaging, as sold, per 100 g", "Entry 2: packaging, as sold, per serving of 103 g"]);
   // Large difference at a 30 g serving is a conflict for every copied nutrient.
   c = pairCheck({ "energy-kcal": 400, proteins: 10 }, { "energy-kcal": 400, proteins: 10 }, 30);
   assert.deepEqual(c.conflicts.map((x) => x.label), ["Calories", "Protein"]);
@@ -1018,62 +1020,131 @@ test("OFF consistency check: comparable sets only, label rounding and precision,
   assert.equal(c.status, "unverifiable");
   assert.match(c.reason, /unexpected basis "portion"/);
   assert.equal(checkConsistency(adaptNutrition({ aggregated_set: { per: "100g", nutrients: {} } })).status, "unverifiable");
-  // A conflict elsewhere is still reported even with schema issues.
-  c = checkConsistency(adaptNutrition({ aggregated_set: { per: "100g", nutrients: {} },
-    input_sets: [offSet("100g", 100, { proteins: 10 }), offSet("serving", 30, { proteins: 10 }), { per: "portion", source: "packaging", nutrients: {} }] }));
-  assert.equal(c.status, "conflict");
 });
-test("OFF conflicting products require an explicit entry choice; values are never picked, averaged or corrected", () => {
+test("OFF consistency check: three or more entries, multiple conflicts and blocked records", () => {
+  const check = (sets: unknown[]) => checkConsistency(adaptNutrition({ aggregated_set: { per: "100g", nutrients: {} }, input_sets: sets }));
+  // Three entries, all pairs inspected: entry 3 (30 g serving) conflicts with both other entries.
+  let c = check([
+    offSet("100g", 100, { "energy-kcal": 400, proteins: 10 }),
+    offSet("serving", 50, { "energy-kcal": 200, proteins: 5 }),
+    offSet("serving", 30, { "energy-kcal": 400, proteins: 10 }),
+  ]);
+  assert.equal(c.status, "conflict");
+  assert(c.resolvable);
+  assert.deepEqual(c.conflicts.map((x) => `${x.a.setIndex + 1}-${x.b.setIndex + 1} ${x.label}`),
+    ["1-3 Calories", "1-3 Protein", "2-3 Calories", "2-3 Protein"]);
+  assert.deepEqual(c.group!.entries.map((e) => e.setIndex), [0, 1, 2]);
+  // Two serving entries are compared with each other too (no per-100 g entry needed).
+  c = check([offSet("serving", 30, { proteins: 3 }), offSet("serving", 60, { proteins: 3 })]);
+  assert.deepEqual(c.conflicts.map((x) => `${x.a.setIndex + 1}-${x.b.setIndex + 1} ${x.label}`), ["1-2 Protein"]);
+  // Two per-100 g entries are compared directly.
+  c = check([offSet("100g", 100, { carbohydrates: 60 }), offSet("100g", 100, { carbohydrates: 70 })]);
+  assert.equal(c.status, "conflict");
+  // Consistent three-entry records stay consistent; an estimate entry never joins the group.
+  c = check([
+    offSet("100g", 100, { "energy-kcal": 400, proteins: 10 }),
+    offSet("serving", 30, { "energy-kcal": 120, proteins: 3 }),
+    offSet("serving", 50, { "energy-kcal": 200, proteins: 5 }),
+    offSet("100g", 100, { proteins: 99 }, { source: "estimate" }),
+  ]);
+  assert.equal(c.status, "consistent");
+  // Blocked: conflicts in more than one source or preparation state.
+  c = check([
+    offSet("100g", 100, { proteins: 10 }), offSet("serving", 30, { proteins: 10 }),
+    offSet("100g", 100, { proteins: 10 }, { source: "manufacturer" }), offSet("serving", 30, { proteins: 10 }, { source: "manufacturer" }),
+  ]);
+  assert.equal(c.status, "conflict");
+  assert.equal(c.resolvable, false);
+  assert.match(c.blockReason!, /more than one source or preparation state/);
+  // Blocked: some entries can't be read, so not every conflict can be checked.
+  c = check([offSet("100g", 100, { proteins: 10 }), offSet("serving", 30, { proteins: 10 }), { per: "portion", source: "packaging", nutrients: {} }]);
+  assert.equal(c.resolvable, false);
+  assert.match(c.blockReason!, /couldn't be read.*unexpected basis "portion"/);
+  // Blocked: more entries than can be presented clearly.
+  c = check([offSet("100g", 100, { proteins: 10 }), ...[10, 20, 30, 40, 50].map((g) => offSet("serving", g, { proteins: 10 }))]);
+  assert.equal(c.resolvable, false);
+  assert.match(c.blockReason!, /6 competing entries/);
+});
+test("OFF conflicting products: one complete entry must be chosen, enforced in the calculation layer", () => {
   const per100 = { "energy-kcal": 360 / 103 * 100, "energy-kj": { value: 1528, modifier: "~" }, proteins: 12, carbohydrates: 60, fat: 8, fiber: 1, sugars: 7 };
   const perPack = { "energy-kcal": 360, proteins: 12, carbohydrates: 60, fat: 8, fiber: 1, sugars: 7 };
-  const mixed = (extra: Record<string, unknown> = {}) => offSolid({
+  const product = (sets: unknown[], extra: Record<string, unknown> = {}) => offSolid({
     code: "0810111890373", product_name: "Mixed-basis Noodles", quantity: "3.62 oz", product_quantity: 102.6, product_quantity_unit: "g",
     serving_quantity: 103, serving_quantity_unit: "g", serving_size: "1 pack (103 g)",
-    nutrition: {
-      aggregated_set: { per: "100g", preparation: "as_sold", nutrients: offNutrients(per100) },
-      input_sets: [offSet("100g", 100, per100), offSet("serving", 103, perPack), offSet("100g", 100, { sugars: 2 }, { source: "estimate" })],
-    },
+    nutrition: { aggregated_set: { per: "100g", preparation: "as_sold", nutrients: offNutrients(per100) }, input_sets: sets },
     ...extra,
   });
+  const twoEntries = [offSet("100g", 100, per100), offSet("serving", 103, perPack), offSet("100g", 100, { sugars: 2 }, { source: "estimate" })];
   assert.deepEqual(validateBarcode("810111890373"), { code: "810111890373" });
-  const p = mapProduct(mixed(), "810111890373", at);
+  const p = mapProduct(product(twoEntries), "810111890373", at);
   assert.equal(p.code, "0810111890373");
   assert.equal(p.consistency.status, "conflict");
-  assert.deepEqual(p.consistency.conflicts.map((c) => c.id), ["1005"]);
-  assert.equal(describeConflict(p.consistency.conflicts[0]), "Carbohydrates: 60 g per 100 g would be 61.8 g per 103 g serving, but the per-serving entry says 60 g.");
-  assert.match(p.calculation, /^Conflicting source nutrition values/);
+  assert.match(p.calculation, /^Conflicting source nutrition values: choose the one entry/);
   // Aggregated values are still shown exactly as recorded (not corrected).
   assert.deepEqual(Object.fromEntries(Object.entries(p.nutrients).map(([k, v]) => [k, v.amount])),
     { "1008": 360 / 103 * 100, "1003": 12, "1005": 60, "1004": 8, "1079": 1, "2000": 7 });
   // No automatic choice: not calculable and no usable values until the user picks an entry.
   assert.equal(isCalculable(p), false);
   assert.equal(productFood(p), null);
+  assert.equal(productFood(p, "entry-99"), null);
   assert(Object.values(per100gNutrients(p)).every((v) => v.amount === null));
-  assert.deepEqual(p.resolutionOptions.map((o) => [o.id, o.available, o.servingGrams]), [["perServing", true, 103], ["per100g", true, 103]]);
-  // Choosing the per-serving entry: serving only, entered values per 103 g.
-  const servingFood = productFood(p, "perServing")!;
-  assert.equal(servingFood.fdcId, "off:0810111890373:perServing");
-  assert.equal(servingFood.resolution, "perServing");
-  assert.deepEqual(servingFood.measures.map((m) => [m.id, m.gramsPerUnit]), [["off-serving", 103]]);
-  assert.match(servingFood.stateNote!, /you chose the Per-serving entry \(103 g, packaging\)/);
+  assert.deepEqual(p.resolutionOptions.map((o) => [o.id, o.available, o.entry.referenceGrams]), [["entry-0", true, 100], ["entry-1", true, 103]]);
   const calc = (food: CalculatorFood, measureId: string, quantity: string) => {
     const r = calculateCustom([{ key: "a", fdcId: food.fdcId, measureId, quantity }], "1", [food]).result!;
-    return [r.totalGrams, ...r.nutrients.map((n) => Number(n.total!.toFixed(4)))];
+    return [r.totalGrams, ...r.nutrients.map((n) => (n.total === null ? null : Number(n.total.toFixed(4))))];
   };
+  // Two-entry resolution, per-serving entry: serving only, values as entered per 103 g.
+  const servingFood = productFood(p, "entry-1")!;
+  assert.equal(servingFood.fdcId, "off:0810111890373:entry-1");
+  assert.deepEqual(servingFood.measures.map((m) => [m.id, m.gramsPerUnit]), [["off-serving", 103]]);
+  assert.match(servingFood.stateNote!, /you chose Entry 2: packaging, as sold, per serving of 103 g/);
   assert.deepEqual(calc(servingFood, "off-serving", "1"), [103, 360, 12, 60, 8, 1, 7]);
   assert.deepEqual(calc(servingFood, "off-serving", "0.5"), [51.5, 180, 6, 30, 4, 0.5, 3.5]);
-  // Choosing the per-100 g entry: grams and serving, per-100 g values as entered.
-  const per100Food = productFood(p, "per100g")!;
+  // Per-100 g entry: grams and the product serving, values as entered per 100 g.
+  const per100Food = productFood(p, "entry-0")!;
   assert.deepEqual(per100Food.measures.map((m) => [m.id, m.gramsPerUnit]), [["g", 1], ["off-serving", 103]]);
   assert.deepEqual(calc(per100Food, "g", "100"), [100, 349.5146, 12, 60, 8, 1, 7]);
   assert.deepEqual(calc(per100Food, "off-serving", "1"), [103, 360, 12.36, 61.8, 8.24, 1.03, 7.21]);
-  // Per-100 g entry is unavailable without weight evidence; nothing is offered for volume products.
-  const unknownUnit = mapProduct(mixed({ quantity: undefined, product_quantity_unit: undefined }), "x", at);
-  assert.deepEqual(unknownUnit.resolutionOptions.map((o) => [o.id, o.available]), [["perServing", true], ["per100g", false]]);
-  assert.equal(productFood(unknownUnit, "per100g"), null);
-  const liquid = mapProduct(mixed({ quantity: "1 L", product_quantity_unit: "ml" }), "x", at);
+  // Three entries: any complete entry can be chosen; an incomplete one never borrows from the others.
+  const three = mapProduct(product([
+    offSet("100g", 100, per100), offSet("serving", 103, perPack), offSet("serving", 51.5, { "energy-kcal": 175, proteins: 6 }),
+  ]), "x", at);
+  assert.equal(three.consistency.status, "conflict");
+  assert.deepEqual(three.resolutionOptions.map((o) => [o.id, o.missing]), [
+    ["entry-0", []], ["entry-1", []], ["entry-2", ["Carbohydrates", "Fat", "Fiber", "Total sugars"]],
+  ]);
+  const incomplete = productFood(three, "entry-2")!;
+  assert.match(incomplete.stateNote!, /doesn't record carbohydrates, fat, fiber, total sugars, so those stay unknown/);
+  assert.deepEqual(calc(incomplete, "off-serving", "2"), [103, 350, 12, null, null, null, null]);
+  const incompleteRun = calculateCustom([{ key: "a", fdcId: incomplete.fdcId, measureId: "off-serving", quantity: "1" }], "1", [incomplete]).result!;
+  assert.deepEqual(incompleteRun.nutrients.find((n) => n.id === "1005")!.missing, ["Mixed-basis Noodles"]);
+  // Per-100 g entries need weight evidence; volume products offer nothing.
+  const unknownUnit = mapProduct(product(twoEntries, { quantity: undefined, product_quantity_unit: undefined }), "x", at);
+  assert.deepEqual(unknownUnit.resolutionOptions.map((o) => [o.id, o.available]), [["entry-0", false], ["entry-1", true]]);
+  assert.equal(productFood(unknownUnit, "entry-0"), null);
+  const liquid = mapProduct(product(twoEntries, { quantity: "1 L", product_quantity_unit: "ml" }), "x", at);
   assert(liquid.resolutionOptions.every((o) => !o.available));
-  assert.equal(productFood(liquid, "perServing"), null);
+  // Blocked records offer no choices and can't be calculated at all.
+  const blocked = mapProduct(product([...twoEntries, offSet("100g", 100, { proteins: 1 }, { source: "manufacturer" }), offSet("serving", 30, { proteins: 1 }, { source: "manufacturer" })]), "x", at);
+  assert.equal(blocked.consistency.resolvable, false);
+  assert.deepEqual(blocked.resolutionOptions, []);
+  assert.match(blocked.calculation, /^Can't be calculated: conflicting source nutrition values/);
+  assert.equal(productFood(blocked, "entry-0"), null);
+  // Calculation-layer bypasses: a hand-built food that skips the choice, a forged resolution,
+  // tampered nutrients and a blocked product are all rejected or re-derived.
+  const conflictError = "This product has conflicting source nutrition values. Choose the one entry that matches your package before calculating.";
+  const forged: CalculatorFood = { ...servingFood, fdcId: "off:0810111890373", resolution: undefined };
+  assert.equal(calculateCustom([{ key: "f", fdcId: forged.fdcId, measureId: "off-serving", quantity: "1" }], "1", [forged]).rowErrors.f, conflictError);
+  const wrongChoice: CalculatorFood = { ...servingFood, resolution: "entry-7" };
+  assert.equal(calculateCustom([{ key: "f", fdcId: wrongChoice.fdcId, measureId: "off-serving", quantity: "1" }], "1", [wrongChoice]).rowErrors.f, conflictError);
+  const blockedFood: CalculatorFood = { ...servingFood, product: blocked };
+  assert.equal(calculateCustom([{ key: "f", fdcId: blockedFood.fdcId, measureId: "off-serving", quantity: "1" }], "1", [blockedFood]).rowErrors.f, conflictError);
+  const noProduct: CalculatorFood = { ...servingFood, product: undefined };
+  assert.equal(calculateCustom([{ key: "f", fdcId: noProduct.fdcId, measureId: "off-serving", quantity: "1" }], "1", [noProduct]).rowErrors.f, "This product's nutrition can't be used for calculation.");
+  const tampered: CalculatorFood = { ...servingFood, nutrients: { ...servingFood.nutrients, "1008": { amount: 1, unit: "KCAL", sourceRowId: null } } };
+  assert.deepEqual(calc(tampered, "off-serving", "1"), [103, 360, 12, 60, 8, 1, 7]);
+  const extraMeasure: CalculatorFood = { ...servingFood, measures: [...servingFood.measures, { id: "g", label: "grams", gramsPerUnit: 1, portionId: "", basis: "" }] };
+  assert.equal(calculateCustom([{ key: "f", fdcId: extraMeasure.fdcId, measureId: "g", quantity: "50" }], "1", [extraMeasure]).rowErrors.f, "Choose an approved ingredient and unit.");
   // Consistent records keep the existing behavior (no choice required).
   const consistent = mapProduct(offSolid({ serving_quantity: 30, serving_quantity_unit: "g", nutrition: {
     aggregated_set: { per: "100g", preparation: "as_sold", nutrients: offNutrients({ "energy-kcal": 400, proteins: 10 }) },
@@ -1081,7 +1152,9 @@ test("OFF conflicting products require an explicit entry choice; values are neve
   } }), "0012345678905", at);
   assert.equal(consistent.consistency.status, "consistent");
   assert.deepEqual(consistent.resolutionOptions, []);
-  assert.equal(productFood(consistent)!.fdcId, "off:0012345678905");
+  const consistentFood = productFood(consistent)!;
+  assert.equal(consistentFood.fdcId, "off:0012345678905");
+  assert.deepEqual(calc(consistentFood, "g", "50"), [50, 200, 5, null, null, null, null]);
   // Preview columns are unchanged for non-conflicting records.
   assert.deepEqual(previewValues(mapProduct(offSolid(), "0012345678905", at)).columns, ["Per 100 g"]);
   const perServing = mapProduct(offSolid({ serving_quantity: 40, serving_quantity_unit: "g" }, { "energy-kcal": 150 }, "serving"), "0012345678905", at);

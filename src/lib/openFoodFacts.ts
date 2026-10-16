@@ -19,7 +19,7 @@
 import type { UsdaNutrientValue } from "../types/nutrition";
 import {
   OFF_NUTRIENT_MAP, adaptNutrition, checkConsistency, mapSet,
-  type AdaptedSet, type ConsistencyCheck, type OffNutrient,
+  type AdaptedSet, type ConsistencyCheck, type EntryRef, type OffNutrient,
 } from "./offNutritionAdapter";
 
 export const OFF_BASE_URL = "https://world.openfoodfacts.org";
@@ -139,19 +139,25 @@ export function createLookupLimiter({ maxPerMinute = 10, minIntervalMs = 3000 } 
 // ---------------------------------------------------------------- mapping
 
 export { OFF_NUTRIENT_MAP, KJ_PER_KCAL, describeConflict } from "./offNutritionAdapter";
-export type { OffNutrient, OffConflict, ConsistencyCheck } from "./offNutritionAdapter";
+export type { OffNutrient, OffConflict, ConsistencyCheck, EntryRef } from "./offNutritionAdapter";
 
 export type NutritionBasis = "per100g" | "perServing" | "per100ml" | "unclear" | "none";
 
-/** How the user resolved conflicting package entries (explicit choice, never automatic). */
-export type ConflictResolution = "per100g" | "perServing";
+/**
+ * How the user resolved conflicting package entries: the id of one complete
+ * input set ("entry-<index>"). Chosen explicitly, never automatically.
+ */
+export type ConflictResolution = string;
 
+/** One complete, identifiable package entry the user may choose. */
 export interface ResolutionOption {
   id: ConflictResolution;
+  entry: EntryRef;
   label: string;
-  /** Values exactly as entered in that package entry. */
+  /** Values exactly as entered in that entry; never filled from other entries. */
   nutrients: Record<string, OffNutrient>;
-  servingGrams: number;
+  /** Mapped nutrients this entry doesn't record exactly (they stay unknown). */
+  missing: string[];
   available: boolean;
   unavailableReason?: string;
 }
@@ -245,22 +251,24 @@ function servingText(size: string | null, grams: number) {
   return stated && Number(stated[1]) === grams ? size : `${size} (${grams} g)`;
 }
 
-/** The two package entries the user can choose between when they conflict. */
-function resolutionOptions(consistency: ConsistencyCheck, sold: OffProduct["soldBy"]): ResolutionOption[] {
-  if (consistency.status !== "conflict" || !consistency.pair) return [];
-  const { per100, serving, servingGrams: grams, source } = consistency.pair;
+/**
+ * Every complete entry in the conflicting group, as separate choices. A
+ * blocked conflict offers none. Per-100 g entries need weight evidence;
+ * nothing is offered for products sold by volume.
+ */
+function resolutionOptions(consistency: ConsistencyCheck, sets: AdaptedSet[], sold: OffProduct["soldBy"]): ResolutionOption[] {
+  if (consistency.status !== "conflict" || !consistency.resolvable || !consistency.group) return [];
   const volume = sold === "volume" ? "The product is sold by volume; MoodMeal doesn't assume a density." : undefined;
-  return [
-    {
-      id: "perServing", label: `Per-serving entry (${grams} g, ${source})`, nutrients: mapSet(serving), servingGrams: grams,
-      available: !volume, unavailableReason: volume,
-    },
-    {
-      id: "per100g", label: `Per-100 g entry (${source})`, nutrients: mapSet(per100), servingGrams: grams,
-      available: sold === "weight",
-      unavailableReason: volume ?? (sold === "weight" ? undefined : "The product's weight or volume unit isn't recorded, so per-100 g values can't be confirmed as grams."),
-    },
-  ];
+  return consistency.group.entries.map((entry) => {
+    const nutrients = mapSet(sets.find((s) => s.index === entry.setIndex)!);
+    const unavailableReason = volume
+      ?? (entry.per === "100g" && sold !== "weight" ? "The product's weight or volume unit isn't recorded, so per-100 g values can't be confirmed as grams." : undefined);
+    return {
+      id: `entry-${entry.setIndex}`, entry, label: entry.label, nutrients,
+      missing: OFF_NUTRIENT_MAP.filter((m) => nutrients[m.id].amount === null).map((m) => m.label),
+      available: !unavailableReason, ...(unavailableReason ? { unavailableReason } : {}),
+    };
+  });
 }
 
 export function mapProduct(p: Record<string, unknown>, requestedCode: string, retrievedAt: Date): OffProduct {
@@ -278,7 +286,10 @@ export function mapProduct(p: Record<string, unknown>, requestedCode: string, re
     notes.push("Carbohydrates follow the product label. Some labels exclude fiber, so they may not match USDA \"carbohydrate, by difference\".");
 
   let calculation: string;
-  if (consistency.status === "conflict") calculation = "Conflicting source nutrition values: choose which package entry matches your package before adding.";
+  if (consistency.status === "conflict")
+    calculation = consistency.resolvable
+      ? "Conflicting source nutrition values: choose the one entry that matches your package before adding."
+      : `Can't be calculated: conflicting source nutrition values. ${consistency.blockReason}`;
   else if (basis === "per100g") calculation = `${reason} ${grams ? "Can be calculated by grams or by product serving." : "Can be calculated by grams. Product servings aren't offered because no serving weight in grams is recorded."}`;
   else if (basis === "perServing") calculation = grams ? `${reason} Can be calculated by product serving only.` : "Can't be calculated yet: nutrition is per serving, but no serving weight in grams is recorded.";
   else calculation = `Can't be calculated yet. ${reason}`;
@@ -296,7 +307,7 @@ export function mapProduct(p: Record<string, unknown>, requestedCode: string, re
     servingLabel: grams ? servingText(text(p.serving_size, 60), grams) : null,
     nutrients,
     consistency,
-    resolutionOptions: resolutionOptions(consistency, sold),
+    resolutionOptions: resolutionOptions(consistency, adapted.inputSets, sold),
     notes,
     ingredientsText: text(p.ingredients_text, 800),
     allergens: tags(p.allergens_tags),
@@ -353,8 +364,9 @@ export function per100gNutrients(p: OffProduct, resolution?: ConflictResolution)
   for (const m of OFF_NUTRIENT_MAP) {
     let amount: number | null = null;
     if (option) {
+      // Only the chosen entry is used; its missing nutrients stay unknown.
       const n = option.nutrients[m.id];
-      amount = n.amount === null ? null : option.id === "per100g" ? n.amount : (n.amount * 100) / option.servingGrams;
+      amount = n.amount === null ? null : (n.amount * 100) / option.entry.referenceGrams;
     } else if (p.consistency.status !== "conflict") {
       const n = p.nutrients[m.id];
       amount = n.amount === null ? null

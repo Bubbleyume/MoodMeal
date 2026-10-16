@@ -165,18 +165,27 @@ export function findFood(fdcId: string, extraFoods: CalculatorFood[] = []) {
 export function productFood(p: OffProduct, resolution?: ConflictResolution): CalculatorFood | null {
   if (!isCalculable(p, resolution)) return null;
   const conflict = p.consistency.status === "conflict";
-  const option = conflict ? p.resolutionOptions.find((o) => o.id === resolution)! : undefined;
+  const option = conflict ? p.resolutionOptions.find((o) => o.id === resolution && o.available) : undefined;
+  if (conflict && !option) return null;
   const measures: CalculatorMeasure[] = [];
-  const perGrams = option ? option.id === "per100g" : p.basis === "per100g";
-  if (perGrams)
-    measures.push({ ...GRAMS, basis: option ? "Weighed amount in grams; the per-100 g package entry you chose." : "Weighed amount in grams; Open Food Facts nutrition per 100 g." });
-  const servingWeight = option ? option.servingGrams : p.servingGrams;
-  const servingLabel = option ? `${option.servingGrams} g` : p.servingLabel;
-  if (servingWeight)
-    measures.push({
-      id: "off-serving", label: `product serving, ${servingLabel}`, gramsPerUnit: servingWeight, portionId: "",
-      basis: option ? `Serving weight from the per-serving package entry: ${servingWeight} g.` : `Product serving recorded by Open Food Facts: ${servingLabel}.`,
-    });
+  if (option) {
+    // Only the chosen entry's own reference weights are offered.
+    if (option.entry.per === "100g") {
+      measures.push({ ...GRAMS, basis: `Weighed amount in grams; values from ${option.label} (chosen by you).` });
+      if (p.servingGrams)
+        measures.push({ id: "off-serving", label: `product serving, ${p.servingLabel}`, gramsPerUnit: p.servingGrams, portionId: "",
+          basis: `Product serving recorded by Open Food Facts: ${p.servingLabel}; values from ${option.label}.` });
+    } else {
+      measures.push({ id: "off-serving", label: `product serving, ${option.entry.referenceGrams} g`, gramsPerUnit: option.entry.referenceGrams, portionId: "",
+        basis: `Serving weight from ${option.label} (chosen by you).` });
+    }
+  } else {
+    if (p.basis === "per100g")
+      measures.push({ ...GRAMS, basis: "Weighed amount in grams; Open Food Facts nutrition per 100 g." });
+    if (p.servingGrams)
+      measures.push({ id: "off-serving", label: `product serving, ${p.servingLabel}`, gramsPerUnit: p.servingGrams, portionId: "",
+        basis: `Product serving recorded by Open Food Facts: ${p.servingLabel}.` });
+  }
   const name = p.name ?? `Product ${p.code}`;
   return {
     fdcId: option ? `off:${p.code}:${option.id}` : `off:${p.code}`,
@@ -185,15 +194,27 @@ export function productFood(p: OffProduct, resolution?: ConflictResolution): Cal
     resolution: option?.id,
     name,
     description: `${name}${p.brand ? ` (${p.brand})` : ""}, barcode ${p.code}`,
-    state: `Open Food Facts product data · ${option ? `${option.id === "per100g" ? "per-100 g" : "per-serving"} entry you chose` : p.basisLabel}`,
+    state: `Open Food Facts product data · ${option ? "entry you chose" : p.basisLabel}`,
     stateNote: option
-      ? `Crowd-sourced label data, not reviewed by MoodMeal. Conflicting source nutrition values: you chose the ${option.label}.`
+      ? `Crowd-sourced label data, not reviewed by MoodMeal. Conflicting source nutrition values: you chose ${option.label}.${option.missing.length ? ` It doesn't record ${option.missing.join(", ").toLowerCase()}, so ${option.missing.length === 1 ? "that stays" : "those stay"} unknown.` : ""}`
       : "Crowd-sourced label data, not reviewed by MoodMeal.",
     imageLabel: "",
     measures,
-    nutrients: per100gNutrients(p, resolution),
+    nutrients: per100gNutrients(p, option?.id),
     sourceURL: p.url,
   };
+}
+
+/**
+ * Re-derives an Open Food Facts food from its product and the user's
+ * explicit choice, so the calculation never trusts a food object built or
+ * changed elsewhere (e.g. one that skipped the conflict choice).
+ */
+function verifiedProductFood(food: CalculatorFood): CalculatorFood | null {
+  if (food.source !== "openfoodfacts") return food;
+  if (!food.product) return null;
+  const verified = productFood(food.product, food.resolution);
+  return verified && verified.fdcId === food.fdcId ? verified : null;
 }
 
 export function searchFoods(query: string): CalculatorFood[] {
@@ -271,7 +292,14 @@ export function calculateCustom(rows: CalculatorRow[], servingsText: string, ext
   const rowErrors: Record<string, string> = {};
   const calculated: CalculatedRow[] = [];
   for (const row of rows) {
-    const food = findFood(row.fdcId, extraFoods);
+    const found = findFood(row.fdcId, extraFoods);
+    const food = found && verifiedProductFood(found);
+    if (found && !food) {
+      rowErrors[row.key] = found.product?.consistency.status === "conflict"
+        ? "This product has conflicting source nutrition values. Choose the one entry that matches your package before calculating."
+        : "This product's nutrition can't be used for calculation.";
+      continue;
+    }
     const measure = food?.measures.find((m) => m.id === row.measureId);
     if (!food || !measure) { rowErrors[row.key] = "Choose an approved ingredient and unit."; continue; }
     const q = parseQuantity(row.quantity);

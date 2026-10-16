@@ -213,25 +213,36 @@ export function mapSet(set: AdaptedSet): Record<string, OffNutrient> {
 
 // ---------------------------------------------------------------- consistency
 
-/** A nutrient whose per-100 g and per-serving entries disagree beyond rounding and declared precision. */
+/** Most entries MoodMeal will present as one choice; more than this is blocked. */
+export const MAX_RESOLUTION_ENTRIES = 5;
+
+/** One complete, identifiable input set, as the user would choose it. */
+export interface EntryRef {
+  setIndex: number;
+  /** "Entry 2: packaging, as sold, per serving of 103 g" */
+  label: string;
+  per: "100g" | "serving";
+  /** Grams the entry's values refer to (100 for per 100 g; the serving weight otherwise). */
+  referenceGrams: number;
+}
+
+/** A nutrient on which two entries of the same source and preparation disagree beyond rounding and precision. */
 export interface OffConflict {
   id: string;
   label: string;
   unit: "KCAL" | "G";
-  per100g: number;
-  perServing: number;
-  servingGrams: number;
-  /** The per-100 g entry scaled to the serving weight. */
-  expectedPerServing: number;
+  a: EntryRef & { value: number };
+  b: EntryRef & { value: number };
+  /** Entry a's value scaled to entry b's reference weight. */
+  expectedB: number;
   tolerance: number;
 }
 
-export interface ComparedPair {
+export interface ConflictGroup {
   source: string;
   preparation: OffPreparation;
-  servingGrams: number;
-  per100: AdaptedSet;
-  serving: AdaptedSet;
+  /** Every mass-referenced entry in this group; each is a complete choice. */
+  entries: EntryRef[];
 }
 
 export type ConsistencyStatus = "consistent" | "conflict" | "not-comparable" | "unverifiable";
@@ -239,10 +250,14 @@ export type ConsistencyStatus = "consistent" | "conflict" | "not-comparable" | "
 export interface ConsistencyCheck {
   status: ConsistencyStatus;
   reason: string;
+  /** Every material conflict found across all comparable pairs. */
   conflicts: OffConflict[];
-  /** The first pair with conflicts (or the first compared pair). */
-  pair: ComparedPair | null;
-  /** Nutrient labels that could be compared in at least one pair. */
+  /** The group of entries the user chooses from when status is "conflict" and resolvable. */
+  group: ConflictGroup | null;
+  /** False when conflicts can't be presented as one clear choice; the product is then blocked. */
+  resolvable: boolean;
+  blockReason?: string;
+  /** Nutrient labels compared in at least one pair. */
   compared: string[];
 }
 
@@ -261,60 +276,111 @@ function sideTolerance(n: OffNutrient, id: string): number {
   return Math.max(halfRoundingStep(n.unit, id, n.amount!), n.precisionHalf ?? 0);
 }
 
-function comparePair(pair: ComparedPair): { conflicts: OffConflict[]; compared: string[] } {
-  const a = mapSet(pair.per100);
-  const b = mapSet(pair.serving);
+/** Gram reference of a set (per 100 g, or a serving stated in grams); null when it isn't mass-based. */
+export function referenceGrams(s: AdaptedSet): number | null {
+  if (s.per === "100g" && (s.perUnit ?? "g") === "g") return 100;
+  if (s.per === "serving" && s.perUnit === "g" && s.perQuantity) return s.perQuantity;
+  return null;
+}
+
+export function entryRef(s: AdaptedSet): EntryRef | null {
+  const grams = referenceGrams(s);
+  if (grams === null || !s.source || !s.preparation) return null;
+  const per = s.per === "100g" ? "100g" : "serving";
+  const prep = s.preparation === "as_sold" ? "as sold" : "prepared";
+  return {
+    setIndex: s.index, per, referenceGrams: grams,
+    label: `Entry ${s.index + 1}: ${s.source}, ${prep}, ${per === "100g" ? "per 100 g" : `per serving of ${grams} g`}`,
+  };
+}
+
+function compareSets(x: AdaptedSet, y: AdaptedSet): { conflicts: OffConflict[]; compared: string[] } {
+  const ex = entryRef(x)!, ey = entryRef(y)!;
+  const a = mapSet(x), b = mapSet(y);
   const conflicts: OffConflict[] = [];
   const compared: string[] = [];
   for (const m of OFF_NUTRIENT_MAP) {
-    const x = a[m.id], y = b[m.id];
-    if (x.amount === null || y.amount === null) continue; // missing or inexact: nothing to compare
+    const va = a[m.id], vb = b[m.id];
+    if (va.amount === null || vb.amount === null) continue; // missing or inexact: nothing to compare
     compared.push(m.label);
-    const scale = pair.servingGrams / 100;
-    const expected = x.amount * scale;
-    const tolerance = sideTolerance(y, m.id) + sideTolerance(x, m.id) * scale;
-    if (Math.abs(expected - y.amount) > tolerance + 1e-9)
-      conflicts.push({ id: m.id, label: m.label, unit: m.unit, per100g: x.amount, perServing: y.amount, servingGrams: pair.servingGrams, expectedPerServing: expected, tolerance });
+    const scale = ey.referenceGrams / ex.referenceGrams;
+    const expected = va.amount * scale;
+    const tolerance = sideTolerance(vb, m.id) + sideTolerance(va, m.id) * scale;
+    if (Math.abs(expected - vb.amount) > tolerance + 1e-9)
+      conflicts.push({ id: m.id, label: m.label, unit: m.unit, a: { ...ex, value: va.amount }, b: { ...ey, value: vb.amount }, expectedB: expected, tolerance });
   }
   return { conflicts, compared };
 }
 
 /**
- * Compares per-100 g and per-serving input sets only when they share the
- * same source and preparation and the serving set states its weight in
- * grams. Estimate sets are never compared.
+ * Compares every pair of mass-referenced input sets (per 100 g, or per
+ * serving with a gram weight) that share the same source and preparation.
+ * Sets from different sources or preparation states, estimate sets and
+ * volume-based sets are never compared.
  */
 export function checkConsistency(n: AdaptedNutrition): ConsistencyCheck {
   const usable = n.inputSets.filter((s) => s.source !== "estimate" && s.source && s.preparation && s.per);
-  const pairs: ComparedPair[] = [];
-  const skipped: string[] = [];
-  for (const a of usable.filter((s) => s.per === "100g" && (s.perUnit ?? "g") === "g")) {
-    for (const b of usable.filter((s) => s.per === "serving")) {
-      if (a.source !== b.source || a.preparation !== b.preparation) { skipped.push("entries come from different sources or preparation states"); continue; }
-      if (b.perUnit !== "g" || !b.perQuantity) { skipped.push(b.perUnit === "ml" ? "the per-serving entry is measured in ml" : "the per-serving entry has no gram weight"); continue; }
-      pairs.push({ source: a.source!, preparation: a.preparation!, servingGrams: b.perQuantity, per100: a, serving: b });
+  const groups = new Map<string, AdaptedSet[]>();
+  const notMass: string[] = [];
+  for (const s of usable) {
+    if (referenceGrams(s) === null) {
+      notMass.push(s.per === "serving" ? (s.perUnit === "ml" ? "a per-serving entry is measured in ml" : "a per-serving entry has no gram weight") : "an entry is per 100 ml");
+      continue;
     }
+    const key = `${s.source}|${s.preparation}`;
+    groups.set(key, [...(groups.get(key) ?? []), s]);
   }
-  let firstConflict: { pair: ComparedPair; conflicts: OffConflict[] } | null = null;
+  const conflicts: OffConflict[] = [];
+  const conflictGroups: string[] = [];
   const compared = new Set<string>();
-  for (const pair of pairs) {
-    const r = comparePair(pair);
-    r.compared.forEach((c) => compared.add(c));
-    if (r.conflicts.length && !firstConflict) firstConflict = { pair, conflicts: r.conflicts };
+  let pairs = 0;
+  for (const [key, sets] of groups) {
+    let groupConflict = false;
+    for (let i = 0; i < sets.length; i++)
+      for (let j = i + 1; j < sets.length; j++) {
+        pairs++;
+        const r = compareSets(sets[i], sets[j]);
+        r.compared.forEach((c) => compared.add(c));
+        if (r.conflicts.length) { conflicts.push(...r.conflicts); groupConflict = true; }
+      }
+    if (groupConflict) conflictGroups.push(key);
   }
-  if (firstConflict)
-    return { status: "conflict", reason: "Per-100 g and per-serving package entries disagree beyond label rounding.", conflicts: firstConflict.conflicts, pair: firstConflict.pair, compared: [...compared] };
+  const comparedList = [...compared];
+
+  if (conflicts.length) {
+    const [key] = conflictGroups;
+    const entries = groups.get(key)!.map((s) => entryRef(s)!);
+    const [source, preparation] = key.split("|") as [string, OffPreparation];
+    let blockReason: string | undefined;
+    if (conflictGroups.length > 1)
+      blockReason = "Conflicting values appear in more than one source or preparation state, so MoodMeal can't offer one clear choice.";
+    else if (n.schemaIssues.length)
+      blockReason = `Some entries couldn't be read (${n.schemaIssues.join("; ")}), so not every conflict can be checked.`;
+    else if (entries.length > MAX_RESOLUTION_ENTRIES)
+      blockReason = `There are ${entries.length} competing entries, more than MoodMeal can present as a clear choice.`;
+    return {
+      status: "conflict",
+      reason: `${conflicts.length} material conflict${conflicts.length === 1 ? "" : "s"} between package entries, beyond label rounding.`,
+      conflicts, compared: comparedList,
+      group: { source, preparation, entries },
+      resolvable: !blockReason,
+      ...(blockReason ? { blockReason } : {}),
+    };
+  }
   if (n.schemaIssues.length)
-    return { status: "unverifiable", reason: `Couldn't fully check this record for conflicting values: ${n.schemaIssues.join("; ")}.`, conflicts: [], pair: pairs[0] ?? null, compared: [...compared] };
-  if (pairs.length && compared.size)
-    return { status: "consistent", reason: "Per-100 g and per-serving package entries agree within label rounding.", conflicts: [], pair: pairs[0], compared: [...compared] };
-  const why = pairs.length ? "the entries share no exact nutrient values to compare"
-    : skipped[0] ?? (usable.length <= 1 ? "there is only one package entry" : "no per-100 g and per-serving pair was found");
-  return { status: "not-comparable", reason: `No consistency comparison was possible: ${why}.`, conflicts: [], pair: null, compared: [] };
+    return { status: "unverifiable", reason: `Couldn't fully check this record for conflicting values: ${n.schemaIssues.join("; ")}.`, conflicts: [], group: null, resolvable: true, compared: comparedList };
+  if (pairs && compared.size)
+    return { status: "consistent", reason: "Package entries agree within label rounding.", conflicts: [], group: null, resolvable: true, compared: comparedList };
+  const groupSizes = [...groups.values()].map((g) => g.length);
+  const why = pairs ? "the entries share no exact nutrient values to compare"
+    : groups.size > 1 && groupSizes.every((s) => s === 1) ? "entries come from different sources or preparation states"
+    : notMass[0] ?? "there is only one package entry";
+  return { status: "not-comparable", reason: `No consistency comparison was possible: ${why}.`, conflicts: [], group: null, resolvable: true, compared: [] };
 }
 
-/** Plain-language summary of one conflict. */
+/** Plain-language summary of one conflict between two entries. */
 export function describeConflict(c: OffConflict): string {
   const f = (v: number) => (c.unit === "KCAL" ? `${Number(v.toFixed(0))} kcal` : `${Number(v.toFixed(2))} g`);
-  return `${c.label}: ${f(c.per100g)} per 100 g would be ${f(c.expectedPerServing)} per ${c.servingGrams} g serving, but the per-serving entry says ${f(c.perServing)}.`;
+  const basis = (e: EntryRef) => (e.per === "100g" ? "per 100 g" : `per ${e.referenceGrams} g serving`);
+  return `${c.label}: entry ${c.a.setIndex + 1} (${f(c.a.value)} ${basis(c.a)}) would be ${f(c.expectedB)} ${basis(c.b)}, but entry ${c.b.setIndex + 1} says ${f(c.b.value)}.`;
 }
