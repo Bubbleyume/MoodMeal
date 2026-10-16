@@ -194,7 +194,7 @@ export function productFood(p: OffProduct, resolution?: ConflictResolution): Cal
     resolution: option?.id,
     name,
     description: `${name}${p.brand ? ` (${p.brand})` : ""}, barcode ${p.code}`,
-    state: `Open Food Facts product data · ${option ? "entry you chose" : p.basisLabel}`,
+    state: `Open Food Facts product data · ${option ? `${entryBasisLabel(option.entry)} (entry you chose)` : p.basisLabel}`,
     stateNote: option
       ? `Crowd-sourced label data, not reviewed by MoodMeal. Conflicting source nutrition values: you chose ${option.label}.${option.missing.length ? ` It doesn't record ${option.missing.join(", ").toLowerCase()}, so ${option.missing.length === 1 ? "that stays" : "those stay"} unknown.` : ""}`
       : "Crowd-sourced label data, not reviewed by MoodMeal.",
@@ -203,6 +203,22 @@ export function productFood(p: OffProduct, resolution?: ConflictResolution): Cal
     nutrients: per100gNutrients(p, option?.id),
     sourceURL: p.url,
   };
+}
+
+/** "per 100 g" or "per serving of 103 g" for one package entry. */
+function entryBasisLabel(entry: { per: "100g" | "serving"; referenceGrams: number }): string {
+  return entry.per === "100g" ? "per 100 g" : `per serving of ${entry.referenceGrams} g`;
+}
+
+/**
+ * Nutrition basis a product food is actually calculated on: the chosen
+ * entry's basis after a conflict, otherwise the product's own basis.
+ */
+export function productBasisLabel(food: CalculatorFood): string {
+  const p = food.product;
+  if (!p) return "";
+  const option = food.resolution ? p.resolutionOptions.find((o) => o.id === food.resolution) : undefined;
+  return option ? entryBasisLabel(option.entry) : p.basisLabel;
 }
 
 /**

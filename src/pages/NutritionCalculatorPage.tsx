@@ -5,7 +5,7 @@ import IngredientThumb from "../components/IngredientThumb";
 import ProductLookup, { AllergenInfo, ConsistencyNotice, OffAttribution } from "../components/ProductLookup";
 import { Plus, Trash2 } from "../components/icons";
 import {
-  CALCULATOR_FOODS, SNAPSHOT, calculateCustom, findFood, productFood, searchFoods,
+  CALCULATOR_FOODS, SNAPSHOT, calculateCustom, findFood, productBasisLabel, productFood, searchFoods,
   type CalculatorFood, type CalculatorRow, type CalculatedNutrient,
 } from "../lib/nutritionCalculator";
 import { OFF_NUTRIENT_MAP, type ConflictResolution, type OffProduct } from "../lib/openFoodFacts";
@@ -159,7 +159,7 @@ export default function NutritionCalculatorPage() {
                         ) : (
                           <span className="mr-1 inline-block rounded-full bg-moodGreen-50 px-2 py-0.5 font-semibold text-moodGreen-700">{food.state}</span>
                         )}
-                        {isProduct ? `Barcode ${food.product!.code} · ${food.product!.basisLabel}` : `FDC ${food.fdcId}`}
+                        {isProduct ? `Barcode ${food.product!.code} · ${productBasisLabel(food)}` : `FDC ${food.fdcId}`}
                       </p>
                       {food.stateNote && <p className="mt-1 text-xs text-slate-500">{food.stateNote}</p>}
                     </div>
@@ -309,7 +309,7 @@ export default function NutritionCalculatorPage() {
                       ) : (
                         <>
                           Source: Open Food Facts product data (crowd-sourced, not reviewed). {r.food.description}.
-                          Nutrition {r.food.product!.basisLabel}; retrieved {new Date(r.food.product!.retrievedAt).toLocaleString()}.{" "}
+                          Nutrition {productBasisLabel(r.food)}; retrieved {new Date(r.food.product!.retrievedAt).toLocaleString()}.{" "}
                           {r.measure.basis}{" "}
                           {OFF_NUTRIENT_MAP.filter((m) => r.food.product!.nutrients[m.id].note).map((m) => (
                             <span key={m.id} className="block text-xs">{m.label}: {r.food.product!.nutrients[m.id].note}</span>

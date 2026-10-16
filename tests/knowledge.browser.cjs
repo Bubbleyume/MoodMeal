@@ -572,11 +572,16 @@ const { zipSync, strToU8 } = require("fflate");
     await page.keyboard.type("1");
     const conflictRow = page.getByTestId("calc-row").filter({ hasText: "Mixed-basis Noodles" });
     assert((await conflictRow.innerText()).includes("you chose Entry 2: packaging, as sold, per serving of 103 g"));
+    // The row shows the chosen entry's basis, not the aggregated per-100 g basis.
+    const conflictRowText = await conflictRow.innerText();
+    assert(conflictRowText.includes("Barcode 0810111890373 · per serving of 103 g"), conflictRowText);
+    assert(!conflictRowText.includes("· per 100 g"), conflictRowText);
     const conflictMarkers = await page.getByTestId("calc-conflict").allInnerTexts();
     assert.deepEqual(conflictMarkers, ["Conflicting source nutrition values: Mixed-basis Noodles (you chose Entry 2: packaging, as sold, per serving of 103 g)"]);
     await page.getByText("Ingredient weights & calculation").click();
     const chosenNote = await page.getByTestId("calc-provenance").filter({ hasText: "Mixed-basis Noodles" }).innerText();
     assert(chosenNote.includes("You chose Entry 2: packaging, as sold, per serving of 103 g. No other entry was used."), chosenNote);
+    assert(chosenNote.includes("Nutrition per serving of 103 g;"), chosenNote);
     await page.getByRole("button", { name: "Remove Mixed-basis Noodles" }).click();
     assert.equal(await page.getByTestId("calc-conflict").count(), 0);
     // A record whose conflicts can't be presented as one clear choice is blocked, with an explanation.

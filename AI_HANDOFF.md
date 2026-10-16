@@ -1,5 +1,21 @@
 # MoodMeal AI Handoff
 
+## Chosen-entry basis shown on calculator rows (Claude Code, 2026-10-16)
+
+Started at 6e87ba0, equal to origin.
+
+A user test of barcode 810111890373 found the problem. After choosing "Entry 2: packaging, as sold, per serving of 103 g", the ingredient row and the calculation details still showed the product's aggregated basis ("per 100 g"). The totals were already correct.
+
+Fix:
+- New `productBasisLabel(food)` in `nutritionCalculator.ts` returns the chosen entry's basis ("per serving of 103 g" / "per 100 g"), otherwise the product's own basis.
+- It's used on the row and in the calculation details, and the food's `state` now reads "… · per serving of 103 g (entry you chose)".
+
+Tests:
+- New unit assertions cover the per-serving choice, the per-100 g choice, the incomplete 51.5 g entry, a consistent product and USDA foods.
+- New browser assertions check the row and the details.
+- 47 knowledge tests, typecheck, avatar tests, 14 USDA tests, 22 FatSecret tests, the build and the browser suite pass.
+- Live check in the browser pane (mobile emulation): the row shows "per serving of 103 g". One pack totals 360 kcal / 12 g protein / 60 g carbs / 8 g fat / 1 g fiber / 7 g sugars, with no console errors. Two live lookups were made across both checks.
+
 ## Multiple-conflict handling for Open Food Facts records (Claude Code, 2026-10-16)
 
 Started at a435c71, equal to origin.

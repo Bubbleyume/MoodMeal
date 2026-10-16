@@ -35,7 +35,7 @@ import { NUTRIENTS, GOALS, source } from "../src/data/knowledge";
 import { readableQuantity, US_VOLUME_IN_TSP } from "../src/lib/units";
 import { validateBarcode, mapProduct, isCalculable, lookupProduct, createLookupLimiter, OFF_NUTRIENT_MAP, OFF_APP_ID, previewValues, describeConflict, per100gNutrients } from "../src/lib/openFoodFacts";
 import { adaptNutrition, checkConsistency, declaredPrecisionHalf, readEntry } from "../src/lib/offNutritionAdapter";
-import { CALCULATOR_FOODS, calculateCustom, parseQuantity, parseServings, findFood, productFood, type CalculatorFood } from "../src/lib/nutritionCalculator";
+import { CALCULATOR_FOODS, calculateCustom, parseQuantity, parseServings, findFood, productFood, productBasisLabel, type CalculatorFood } from "../src/lib/nutritionCalculator";
 import { PILOT_INGREDIENTS } from "../src/data/usdaPilot";
 
 let checks = 0;
@@ -1098,11 +1098,16 @@ test("OFF conflicting products: one complete entry must be chosen, enforced in t
   assert.equal(servingFood.fdcId, "off:0810111890373:entry-1");
   assert.deepEqual(servingFood.measures.map((m) => [m.id, m.gramsPerUnit]), [["off-serving", 103]]);
   assert.match(servingFood.stateNote!, /you chose Entry 2: packaging, as sold, per serving of 103 g/);
+  // The row shows the chosen entry's basis, not the aggregated "per 100 g".
+  assert.equal(p.basisLabel, "per 100 g");
+  assert.equal(productBasisLabel(servingFood), "per serving of 103 g");
+  assert.equal(servingFood.state, "Open Food Facts product data · per serving of 103 g (entry you chose)");
   assert.deepEqual(calc(servingFood, "off-serving", "1"), [103, 360, 12, 60, 8, 1, 7]);
   assert.deepEqual(calc(servingFood, "off-serving", "0.5"), [51.5, 180, 6, 30, 4, 0.5, 3.5]);
   // Per-100 g entry: grams and the product serving, values as entered per 100 g.
   const per100Food = productFood(p, "entry-0")!;
   assert.deepEqual(per100Food.measures.map((m) => [m.id, m.gramsPerUnit]), [["g", 1], ["off-serving", 103]]);
+  assert.equal(productBasisLabel(per100Food), "per 100 g");
   assert.deepEqual(calc(per100Food, "g", "100"), [100, 349.5146, 12, 60, 8, 1, 7]);
   assert.deepEqual(calc(per100Food, "off-serving", "1"), [103, 360, 12.36, 61.8, 8.24, 1.03, 7.21]);
   // Three entries: any complete entry can be chosen; an incomplete one never borrows from the others.
@@ -1114,6 +1119,7 @@ test("OFF conflicting products: one complete entry must be chosen, enforced in t
     ["entry-0", []], ["entry-1", []], ["entry-2", ["Carbohydrates", "Fat", "Fiber", "Total sugars"]],
   ]);
   const incomplete = productFood(three, "entry-2")!;
+  assert.equal(productBasisLabel(incomplete), "per serving of 51.5 g");
   assert.match(incomplete.stateNote!, /doesn't record carbohydrates, fat, fiber, total sugars, so those stay unknown/);
   assert.deepEqual(calc(incomplete, "off-serving", "2"), [103, 350, 12, null, null, null, null]);
   const incompleteRun = calculateCustom([{ key: "a", fdcId: incomplete.fdcId, measureId: "off-serving", quantity: "1" }], "1", [incomplete]).result!;
@@ -1154,6 +1160,8 @@ test("OFF conflicting products: one complete entry must be chosen, enforced in t
   assert.deepEqual(consistent.resolutionOptions, []);
   const consistentFood = productFood(consistent)!;
   assert.equal(consistentFood.fdcId, "off:0012345678905");
+  assert.equal(productBasisLabel(consistentFood), "per 100 g");
+  assert.equal(productBasisLabel(CALCULATOR_FOODS[0]), "");
   assert.deepEqual(calc(consistentFood, "g", "50"), [50, 200, 5, null, null, null, null]);
   // Preview columns are unchanged for non-conflicting records.
   assert.deepEqual(previewValues(mapProduct(offSolid(), "0012345678905", at)).columns, ["Per 100 g"]);
