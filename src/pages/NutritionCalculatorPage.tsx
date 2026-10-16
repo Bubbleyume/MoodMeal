@@ -2,11 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import IngredientThumb from "../components/IngredientThumb";
+import ProductLookup, { AllergenInfo, OffAttribution } from "../components/ProductLookup";
 import { Plus, Trash2 } from "../components/icons";
 import {
-  CALCULATOR_FOODS, SNAPSHOT, calculateCustom, findFood, searchFoods,
-  type CalculatorRow, type CalculatedNutrient,
+  CALCULATOR_FOODS, SNAPSHOT, calculateCustom, findFood, productFood, searchFoods,
+  type CalculatorFood, type CalculatorRow, type CalculatedNutrient,
 } from "../lib/nutritionCalculator";
+import { OFF_NUTRIENT_MAP, type OffProduct } from "../lib/openFoodFacts";
 
 function amount(n: CalculatedNutrient, value: number | null) {
   if (value === null) return "Unknown";
@@ -18,17 +20,19 @@ const formatGrams = (g: number) => `${Number(g.toFixed(2))} g`;
 let rowCounter = 0;
 
 /**
- * Custom nutrition estimate from approved USDA ingredients. Inputs live only
- * in this screen's state: nothing is saved, reviewed or attached to a recipe.
+ * Custom nutrition estimate from reviewed USDA ingredients and, optionally,
+ * confirmed Open Food Facts products. Inputs and lookups live only in this
+ * screen's state: nothing is saved, reviewed or attached to a recipe.
  */
 export default function NutritionCalculatorPage() {
   const [query, setQuery] = useState("");
   const [rows, setRows] = useState<CalculatorRow[]>([]);
+  const [products, setProducts] = useState<CalculatorFood[]>([]);
   const [servings, setServings] = useState("1");
   const [focusKey, setFocusKey] = useState<string | null>(null);
 
   const matches = useMemo(() => (query.trim() ? searchFoods(query) : []), [query]);
-  const calc = useMemo(() => calculateCustom(rows, servings), [rows, servings]);
+  const calc = useMemo(() => calculateCustom(rows, servings, products), [rows, servings, products]);
 
   useEffect(() => {
     if (!focusKey) return;
@@ -36,24 +40,43 @@ export default function NutritionCalculatorPage() {
     setFocusKey(null);
   }, [focusKey]);
 
-  const addFood = (fdcId: string) => {
-    const food = findFood(fdcId)!;
+  const addRow = (food: CalculatorFood, preferGrams = false) => {
     const key = `r${++rowCounter}`;
-    const household = food.measures.find((m) => m.id !== "g") ?? food.measures[0];
-    setRows((r) => [...r, { key, fdcId, measureId: household.id, quantity: "" }]);
-    setQuery("");
+    const measure = (preferGrams ? food.measures.find((m) => m.id === "g") : food.measures.find((m) => m.id !== "g")) ?? food.measures[0];
+    setRows((r) => [...r, { key, fdcId: food.fdcId, measureId: measure.id, quantity: "" }]);
     setFocusKey(key);
+  };
+  const addFood = (fdcId: string) => {
+    addRow(findFood(fdcId)!);
+    setQuery("");
+  };
+  const addProduct = (product: OffProduct) => {
+    const food = productFood(product);
+    if (!food) return;
+    setProducts((p) => (p.some((f) => f.fdcId === food.fdcId) ? p : [...p, food]));
+    addRow(food, true);
   };
   const update = (key: string, patch: Partial<CalculatorRow>) =>
     setRows((r) => r.map((row) => (row.key === key ? { ...row, ...patch } : row)));
-  const remove = (key: string) => setRows((r) => r.filter((row) => row.key !== key));
+  const remove = (key: string) => {
+    const next = rows.filter((row) => row.key !== key);
+    setRows(next);
+    setProducts((p) => p.filter((f) => next.some((row) => row.fdcId === f.fdcId)));
+  };
 
   const result = calc.result;
   const hasErrors = Object.keys(calc.rowErrors).length > 0 || !!calc.servingsError;
+  const usesProducts = !!result?.sources.includes("openfoodfacts");
+  const usesUsda = !!result?.sources.includes("usda");
+  const sourceLabel = usesProducts && usesUsda
+    ? "Estimate from mixed sources: USDA FoodData Central records reviewed for MoodMeal, and Open Food Facts product data (crowd-sourced, not reviewed by MoodMeal)."
+    : usesProducts
+      ? "Estimate from Open Food Facts product data (crowd-sourced, not reviewed by MoodMeal)."
+      : "Calculated estimate from USDA FoodData Central records reviewed for MoodMeal.";
 
   return (
     <div className="mm-soft-bg flex h-full flex-1 flex-col">
-      <Header title="Nutrition Calculator" subtitle="USDA-based estimates for your own recipe" />
+      <Header title="Nutrition Calculator" subtitle="Estimates for your own recipe" />
       <div className="screen-scroll space-y-4 px-4 pt-4">
         <section className="card text-sm text-slate-600">
           <p className="text-xs font-bold uppercase tracking-wide text-brand-700">Calculated estimate · USDA FoodData Central</p>
@@ -61,6 +84,7 @@ export default function NutritionCalculatorPage() {
             Combine ingredients that MoodMeal has reviewed against USDA records. Results are calculated for your own
             combination only. They are not saved, reviewed or added to MoodMeal recipes.
           </p>
+          <p className="mt-2">You can also look up a packaged product by barcode. Its Open Food Facts data is labeled separately.</p>
         </section>
 
         <section className="card" aria-labelledby="calc-search-heading">
@@ -109,12 +133,16 @@ export default function NutritionCalculatorPage() {
           )}
         </section>
 
+        <ProductLookup onConfirm={addProduct} />
+
         <section className="card" aria-labelledby="calc-rows-heading">
           <h2 id="calc-rows-heading" className="section-title">Your ingredients</h2>
           {!rows.length && <p className="mt-2 text-sm text-slate-600">No ingredients yet. Search above to add one.</p>}
           <ul className="mt-2 divide-y divide-slate-100">
             {rows.map((row) => {
-              const food = findFood(row.fdcId)!;
+              const food = findFood(row.fdcId, products);
+              if (!food) return null;
+              const isProduct = food.source === "openfoodfacts";
               const measure = food.measures.find((m) => m.id === row.measureId);
               const error = calc.rowErrors[row.key];
               const showError = error && row.quantity.trim() !== "";
@@ -124,10 +152,14 @@ export default function NutritionCalculatorPage() {
                   <div className="flex items-start gap-3">
                     <IngredientThumb name={food.imageLabel} />
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold text-slate-800">{food.name}</p>
+                      <p className="break-words text-sm font-semibold text-slate-800">{food.name}</p>
                       <p className="text-xs text-slate-600">
-                        <span className="mr-1 inline-block rounded-full bg-moodGreen-50 px-2 py-0.5 font-semibold text-moodGreen-700">{food.state}</span>
-                        FDC {food.fdcId}
+                        {isProduct ? (
+                          <span className="mr-1 inline-block rounded-full bg-amber-100 px-2 py-0.5 font-semibold text-amber-900">Open Food Facts product data</span>
+                        ) : (
+                          <span className="mr-1 inline-block rounded-full bg-moodGreen-50 px-2 py-0.5 font-semibold text-moodGreen-700">{food.state}</span>
+                        )}
+                        {isProduct ? `Barcode ${food.product!.code} · ${food.product!.basisLabel}` : `FDC ${food.fdcId}`}
                       </p>
                       {food.stateNote && <p className="mt-1 text-xs text-slate-500">{food.stateNote}</p>}
                     </div>
@@ -160,7 +192,7 @@ export default function NutritionCalculatorPage() {
                     >
                       {food.measures.map((m) => (
                         <option key={m.id} value={m.id}>
-                          {m.id === "g" ? "grams" : `${m.label} (${formatGrams(m.gramsPerUnit)})`}
+                          {m.id === "g" ? "grams" : `${m.label}${isProduct ? "" : ` (${formatGrams(m.gramsPerUnit)})`}`}
                         </option>
                       ))}
                     </select>
@@ -189,7 +221,7 @@ export default function NutritionCalculatorPage() {
             <p id="err-servings" className="mt-1 text-xs font-semibold text-red-700">{calc.servingsError}</p>
           )}
           {rows.length > 0 && (
-            <Button variant="ghost" className="mt-3" onClick={() => { setRows([]); setServings("1"); }}>
+            <Button variant="ghost" className="mt-3" onClick={() => { setRows([]); setProducts([]); setServings("1"); }}>
               Clear calculator
             </Button>
           )}
@@ -208,6 +240,9 @@ export default function NutritionCalculatorPage() {
           )}
           {result && (
             <>
+              <p className={`mt-1 text-xs font-semibold ${usesProducts ? "text-amber-900" : "text-brand-700"}`} data-testid="calc-source-label">
+                {sourceLabel}
+              </p>
               <p className="mt-1 text-sm text-slate-600">
                 {formatGrams(result.totalGrams)} total · {result.servings} {result.servings === 1 ? "serving" : "equal servings"}
               </p>
@@ -226,38 +261,60 @@ export default function NutritionCalculatorPage() {
                         {n.label}
                         {n.missing.length > 0 && (
                           <span className="block text-xs font-normal text-red-700">
-                            Incomplete: no USDA value for {n.missing.join(", ")}
+                            Incomplete: no recorded value for {n.missing.join(", ")}
                           </span>
                         )}
                       </th>
-                      <td className="py-2 text-right font-bold text-brand-700">{amount(n, n.total)}</td>
-                      <td className="py-2 text-right font-bold text-brand-700">{amount(n, n.perServing)}</td>
+                      <td className="whitespace-nowrap py-2 pl-2 text-right font-bold text-brand-700">{amount(n, n.total)}</td>
+                      <td className="whitespace-nowrap py-2 pl-2 text-right font-bold text-brand-700">{amount(n, n.perServing)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               <p className="mt-3 text-xs text-slate-500">
-                Calculated estimate from USDA reference values and approved portion weights, not weighed or
-                laboratory-tested food. Missing USDA values are never counted as zero. Not medical or dietary advice.
+                Calculated estimate{usesProducts ? " using product label data and" : " from"} USDA reference values where
+                listed, not weighed or laboratory-tested food. Missing values are never counted as zero. Not medical or
+                dietary advice.
               </p>
+              {usesProducts && (
+                <p className="mt-2 text-xs text-slate-500">
+                  Open Food Facts carbohydrates follow each product's label. Some labels exclude fiber, so they may not
+                  match USDA "carbohydrate, by difference".
+                </p>
+              )}
               <details className="mt-3 text-sm text-slate-600">
                 <summary className="min-h-[24px] cursor-pointer py-1 font-semibold text-brand-700">Ingredient weights & calculation</summary>
                 <ul className="mt-2 space-y-3">
                   {result.rows.map((r) => (
-                    <li key={r.key}>
+                    <li key={r.key} data-testid="calc-provenance">
                       <strong>
-                        {r.food.name}: {r.quantity} {r.measure.id === "g" ? "g" : r.measure.label} = {formatGrams(r.grams ?? 0)}
+                        {r.food.name}: {r.measure.id === "g" ? formatGrams(r.grams ?? 0) : `${r.quantity} ${r.measure.label} = ${formatGrams(r.grams ?? 0)}`}
                       </strong>
                       <br />
-                      {r.food.description} ({r.food.state}). FDC {r.fdcId}
-                      {r.measure.portionId ? `; portion ${r.measure.portionId}` : ""}. {r.measure.basis}
+                      {r.food.source === "usda" ? (
+                        <>
+                          Source: USDA FoodData Central (reviewed for MoodMeal). {r.food.description} ({r.food.state}). FDC {r.fdcId}
+                          {r.measure.portionId ? `; portion ${r.measure.portionId}` : ""}. {r.measure.basis}
+                        </>
+                      ) : (
+                        <>
+                          Source: Open Food Facts product data (crowd-sourced, not reviewed). {r.food.description}.
+                          Nutrition {r.food.product!.basisLabel}; retrieved {new Date(r.food.product!.retrievedAt).toLocaleString()}.{" "}
+                          {r.measure.basis}{" "}
+                          {OFF_NUTRIENT_MAP.filter((m) => r.food.product!.nutrients[m.id].note).map((m) => (
+                            <span key={m.id} className="block text-xs">{m.label}: {r.food.product!.nutrients[m.id].note}</span>
+                          ))}
+                          <AllergenInfo product={r.food.product!} />
+                        </>
+                      )}
                     </li>
                   ))}
                 </ul>
                 <p className="mt-3">
                   Each nutrient = amount per 100 g × grams ÷ 100, summed across ingredients for the whole recipe, then
-                  divided by {result.servings} for each serving. If any ingredient has no USDA value for a nutrient, that
-                  nutrient is shown as Unknown. Figures are rounded for display.
+                  divided by {result.servings} for each serving. Product servings use the label's per-serving values. If
+                  any ingredient has no recorded value for a nutrient, that nutrient is shown as Unknown. Figures are
+                  rounded for display.
                 </p>
               </details>
               <details className="mt-3 text-sm text-slate-600">
@@ -266,15 +323,20 @@ export default function NutritionCalculatorPage() {
                   {[...new Map(result.rows.map((r) => [r.fdcId, r.food])).values()].map((f) => (
                     <li key={f.fdcId}>
                       <a className="text-brand-700 underline" href={f.sourceURL} target="_blank" rel="noreferrer">
-                        USDA FoodData Central — {f.description} (FDC {f.fdcId})
+                        {f.source === "usda"
+                          ? `USDA FoodData Central — ${f.description} (FDC ${f.fdcId})`
+                          : `Open Food Facts — ${f.description}`}
                       </a>
                     </li>
                   ))}
                 </ul>
-                <p className="mt-2 text-xs">
-                  USDA Agricultural Research Service, {SNAPSHOT}. Records and portions were reviewed for MoodMeal; this
-                  custom combination was not.
-                </p>
+                {usesUsda && (
+                  <p className="mt-2 text-xs">
+                    USDA Agricultural Research Service, {SNAPSHOT}. Records and portions were reviewed for MoodMeal; this
+                    custom combination was not.
+                  </p>
+                )}
+                {usesProducts && <div className="mt-2"><OffAttribution /></div>}
               </details>
             </>
           )}

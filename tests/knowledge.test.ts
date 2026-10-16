@@ -33,7 +33,8 @@ import {
 import { historyInsights } from "../src/lib/interactions";
 import { NUTRIENTS, GOALS, source } from "../src/data/knowledge";
 import { readableQuantity, US_VOLUME_IN_TSP } from "../src/lib/units";
-import { CALCULATOR_FOODS, calculateCustom, parseQuantity, parseServings, findFood } from "../src/lib/nutritionCalculator";
+import { validateBarcode, mapProduct, isCalculable, lookupProduct, createLookupLimiter, OFF_NUTRIENT_MAP, OFF_APP_ID } from "../src/lib/openFoodFacts";
+import { CALCULATOR_FOODS, calculateCustom, parseQuantity, parseServings, findFood, productFood } from "../src/lib/nutritionCalculator";
 import { PILOT_INGREDIENTS } from "../src/data/usdaPilot";
 
 let checks = 0;
@@ -41,6 +42,13 @@ const test = (name: string, fn: () => void) => {
   fn();
   checks++;
   console.log("PASS", name);
+};
+const pendingTests: Promise<void>[] = [];
+const testAsync = (name: string, fn: () => Promise<void>) => {
+  pendingTests.push(fn().then(() => {
+    checks++;
+    console.log("PASS", name);
+  }));
 };
 test("all moods and intensities have source-backed matching explanations", () => {
   for (const mood of EMOTIONS)
@@ -769,4 +777,168 @@ test("single-entry and identical-intensity observations read naturally", () => {
   assert(lines([entry("a", 6), entry("b", 6)]).includes("Your tired check-ins were all 6/10 intensity."));
   assert(lines([entry("a", 3), entry("b", 7)]).includes("Your tired check-ins ranged from 3 to 7/10 intensity."));
 });
-console.log(`${checks} knowledge-system tests passed`);
+// ---- Open Food Facts (mocked; no network) ----
+const offSolid = (extra: Record<string, unknown> = {}, nutriments: Record<string, unknown> = {}) => ({
+  code: "0012345678905", product_name: "Test Granola", brands: "Example Co", quantity: "400 g",
+  product_quantity: 400, product_quantity_unit: "g", nutrition_data_per: "100g",
+  nutriments: { "energy-kcal_100g": 400, "energy-kj_100g": 1674, proteins_100g: 10, carbohydrates_100g: 60, fat_100g: 12, fiber_100g: 0, ...nutriments },
+  allergens_tags: ["en:milk", "en:soybeans"], traces_tags: ["en:nuts"], ingredients_text: "Oats, sugar, <b>milk</b> powder",
+  ...extra,
+});
+const at = new Date("2026-10-15T12:00:00Z");
+test("barcodes: supported formats, check digits and leading zeros", () => {
+  assert.deepEqual(validateBarcode("0012345678905"), { code: "0012345678905" });
+  assert.deepEqual(validateBarcode("012345678905"), { code: "012345678905" });
+  assert.deepEqual(validateBarcode(" 0 12345-678905 "), { code: "012345678905" });
+  assert.deepEqual(validateBarcode("96385074"), { code: "96385074" });
+  assert.deepEqual(validateBarcode("00012345678905"), { code: "00012345678905" });
+  for (const [input, start] of [["", "Enter"], ["12AB", "Use digits"], ["12345", "Barcodes have"], ["0012345678904", "This barcode's check digit"]] as const) {
+    const r = validateBarcode(input);
+    assert("error" in r && r.error.startsWith(start), input);
+  }
+});
+test("Open Food Facts mapping: explicit units, zero vs missing, kJ conversion, modifiers", () => {
+  let p = mapProduct(offSolid(), "0012345678905", at);
+  assert.equal(p.basis, "per100g");
+  assert.equal(p.code, "0012345678905");
+  assert.deepEqual(OFF_NUTRIENT_MAP.map((m) => [m.id, m.offKey, m.unit]), [
+    ["1008", "energy-kcal", "KCAL"], ["1003", "proteins", "G"], ["1005", "carbohydrates", "G"],
+    ["1004", "fat", "G"], ["1079", "fiber", "G"], ["2000", "sugars", "G"]]);
+  assert.equal(p.nutrients["1008"].amount, 400);
+  assert.equal(p.nutrients["1079"].amount, 0); // recorded zero stays zero
+  assert.equal(p.nutrients["2000"].amount, null); // missing stays null
+  assert.equal(p.nutrients["2000"].note, "Not recorded by Open Food Facts.");
+  p = mapProduct(offSolid({}, { "energy-kcal_100g": undefined }), "0012345678905", at);
+  assert(Math.abs(p.nutrients["1008"].amount! - 1674 / 4.184) < 1e-9);
+  assert.match(p.nutrients["1008"].note!, /Converted from 1674 kJ/);
+  p = mapProduct(offSolid({}, { "energy-kcal_100g": undefined, "energy-kj_100g": undefined, energy_100g: 418.4 }), "0012345678905", at);
+  assert(Math.abs(p.nutrients["1008"].amount! - 100) < 1e-9);
+  p = mapProduct(offSolid({}, { "energy-kcal_100g": undefined, "energy-kj_100g": undefined }), "0012345678905", at);
+  assert.equal(p.nutrients["1008"].amount, null);
+  p = mapProduct(offSolid({}, { fat_100g: 0.5, fat_modifier: "<", proteins_100g: "12.5", sugars_100g: "lots" }), "0012345678905", at);
+  assert.equal(p.nutrients["1004"].amount, null);
+  assert.match(p.nutrients["1004"].note!, /< 0.5/);
+  assert.equal(p.nutrients["1003"].amount, 12.5);
+  assert.equal(p.nutrients["2000"].amount, null);
+  // Estimated values are never read.
+  p = mapProduct({ ...offSolid({}, { proteins_100g: undefined }), nutriments_estimated: { proteins_100g: 9 } }, "0012345678905", at);
+  assert.equal(p.nutrients["1003"].amount, null);
+  // Allergen and ingredient text: cleaned tags; "none" and missing are distinct; text kept as plain data.
+  p = mapProduct(offSolid(), "0012345678905", at);
+  assert.deepEqual(p.allergens, ["milk", "soybeans"]);
+  assert.deepEqual(p.traces, ["nuts"]);
+  assert.equal(p.ingredientsText, "Oats, sugar, <b>milk</b> powder");
+  assert.equal(mapProduct(offSolid({ allergens_tags: ["en:none"] }), "0012345678905", at).allergens, "none");
+  assert.equal(mapProduct(offSolid({ allergens_tags: undefined, traces_tags: [] }), "0012345678905", at).allergens, null);
+  assert.equal(mapProduct(offSolid({ code: "javascript:1" }), "0012345678905", at).url, "https://world.openfoodfacts.org/product/0012345678905");
+});
+test("Open Food Facts nutrition basis: per 100 ml, unclear and missing bases are not calculable", () => {
+  const liquid = mapProduct(offSolid({ quantity: "1.5 L", product_quantity: 1500, product_quantity_unit: "ml", serving_quantity: 250, serving_quantity_unit: "ml", serving_size: "250 ml" }), "0012345678905", at);
+  assert.equal(liquid.basis, "per100ml");
+  assert.equal(isCalculable(liquid), false);
+  assert.equal(productFood(liquid), null);
+  assert.match(liquid.calculation, /per 100 ml.*density/);
+  const v35 = mapProduct(offSolid({ nutrition_data_per: "100ml" }), "0012345678905", at);
+  assert.equal(v35.basis, "per100ml");
+  const unclear = mapProduct(offSolid({ quantity: undefined, product_quantity_unit: undefined }), "0012345678905", at);
+  assert.equal(unclear.basis, "unclear");
+  assert.equal(productFood(unclear), null);
+  const none = mapProduct(offSolid({ no_nutrition_data: "on" }), "0012345678905", at);
+  assert.equal(none.basis, "none");
+  assert.equal(productFood(none), null);
+  // Serving offered only with an explicit gram weight; never from ml.
+  assert.equal(mapProduct(offSolid({ serving_quantity: 30, serving_quantity_unit: "g", serving_size: "30 g" }), "x", at).servingGrams, 30);
+  assert.equal(mapProduct(offSolid({ serving_quantity: 30, serving_size: "1 bowl (30 g)" }), "x", at).servingGrams, 30);
+  assert.equal(mapProduct(offSolid({ serving_quantity: 30, serving_size: "1 bowl" }), "x", at).servingGrams, null);
+  assert.equal(mapProduct(offSolid({ serving_quantity: 30, serving_size: "30 ml" }), "x", at).servingGrams, null);
+  const perServingNoGrams = mapProduct(offSolid({ nutrition_data_per: "serving", serving_size: "1 bar" }), "0012345678905", at);
+  assert.equal(perServingNoGrams.basis, "perServing");
+  assert.equal(productFood(perServingNoGrams), null);
+});
+test("Open Food Facts products join calculations without changing USDA foods; mixed totals and servings", () => {
+  const solid = productFood(mapProduct(offSolid({ serving_quantity: 30, serving_quantity_unit: "g", serving_size: "30 g" }), "0012345678905", at))!;
+  assert.equal(solid.source, "openfoodfacts");
+  assert.equal(solid.fdcId, "off:0012345678905");
+  assert.deepEqual(solid.measures.map((m) => [m.id, m.gramsPerUnit]), [["g", 1], ["off-serving", 30]]);
+  const rows = [
+    { key: "u", fdcId: "173944", measureId: "each-93515", quantity: "1" },
+    { key: "o", fdcId: solid.fdcId, measureId: "g", quantity: "50" },
+  ];
+  // Without the confirmed product in the extra foods, the row is rejected.
+  assert.equal(calculateCustom(rows, "2").result, undefined);
+  const r = calculateCustom(rows, "2", [solid]).result!;
+  assert.deepEqual(r.sources, ["usda", "openfoodfacts"]);
+  const by = (id: string) => r.nutrients.find((n) => n.id === id)!;
+  assert(Math.abs(by("1008").total! - (105.02 + 200)) < 1e-9);
+  assert(Math.abs(by("1008").perServing! - (105.02 + 200) / 2) < 1e-9);
+  assert.equal(by("1079").total, 3.068); // product fiber is a recorded 0
+  assert.equal(by("2000").total, null); // product sugars missing → incomplete
+  assert.deepEqual(by("2000").missing, ["Test Granola"]);
+  // Product servings: 2 × 30 g at 400 kcal/100 g.
+  const servingRun = calculateCustom([{ key: "s", fdcId: solid.fdcId, measureId: "off-serving", quantity: "2" }], "1", [solid]).result!;
+  assert.deepEqual(servingRun.sources, ["openfoodfacts"]);
+  assert.equal(servingRun.rows[0].grams, 60);
+  assert(Math.abs(servingRun.nutrients[0].total! - 240) < 1e-9);
+  // Per-serving label values: 2 servings of 150 kcal per 40 g serving = 300 kcal; grams not offered.
+  const perServing = productFood(mapProduct(offSolid({ nutrition_data_per: "serving", serving_quantity: 40, serving_quantity_unit: "g", serving_size: "40 g" },
+    { "energy-kcal_serving": 150, proteins_serving: 5, carbohydrates_serving: 20, fat_serving: 6, fiber_serving: 2, sugars_serving: 0 }), "96385074", at))!;
+  assert.deepEqual(perServing.measures.map((m) => m.id), ["off-serving"]);
+  const ps = calculateCustom([{ key: "p", fdcId: perServing.fdcId, measureId: "off-serving", quantity: "2" }], "1", [perServing]).result!;
+  assert(Math.abs(ps.nutrients[0].total! - 300) < 1e-9);
+  assert.equal(ps.nutrients.find((n) => n.id === "2000")!.total, 0);
+  assert.equal(calculateCustom([{ key: "p", fdcId: perServing.fdcId, measureId: "g", quantity: "40" }], "1", [perServing]).rowErrors.p, "Choose an approved ingredient and unit.");
+  // The USDA list and catalog are untouched.
+  assert.equal(CALCULATOR_FOODS.length, 17);
+  assert(CALCULATOR_FOODS.every((f) => f.source === "usda"));
+  assert.equal(findFood(solid.fdcId), undefined);
+  assert.equal(RECIPES.filter((x) => x.nutritionEstimate).length, 1);
+});
+test("Open Food Facts lookup limiter stays under the published rate limit", () => {
+  const limiter = createLookupLimiter({ maxPerMinute: 10, minIntervalMs: 3000 });
+  assert.deepEqual(limiter.check(0), { ok: true });
+  limiter.record(0);
+  assert.deepEqual(limiter.check(1000), { ok: false, waitSeconds: 2 });
+  for (let i = 1; i < 10; i++) limiter.record(i * 3000);
+  assert.deepEqual(limiter.check(30000), { ok: false, waitSeconds: 30 });
+  assert.deepEqual(limiter.check(60001), { ok: true });
+  limiter.block(60001, 45);
+  assert.deepEqual(limiter.check(61001), { ok: false, waitSeconds: 44 });
+});
+testAsync("Open Food Facts lookup: one read-only request and every failure state (mocked)", async () => {
+  const calls: { url: string; headers: Record<string, string> }[] = [];
+  const respond = (status: number, body: unknown, headers: Record<string, string> = {}) =>
+    async (url: string, init: { headers: Record<string, string>; signal: AbortSignal }) => {
+      calls.push({ url, headers: init.headers });
+      return { status, ok: status >= 200 && status < 300, headers: { get: (n: string) => headers[n] ?? null },
+        json: async () => { if (body === "bad-json") throw new SyntaxError("bad"); return body; } };
+    };
+  let r = await lookupProduct("0012345678905", { fetchImpl: respond(200, { status: "success", result: { id: "product_found" }, product: offSolid() }), now: () => at });
+  assert.equal(r.status, "found");
+  assert.equal(calls.length, 1);
+  assert.match(calls[0].url, /^https:\/\/world\.openfoodfacts\.org\/api\/v3\/product\/0012345678905\?fields=/);
+  assert.equal(calls[0].headers["X-User-Agent"], OFF_APP_ID);
+  assert.equal(r.status === "found" && r.product.retrievedAt, at.toISOString());
+  r = await lookupProduct("0012345678905", { fetchImpl: respond(404, { status: "failure", result: { id: "product_not_found" } }) });
+  assert.deepEqual(r, { status: "not-found", code: "0012345678905" });
+  r = await lookupProduct("0012345678905", { fetchImpl: respond(200, { status: "failure", result: { id: "product_not_found" } }) });
+  assert.equal(r.status, "not-found");
+  r = await lookupProduct("0012345678905", { fetchImpl: respond(429, null, { "Retry-After": "30" }) });
+  assert.deepEqual(r, { status: "rate-limited", retryAfterSeconds: 30 });
+  r = await lookupProduct("0012345678905", { fetchImpl: respond(503, null) });
+  assert.deepEqual(r, { status: "rate-limited", retryAfterSeconds: 60 });
+  r = await lookupProduct("0012345678905", { fetchImpl: respond(500, {}) });
+  assert.deepEqual(r, { status: "error", message: "Open Food Facts returned HTTP 500." });
+  r = await lookupProduct("0012345678905", { fetchImpl: respond(200, "bad-json") });
+  assert.equal(r.status, "error");
+  r = await lookupProduct("0012345678905", { fetchImpl: async () => { throw new TypeError("Failed to fetch"); } });
+  assert.deepEqual(r, { status: "network-error" });
+  const hang = (_url: string, init: { signal: AbortSignal }) => new Promise<never>((_, reject) => {
+    init.signal.addEventListener("abort", () => reject(Object.assign(new Error("aborted"), { name: "AbortError" })));
+  });
+  r = await lookupProduct("0012345678905", { fetchImpl: hang as never, timeoutMs: 20 });
+  assert.deepEqual(r, { status: "timeout" });
+});
+Promise.all(pendingTests).then(
+  () => console.log(`${checks} knowledge-system tests passed`),
+  (e) => { console.error(e); process.exit(1); },
+);

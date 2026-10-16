@@ -445,6 +445,121 @@ const { zipSync, strToU8 } = require("fflate");
     await page.getByRole("button", { name: "Remove Banana" }).click();
     await page.getByText("No ingredients yet.", { exact: false }).waitFor();
     assert.equal(await page.evaluate(() => JSON.stringify(Object.keys(localStorage).sort())), storageBefore);
+    // Open Food Facts barcode lookup (all responses mocked; no live requests).
+    const offRequests = [];
+    const offProduct = (extra) => ({
+      code: "0012345678905", product_name: "Test Granola", brands: "Example Co", quantity: "400 g",
+      product_quantity: 400, product_quantity_unit: "g", nutrition_data_per: "100g",
+      serving_quantity: 30, serving_quantity_unit: "g", serving_size: "30 g",
+      nutriments: { "energy-kcal_100g": 400, proteins_100g: 10, carbohydrates_100g: 60, fat_100g: 12, fiber_100g: 0 },
+      allergens_tags: ["en:milk"], ingredients_text: "Oats, <script>alert(1)</script> honey", ...extra,
+    });
+    await page.route("**/api/v3/product/**", async (route) => {
+      const url = route.request().url();
+      offRequests.push({ url, ua: route.request().headers()["x-user-agent"] });
+      const code = url.match(/product\/(\d+)/)[1];
+      const json = (status, body, headers = {}) => route.fulfill({ status, contentType: "application/json", headers: { "Access-Control-Allow-Origin": "*", ...headers }, body: JSON.stringify(body) });
+      if (code === "0012345678905") return json(200, { status: "success", result: { id: "product_found" }, product: offProduct() });
+      if (code === "96385074") return json(200, { status: "success", result: { id: "product_found" }, product: offProduct({ code: "96385074", product_name: "Test Juice", quantity: "1 L", product_quantity_unit: "ml", serving_quantity: 250, serving_quantity_unit: "ml", serving_size: "250 ml" }) });
+      if (code === "00012345678905") return json(404, { status: "failure", result: { id: "product_not_found" } });
+      if (code === "4006381333931") return json(429, {}, { "Retry-After": "30" });
+      return route.abort("failed");
+    });
+    const errorsBeforeOff = errors.length;
+    const lookUp = async (code) => {
+      await page.getByLabel("Barcode (EAN or UPC)").fill(code);
+      await page.getByRole("button", { name: "Look Up" }).click();
+    };
+    // Invalid input: message, no request.
+    await lookUp("12345");
+    await page.getByText(/Barcodes have 8, 12, 13 or 14 digits/).waitFor();
+    assert.equal(offRequests.length, 0);
+    // Found: preview with provenance; nothing is added until confirmed.
+    await lookUp("0012345678905");
+    const preview = page.getByTestId("off-preview");
+    await preview.waitFor();
+    const previewText = await preview.innerText();
+    for (const t of ["Open Food Facts product data", "Test Granola", "Example Co", "0012345678905", "per 100 g", "30 g", "Allergens recorded: milk", "May contain (traces): Not recorded. This does not mean", "Open Database License", "Product page"])
+      assert(previewText.toLowerCase().includes(t.toLowerCase()), t);
+    assert(previewText.includes("<script>alert(1)</script>"), "ingredient text shown as plain text");
+    assert.equal(await page.locator("script:not([src])").filter({ hasText: "alert(1)" }).count(), 0);
+    assert.equal(offRequests.length, 1);
+    assert.match(offRequests[0].url, /\/product\/0012345678905\?/);
+    assert.match(offRequests[0].ua, /^MoodMeal\//);
+    assert.equal(await page.getByTestId("calc-row").count(), 0);
+    for (const width of [320, 390, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `preview overflow ${width}`);
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await preview.screenshot({ path: "work/qa-off-preview-390.png" });
+    await page.getByRole("button", { name: "Add to calculator" }).click();
+    assert.equal(await page.evaluate(() => document.activeElement.getAttribute("aria-label")), "Amount of Test Granola");
+    await page.keyboard.type("50");
+    const productRow = page.getByTestId("calc-row").filter({ hasText: "Test Granola" });
+    assert((await productRow.innerText()).toLowerCase().includes("open food facts product data"));
+    // Mixed with a USDA food: labeled mixed sources, provenance per ingredient, incomplete sugars.
+    await page.getByLabel("Search approved ingredients").fill("banana");
+    await page.getByRole("button", { name: "Add Banana (Raw, peeled)" }).click();
+    await page.keyboard.type("1");
+    await page.getByLabel("Servings").fill("1");
+    await page.getByTestId("calc-results").waitFor();
+    assert.match(await page.getByTestId("calc-source-label").innerText(), /^Estimate from mixed sources: USDA FoodData Central .* and Open Food Facts product data/);
+    const mixed = await page.getByTestId("calc-results").innerText();
+    assert(mixed.includes("305 kcal"), mixed);
+    assert(mixed.includes("Incomplete: no recorded value for Test Granola"), mixed);
+    await page.getByText("Ingredient weights & calculation").click();
+    const provenance = await page.getByTestId("calc-provenance").allInnerTexts();
+    assert(provenance.some((t) => /Source: Open Food Facts product data .*barcode 0012345678905/s.test(t)), provenance.join(" | "));
+    assert(provenance.some((t) => /Source: USDA FoodData Central/.test(t)), provenance.join(" | "));
+    for (const width of [320, 390, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `mixed overflow ${width}`);
+      if (width !== 1440) await page.screenshot({ path: `work/qa-off-mixed-${width}.png` });
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    // Repeat lookup of the same barcode uses the session cache (no new request).
+    await lookUp("0012345678905");
+    await preview.waitFor();
+    assert.equal(offRequests.length, 1);
+    await page.getByRole("button", { name: "Cancel" }).click();
+    // Liquid recorded per 100 ml: explained and not addable.
+    await page.waitForTimeout(3100);
+    await lookUp("96385074");
+    await preview.waitFor();
+    assert((await preview.innerText()).includes("Can't be calculated yet"));
+    assert(await page.getByRole("button", { name: "Add to calculator" }).isDisabled());
+    // Lookups are spaced out by the client limiter; failures are reported once, never retried.
+    await lookUp("00012345678905");
+    await page.getByText(/wait \d+ s before the next lookup/).waitFor();
+    assert.equal(offRequests.length, 2);
+    await page.waitForTimeout(3100);
+    await lookUp("00012345678905");
+    await page.getByText("No product with barcode 00012345678905 was found on Open Food Facts.").waitFor();
+    await page.waitForTimeout(3100);
+    await lookUp("5901234123457");
+    await page.getByText("Couldn't reach Open Food Facts. Check your connection and try again.").waitFor();
+    await page.waitForTimeout(3100);
+    await lookUp("4006381333931");
+    // Retry-After isn't CORS-exposed by Open Food Facts, so browsers fall back to 60 s.
+    await page.getByText(/Open Food Facts is limiting requests right now. Wait about 60 s/).waitFor();
+    // After a rate limit, new barcodes wait (no request); cached ones still show without a request.
+    await page.waitForTimeout(3100);
+    await lookUp("5901234123457");
+    await page.getByText(/wait \d+ s before the next lookup/).waitFor();
+    await lookUp("0012345678905");
+    await preview.waitFor();
+    await page.getByRole("button", { name: "Cancel" }).click();
+    assert.equal(offRequests.length, 5);
+    assert.deepEqual(offRequests.map((r) => r.url.match(/product\/(\d+)/)[1]), ["0012345678905", "96385074", "00012345678905", "5901234123457", "4006381333931"]);
+    await page.unroute("**/api/v3/product/**");
+    // Removing the product row drops it; nothing was written to browser storage.
+    await page.getByRole("button", { name: "Remove Test Granola" }).click();
+    await page.getByRole("button", { name: "Remove Banana" }).click();
+    assert.equal(await page.evaluate(() => JSON.stringify(Object.keys(localStorage).sort())), storageBefore);
+    // Mocked 404/429/aborted responses log expected "Failed to load resource" messages.
+    const offErrors = errors.splice(errorsBeforeOff);
+    assert(offErrors.every((e) => /Failed to load resource/.test(e)), offErrors.join(" | "));
     console.log("BROWSER ERRORS", errors);
     assert.deepEqual(errors, []);
     console.log(

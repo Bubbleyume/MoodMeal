@@ -1,5 +1,33 @@
 # MoodMeal AI Handoff
 
+## Open Food Facts barcode lookup in the Nutrition Calculator (Claude Code, 2026-10-15)
+
+Started at cf16a7d, equal to origin. Details and the licensing review are in `docs/OPEN-FOOD-FACTS.md`.
+
+Code:
+- `src/lib/openFoodFacts.ts`: barcode validation, read-only API v3 lookup, mapping, rate limiter.
+- `src/components/ProductLookup.tsx`: lookup UI and preview.
+- `nutritionCalculator.ts`: `source`, `productFood`, and an `extraFoods` parameter on `calculateCustom` and `findFood`.
+- `NutritionCalculatorPage.tsx`: lookup section, product rows, source labels and provenance.
+
+Behaviour:
+- Barcodes: EAN-8, UPC-A, EAN-13 and GTIN-14 with check digit; leading zeros kept.
+- Lookups run only on an explicit button press. There are no retries, and found/not-found results are cached for the session. The app limits itself to 10 lookups per minute with at least 3 s between them; OFF's limit is 15 per minute per IP.
+- Lookup states: loading, not-found, timeout, network-error, rate-limit (60 s, since Retry-After isn't CORS-exposed) and error.
+- The preview must be confirmed before a product is added.
+- Grams are offered only for per-100 g products sold by weight. Volume-unit or per-100 ml products, unclear bases, and products with no nutrition are not calculable. A product serving is offered only with an explicit gram weight.
+- Mapping is explicit. kJ is converted to kcal at 4.184. Missing values stay null, zero stays zero, modifier and estimated values are excluded.
+- Results show mixed-source labels and per-ingredient provenance. Allergen and ingredient text is shown safely.
+- Nothing is stored or published. The USDA list stays at 17 and catalog nutrition is unchanged.
+
+Validation:
+- 43 knowledge tests pass, 6 new, with mocked fetch.
+- Typecheck, avatar tests, 14 USDA tests, 22 FatSecret tests and the build pass.
+- The browser suite passes with mocked OFF routes covering found/confirm, mixed totals, liquid refusal, 404, 429, network error, invalid input, the client limiter and the cache, plus overflow at 320/390/1440 px (emulation only).
+- Live: 3 staging and 2 production reads by script, plus 1 production read from the browser, which confirmed CORS with `X-User-Agent`.
+
+Unresolved before public deployment: a contact in the app identifier, the OFF usage form, an ODbL share-alike decision before any persistence, keeping OFF data out of medical tools, and real-device testing.
+
 ## Verification of calculator count and polish items (Claude Code, 2026-10-15)
 
 Started at 4c351f9, equal to origin.

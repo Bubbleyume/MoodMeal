@@ -15,6 +15,7 @@ import pilotData from "../data/usda/pilot-foods.json";
 import { APPROVED_INGREDIENTS } from "../data/usdaApprovals";
 import { PILOT_INGREDIENTS } from "../data/usdaPilot";
 import { calculateNutrition } from "./nutrition";
+import { isCalculable, per100gNutrients, type OffProduct } from "./openFoodFacts";
 import type { NutritionInput, NutritionValue, UsdaNutrientValue } from "../types/nutrition";
 
 export const SNAPSHOT = pilotData.snapshot;
@@ -37,8 +38,15 @@ export interface CalculatorMeasure {
   basis: string;
 }
 
+export type FoodSource = "usda" | "openfoodfacts";
+
 export interface CalculatorFood {
+  /** FDC ID for USDA foods; "off:<barcode>" for Open Food Facts products. */
   fdcId: string;
+  /** USDA reviewed record, or unreviewed Open Food Facts product data. */
+  source: FoodSource;
+  /** Open Food Facts product details (provenance) when source is "openfoodfacts". */
+  product?: OffProduct;
   name: string;
   description: string;
   /** Preparation state the USDA values describe (raw, cooked, peeled…). */
@@ -110,7 +118,7 @@ function buildFoods(): CalculatorFood[] {
     const info = FOOD_INFO[fdcId];
     if (!info) throw new Error(`No calculator name/state for FDC ${fdcId}`);
     if (!foods.has(fdcId)) foods.set(fdcId, {
-      fdcId, description, nutrients, imageLabel, ...info, measures: [GRAMS],
+      fdcId, source: "usda", description, nutrients, imageLabel, ...info, measures: [GRAMS],
       sourceURL: `https://fdc.nal.usda.gov/food-details/${fdcId}/nutrients`,
     });
     return foods.get(fdcId)!;
@@ -143,8 +151,39 @@ function buildFoods(): CalculatorFood[] {
 
 export const CALCULATOR_FOODS: CalculatorFood[] = buildFoods();
 
-export function findFood(fdcId: string) {
-  return CALCULATOR_FOODS.find((f) => f.fdcId === fdcId);
+export function findFood(fdcId: string, extraFoods: CalculatorFood[] = []) {
+  return CALCULATOR_FOODS.find((f) => f.fdcId === fdcId) ?? extraFoods.find((f) => f.fdcId === fdcId);
+}
+
+/**
+ * Temporary calculator food for a confirmed Open Food Facts product, or null
+ * when its nutrition basis can't be used. Grams are offered only for
+ * nutrition per 100 g; a product serving only with an explicit gram weight.
+ */
+export function productFood(p: OffProduct): CalculatorFood | null {
+  if (!isCalculable(p)) return null;
+  const measures: CalculatorMeasure[] = [];
+  if (p.basis === "per100g")
+    measures.push({ ...GRAMS, basis: "Weighed amount in grams; Open Food Facts nutrition per 100 g." });
+  if (p.servingGrams)
+    measures.push({
+      id: "off-serving", label: `product serving, ${p.servingLabel}`, gramsPerUnit: p.servingGrams, portionId: "",
+      basis: `Product serving recorded by Open Food Facts: ${p.servingLabel}.`,
+    });
+  const name = p.name ?? `Product ${p.code}`;
+  return {
+    fdcId: `off:${p.code}`,
+    source: "openfoodfacts",
+    product: p,
+    name,
+    description: `${name}${p.brand ? ` (${p.brand})` : ""}, barcode ${p.code}`,
+    state: `Open Food Facts product data · ${p.basisLabel}`,
+    stateNote: "Crowd-sourced label data, not reviewed by MoodMeal.",
+    imageLabel: "",
+    measures,
+    nutrients: per100gNutrients(p),
+    sourceURL: p.url,
+  };
 }
 
 export function searchFoods(query: string): CalculatorFood[] {
@@ -210,17 +249,19 @@ export interface CalculatorResult {
   /** Present only when every row and the serving count are valid. */
   result?: {
     servings: number;
+    /** Data sources used: USDA only, Open Food Facts only, or both (mixed). */
+    sources: FoodSource[];
     rows: CalculatedRow[];
     totalGrams: number;
     nutrients: CalculatedNutrient[];
   };
 }
 
-export function calculateCustom(rows: CalculatorRow[], servingsText: string): CalculatorResult {
+export function calculateCustom(rows: CalculatorRow[], servingsText: string, extraFoods: CalculatorFood[] = []): CalculatorResult {
   const rowErrors: Record<string, string> = {};
   const calculated: CalculatedRow[] = [];
   for (const row of rows) {
-    const food = findFood(row.fdcId);
+    const food = findFood(row.fdcId, extraFoods);
     const measure = food?.measures.find((m) => m.id === row.measureId);
     if (!food || !measure) { rowErrors[row.key] = "Choose an approved ingredient and unit."; continue; }
     const q = parseQuantity(row.quantity);
@@ -239,6 +280,7 @@ export function calculateCustom(rows: CalculatorRow[], servingsText: string): Ca
     rowErrors,
     result: {
       servings: servings.value,
+      sources: (["usda", "openfoodfacts"] as FoodSource[]).filter((src) => calculated.some((r) => r.food.source === src)),
       rows: calculated,
       totalGrams: round(calculated.reduce((s, r) => s + (r.grams ?? 0), 0)),
       nutrients: values.map((v, i) => ({
