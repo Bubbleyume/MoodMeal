@@ -7,7 +7,7 @@ const TABS = [
   { to: "/mood", label: "Home", icon: Home, match: ["/mood", "/result", "/foods", "/meals", "/recipe"] },
   { to: "/grocery", label: "Grocery", icon: ShoppingCart, match: ["/grocery"] },
   { to: "/history", label: "History", icon: TrendingUp, match: ["/history"] },
-  { to: "/wellness", label: "Wellness", icon: Leaf, match: ["/wellness", "/health", "/tracking", "/reminders", "/self-care", "/glossary", "/learn"] },
+  { to: "/wellness", label: "Wellness", icon: Leaf, match: ["/wellness", "/health", "/tracking", "/reminders", "/self-care", "/glossary", "/learn", "/nutrition-calculator"] },
   { to: "/profile", label: "Profile", icon: User, match: ["/profile", "/preferences", "/library"] },
 ];
 

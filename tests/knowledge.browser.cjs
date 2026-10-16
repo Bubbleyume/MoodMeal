@@ -344,6 +344,42 @@ const { zipSync, strToU8 } = require("fflate");
     await page.goto(baseURL + "/grocery");
     await page.getByText("4 tsp").waitFor();
     await page.screenshot({ path: "work/qa-grocery-converted-390.png" });
+    // Nutrition Calculator: reached from Wellness, calculates, validates, saves nothing.
+    const storageBefore = await page.evaluate(() => JSON.stringify(Object.keys(localStorage).sort()));
+    await page.goto(baseURL + "/wellness");
+    await page.getByRole("link", { name: /Nutrition Calculator/ }).click();
+    await page.waitForURL("**/nutrition-calculator");
+    assert.equal(await page.locator('nav a[aria-current="page"]').innerText(), "Wellness");
+    await page.getByLabel("Search approved ingredients").fill("banana");
+    await page.getByRole("button", { name: "Add Banana (Raw, peeled)" }).click();
+    assert.equal(await page.evaluate(() => document.activeElement.getAttribute("aria-label")), "Amount of Banana");
+    await page.keyboard.type("1");
+    await page.getByLabel("Servings").fill("2");
+    const results = page.getByTestId("calc-results");
+    await results.waitFor();
+    const resultText = await results.innerText();
+    for (const v of ["105 kcal", "53 kcal", "27.0 g", "3.1 g", "14.4 g", "Total sugars"]) assert(resultText.includes(v), v);
+    await page.getByText("Ingredient weights & calculation").click();
+    await page.getByText(/Banana: 1 medium banana .* = 118 g/).waitFor();
+    for (const width of [320, 390, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `calculator overflow ${width}`);
+      if (width !== 1440) await page.screenshot({ path: `work/qa-calculator-${width}.png` });
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.getByLabel("Amount of Banana").fill("-1");
+    await page.getByText("Amount must be greater than 0.").waitFor();
+    assert.equal(await page.getByLabel("Amount of Banana").getAttribute("aria-invalid"), "true");
+    assert.equal(await page.getByTestId("calc-results").count(), 0);
+    await page.getByLabel("Amount of Banana").fill("1/2");
+    await page.getByLabel("Servings").fill("0");
+    await page.getByText(/whole number of servings from 1 to 100/).waitFor();
+    assert.equal(await page.getByTestId("calc-results").count(), 0);
+    await page.getByLabel("Search approved ingredients").fill("dragonfruit");
+    await page.getByText(/No approved ingredient matches/).waitFor();
+    await page.getByRole("button", { name: "Remove Banana" }).click();
+    await page.getByText("No ingredients yet.", { exact: false }).waitFor();
+    assert.equal(await page.evaluate(() => JSON.stringify(Object.keys(localStorage).sort())), storageBefore);
     console.log("BROWSER ERRORS", errors);
     assert.deepEqual(errors, []);
     console.log(

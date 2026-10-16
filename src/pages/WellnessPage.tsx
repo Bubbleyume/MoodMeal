@@ -16,6 +16,13 @@ export default function WellnessPage() {
         <p className="text-sm text-slate-600">
           Food, sleep, activity and connection all have a place in self-care.
         </p>
+        <Link className="card block ring-2 ring-brand-100" to="/nutrition-calculator">
+          <h2 className="font-bold">Nutrition Calculator</h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Estimate calories, protein, carbs, fat, fiber and sugars for your own
+            recipe from USDA-reviewed ingredients.
+          </p>
+        </Link>
         {LESSONS.map((l) => (
           <Link className="card block" key={l.id} to={`/learn/${l.id}`}>
             <h2 className="font-bold">{l.title}</h2>

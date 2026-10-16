@@ -32,6 +32,8 @@ import {
 } from "../src/lib/libraryReview";
 import { historyInsights } from "../src/lib/interactions";
 import { NUTRIENTS, GOALS, source } from "../src/data/knowledge";
+import { CALCULATOR_FOODS, calculateCustom, parseQuantity, parseServings, findFood } from "../src/lib/nutritionCalculator";
+import { PILOT_INGREDIENTS } from "../src/data/usdaPilot";
 
 let checks = 0;
 const test = (name: string, fn: () => void) => {
@@ -602,5 +604,112 @@ test("ingredient image resolver never borrows artwork from another food", () => 
   for (const food of FOODS)
     if (!covered.has(food.name.toLowerCase()))
       assert.equal(ingredientImages(food.name)[0]?.original, food.image, food.name);
+});
+test("nutrition calculator offers only approved records, states and conversions", () => {
+  const approvedIds = new Set([...APPROVED_INGREDIENTS.map((r) => r.fdcId), ...PILOT_INGREDIENTS.map((i) => i.fdcId)]);
+  assert.deepEqual(new Set(CALCULATOR_FOODS.map((f) => f.fdcId)), approvedIds);
+  assert.equal(CALCULATOR_FOODS.length, 17);
+  for (const f of CALCULATOR_FOODS) {
+    assert(f.state.length >= 3, f.name);
+    assert(ingredientImages(f.imageLabel).length > 0, f.imageLabel);
+    assert.equal(f.measures[0].id, "g");
+    for (const m of f.measures.slice(1)) {
+      // Every household measure is an approved conversion per unit, or the pilot's approved USDA portion.
+      const fromApproval = APPROVED_INGREDIENTS.filter((r) => r.fdcId === f.fdcId).flatMap((r) => r.conversions)
+        .some((c) => c.basePortionId === m.portionId && Math.abs(c.grams / c.quantity - m.gramsPerUnit) < 1e-9);
+      const fromPilot = PILOT_INGREDIENTS.some((i) => i.fdcId === f.fdcId && i.portionId === m.portionId);
+      assert(fromApproval || fromPilot, `${f.name}: ${m.label}`);
+    }
+  }
+  const labels = (id: string) => findFood(id)!.measures.map((m) => `${m.label}=${m.gramsPerUnit}`);
+  assert.deepEqual(labels("169640"), ["grams=1", "tsp=7", "cup=339"]); // no unapproved tbsp
+  assert.deepEqual(labels("173944"), ["grams=1", "medium banana (7–7⅞ in)=118"]);
+  assert.deepEqual(labels("169704"), ["grams=1", "cup, cooked=202"]);
+  assert.deepEqual(labels("170567"), ["grams=1", "cup, whole=143", "tbsp, whole=8.9375"]);
+  assert.deepEqual(labels("174156"), ["grams=1", "cup brewed (1 bag in 8 fl oz water)=237"]);
+  assert.deepEqual(labels("171711"), ["grams=1", "cup=148"]);
+  assert.equal(findFood("168482")!.state, "Raw, peeled flesh");
+  assert.equal(findFood("173424")!.state, "Cooked (hard-boiled), without shell");
+  assert.equal(findFood("169704")!.state, "Cooked");
+});
+test("nutrition calculator: known weights, serving division and conversions", () => {
+  const row = (key: string, fdcId: string, measureId: string, quantity: string) => ({ key, fdcId, measureId, quantity });
+  const near = (a: number | null, b: number) => assert(a !== null && Math.abs(a - b) < 1e-9, `${a} vs ${b}`);
+  // One medium banana (118 g): USDA per-100 g values x 1.18.
+  let r = calculateCustom([row("a", "173944", "each-93515", "1")], "1").result!;
+  assert.equal(r.rows[0].grams, 118);
+  const by = (id: string) => r.nutrients.find((n) => n.id === id)!;
+  near(by("1008").total, 105.02); near(by("1003").total, 1.2862); near(by("1005").total, 26.9512);
+  near(by("1004").total, 0.3894); near(by("1079").total, 3.068); near(by("2000").total, 14.4314);
+  assert.deepEqual(r.nutrients.map((n) => n.label), ["Calories", "Protein", "Carbohydrates", "Fat", "Fiber", "Total sugars"]);
+  // Grams and household units give the same result; servings divide the total.
+  r = calculateCustom([row("a", "173944", "g", "118"), row("b", "168588", "tbsp-83375", "2")], "2").result!;
+  near(r.nutrients[0].total, 105.02 + 196.48);
+  near(r.nutrients[0].perServing, (105.02 + 196.48) / 2);
+  assert.equal(r.totalGrams, 150);
+  // Approved conversions per unit, including fractions and derived cup/tbsp weights.
+  const grams = (fdcId: string, measureId: string, q: string) => calculateCustom([row("x", fdcId, measureId, q)], "1").result!.rows[0].grams;
+  assert.equal(grams("169704", "cup-85378", "3/4"), 151.5);
+  assert.equal(grams("170556", "tbsp-86847", "2"), 16.125);
+  assert.equal(grams("169640", "cup-85264", "1/4"), 84.75);
+  assert.equal(grams("173904", "cup-93454", "1 1/2"), 121.5);
+  assert.equal(grams("171320", "tsp-88429", "1/16"), 0.1625);
+  assert.equal(grams("167762", "portion-81922", "1"), 144);
+  assert.equal(grams("171711", "portion-89238", ".5"), 74);
+  // Rainbow Fruit Skewers inputs reproduce the approved pilot energy.
+  const skewers = calculateCustom([row("s", "167762", "portion-81922", "1"), row("p", "169124", "cup-84287", "1"), row("b", "171711", "portion-89238", "0.5")], "2").result!;
+  const pilotEnergy = RECIPES.find((x) => x.id === PILOT_RECIPE_ID)!.nutritionEstimate!.values.find((v) => v.id === "1008")!;
+  near(skewers.nutrients[0].total, pilotEnergy.total!);
+  near(skewers.nutrients[0].perServing, pilotEnergy.perServing!);
+});
+test("nutrition calculator keeps missing nutrients unknown and rejects invalid input", () => {
+  const banana = findFood("173944")!;
+  const saved = banana.nutrients;
+  banana.nutrients = { ...saved, "1079": { amount: null, unit: "G", sourceRowId: null } };
+  try {
+    const r = calculateCustom([
+      { key: "a", fdcId: "173944", measureId: "g", quantity: "100" },
+      { key: "b", fdcId: "168588", measureId: "g", quantity: "100" },
+    ], "2").result!;
+    const fiber = r.nutrients.find((n) => n.id === "1079")!;
+    assert.equal(fiber.total, null);
+    assert.equal(fiber.perServing, null);
+    assert.deepEqual(fiber.missing, ["Banana"]);
+    assert.equal(r.nutrients.find((n) => n.id === "1008")!.total, 89 + 614);
+  } finally {
+    banana.nutrients = saved;
+  }
+  const bad = (q: string) => { const p = parseQuantity(q); return "error" in p ? p.error : p.value; };
+  assert.equal(bad(""), "Enter an amount.");
+  assert.equal(bad("0"), "Amount must be greater than 0.");
+  assert.equal(bad("-1"), "Amount must be greater than 0.");
+  assert.equal(bad("0/3"), "Amount must be greater than 0.");
+  for (const q of ["abc", "1,5", "1/0", "2 cups", "1e3", "NaN", "Infinity", "1.2.3"])
+    assert.equal(typeof bad(q), "string", q);
+  assert.equal(bad("10001"), "Amount must be 10,000 or less.");
+  assert.equal(bad("1/2"), 0.5); assert.equal(bad("1 1/2"), 1.5); assert.equal(bad(".5"), 0.5); assert.equal(bad(" 2 "), 2);
+  for (const sv of ["", "0", "-2", "1.5", "abc", "101"]) assert("error" in parseServings(sv), sv);
+  assert.deepEqual(parseServings("4"), { value: 4 });
+  // Any invalid row, an empty list, a bad serving count, or an unapproved unit/food gives no result.
+  const ok = { key: "a", fdcId: "173944", measureId: "g", quantity: "50" };
+  assert.equal(calculateCustom([], "1").result, undefined);
+  assert.equal(calculateCustom([ok, { ...ok, key: "b", quantity: "-3" }], "1").result, undefined);
+  assert.equal(calculateCustom([ok, { ...ok, key: "b", quantity: "-3" }], "1").rowErrors.b, "Amount must be greater than 0.");
+  assert.equal(calculateCustom([ok], "0").result, undefined);
+  assert.equal(calculateCustom([{ ...ok, measureId: "tbsp-83375" }], "1").rowErrors.a, "Choose an approved ingredient and unit.");
+  assert.equal(calculateCustom([{ ...ok, fdcId: "999999" }], "1").rowErrors.a, "Choose an approved ingredient and unit.");
+});
+test("nutrition calculator never changes catalog nutrition or approvals", () => {
+  const snapshot = () => JSON.stringify({ a: APPROVED_INGREDIENTS, e: RECIPES.map((r) => [r.id, r.nutritionEstimate, r.nutrientTotals]) });
+  const before = snapshot();
+  const toast = RECIPES.find((r) => r.id === "recipe-chamomile-comfort-toast")!;
+  const rows = toast.structuredIngredients.map((i, n) => {
+    const input = approvedIngredientInput(i, toast.id)!;
+    return { key: String(n), fdcId: input.fdcId, measureId: "g", quantity: String(input.grams) };
+  });
+  assert(calculateCustom(rows, "1").result);
+  assert.equal(snapshot(), before);
+  assert.equal(toast.nutritionEstimate, null);
+  assert.equal(RECIPES.filter((r) => r.nutritionEstimate).length, 1);
 });
 console.log(`${checks} knowledge-system tests passed`);

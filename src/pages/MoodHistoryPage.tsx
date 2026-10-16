@@ -34,6 +34,14 @@ export default function MoodHistoryPage() {
   const pauseTimer = () => window.clearTimeout(timer.current ?? undefined);
   useEffect(() => () => window.clearTimeout(timer.current ?? undefined), []);
 
+  // After a keyboard delete, focus moves to Undo once the snackbar has rendered.
+  const [focusUndo, setFocusUndo] = useState(false);
+  useEffect(() => {
+    if (!focusUndo || !deleted) return;
+    undoRef.current?.focus();
+    setFocusUndo(false);
+  }, [focusUndo, deleted]);
+
   const handleDelete = (id: string, viaKeyboard: boolean) => {
     const removed = removeEntry(id);
     if (!removed) return;
@@ -41,7 +49,7 @@ export default function MoodHistoryPage() {
     startTimer();
     // The row's button is gone, so keyboard focus moves to Undo instead of being
     // lost (focus pauses the countdown). Pointer users keep the timed snackbar.
-    if (viaKeyboard) window.setTimeout(() => undoRef.current?.focus(), 0);
+    setFocusUndo(viaKeyboard);
   };
 
   const handleUndo = () => {

@@ -24,6 +24,7 @@ import TrackingPage from "./pages/TrackingPage";
 import RemindersPage from "./pages/RemindersPage";
 import SelfCarePage from "./pages/SelfCarePage";
 import GlossaryPage from "./pages/GlossaryPage";
+import NutritionCalculatorPage from "./pages/NutritionCalculatorPage";
 import ReminderAlerts from "./components/ReminderAlerts";
 
 const NO_NAV_ROUTES = ["/", "/analyzing", "/onboarding", "/profile/avatar"];
@@ -54,6 +55,7 @@ function Shell() {
         <Route path="/tracking" element={<TrackingPage />} />
         <Route path="/reminders" element={<RemindersPage />} />
         <Route path="/self-care" element={<SelfCarePage />} />
+        <Route path="/nutrition-calculator" element={<NutritionCalculatorPage />} />
         <Route path="/glossary" element={<GlossaryPage />} />
         <Route path="/glossary/:id" element={<GlossaryPage />} />
         <Route path="/profile" element={<ProfilePage />} />

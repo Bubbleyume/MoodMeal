@@ -1,5 +1,22 @@
 # MoodMeal AI Handoff
 
+## Nutrition Calculator (Claude Code, 2026-10-15)
+
+Started at e452f05, equal to origin. Location: Wellness tab → "Nutrition Calculator" card (route `/nutrition-calculator`; the Wellness tab is highlighted).
+- `src/lib/nutritionCalculator.ts` builds 17 calculator foods from `approved-ingredients.json` plus the three Rainbow Fruit Skewers pilot records. Each has a display name, an explicit preparation state (for example "Raw, peeled flesh" or "Cooked"), and a note where needed.
+- Household measures come only from approved conversions (grams ÷ approved quantity) or the pilot's approved USDA portions; grams are always available. There is no honey tbsp, no skin-on sweet potato, and no dry rice.
+- It reuses `calculateNutrition`, so a missing value makes that nutrient's total and per-serving amount null. The UI then shows "Unknown" and "Incomplete: no USDA value for …".
+- Reports calories, protein, carbs, fat, fiber and total sugars for the whole recipe and per serving.
+- Amounts accept 2, 1.5, .5, 1/2 and 1 1/2, greater than 0 and up to 10,000. Servings must be a whole number from 1 to 100. While any input is invalid, no result is shown.
+- Inputs live in page state only: no localStorage key, no approval, and nothing is attached to a recipe. `usdaPilot.ts` now exports `PILOT_INGREDIENTS` (no behaviour change). No FatSecret data and no API is involved.
+
+Also fixed: the Mood History Undo button now receives focus after a keyboard delete from a post-render effect; before, it intermittently failed.
+
+Validation:
+- Typecheck, avatar tests, 14 USDA tests, 22 FatSecret tests and the build pass.
+- 34 knowledge tests pass, including 4 for the calculator: approved-only measures, known banana values, serving division, conversions, reproducing the skewers pilot energy, missing-nutrient nulls, invalid inputs, and no catalog changes.
+- The browser suite passes three times in a row, including calculator flow, validation, overflow at 320/390/1440 and no storage writes.
+
 ## Usability review and accessibility fixes (Claude Code, 2026-10-15)
 
 Started at 64646f4, equal to origin. The full report is in `docs/USABILITY-REVIEW-2026-10-15.md`. All mobile results are **automated emulation** (Edge/Playwright at 360/390/430/768 px); no physical device was used.

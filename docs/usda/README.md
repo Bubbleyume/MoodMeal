@@ -46,6 +46,10 @@ Honey appears in Warm Oatmeal, Calming Kefir Smoothie, Green Tea Energy Bites, I
 
 Prioritize shared ingredients such as honey, banana and almond butter. Confirm size, salt/fat level and exact household portion before approving weights. Milk alternatives, meat cuts, chocolate, kefir and materially different food identities remain unresolved. Crushed chili flakes and sea salt retain the conditions above. No other recipe nutrition is published.
 
+## Nutrition Calculator (custom recipes)
+
+`src/lib/nutritionCalculator.ts` and `/nutrition-calculator` let users combine approved records (above, plus the three pilot fruits) in grams or approved household measures only. Missing values stay null and are shown as Unknown/incomplete. Results are calculated estimates for the user's own combination; they are not stored, reviewed or approved, and they never change catalog nutrition or recipe approval status.
+
 ## Integration boundaries
 
 No storage migration: estimates derive from the built-in recipe. Existing user data and recommendation behavior remain intact. No branch changes, merge, reset, commit or push were performed. The checkout is knowledge-system-foundation at 3292282, one checkpoint ahead of avatar-redesign-phase-2 at 7edaaf7; master remains 7d49790.
