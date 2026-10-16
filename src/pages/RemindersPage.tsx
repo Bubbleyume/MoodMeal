@@ -33,7 +33,7 @@ export default function RemindersPage() {
       <div className="rounded-2xl bg-brand-50 p-4 text-sm text-brand-900">
         <p className="font-semibold">Keep MoodMeal open for in-app alerts.</p>
         <p className="mt-1 text-xs">For alarms when the app is closed, export to your calendar and check its notification settings.</p>
-        <details className="mt-3 text-xs"><summary className="cursor-pointer font-semibold">Timing, safety & calendar details</summary>
+        <details className="mt-3 text-xs"><summary className="min-h-[24px] cursor-pointer py-1 font-semibold">Timing, safety & calendar details</summary>
           <p className="mt-2">Times follow this device’s local clock. Add a separate reminder for each dose time. Follow your prescribed instructions; never double a dose because of a missed alert.</p>
           <p className="mt-2">Calendar exports may sync to your calendar provider. Changes here do not update an exported event, including pausing or deleting it. Update your calendar separately.</p>
         </details>

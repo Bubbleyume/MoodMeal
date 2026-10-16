@@ -30,7 +30,7 @@ export default function MoodHistoryPage() {
       </div>
       <div className="screen-scroll -mt-4 rounded-t-[2rem] bg-transparent px-4 pt-5">
         {entries.length === 0 ? (
-          <div className="mt-16 flex flex-col items-center text-center text-slate-400">
+          <div className="mt-16 flex flex-col items-center text-center text-slate-500">
             <span className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-50 text-brand-300">
               <TrendingUp size={28} />
             </span>
@@ -44,10 +44,10 @@ export default function MoodHistoryPage() {
             <div className="card">
               <div className="mb-1 flex items-center justify-between">
                 <h2 className="section-title">Mood Trend</h2>
-                <span className="text-xs text-slate-400">{entries.length} entries</span>
+                <span className="text-xs text-slate-500">{entries.length} {entries.length === 1 ? "entry" : "entries"}</span>
               </div>
               <MoodChart entries={entries} />
-              <p className="mt-3 flex items-start gap-1.5 text-[11px] leading-snug text-slate-400">
+              <p className="mt-3 flex items-start gap-1.5 text-[11px] leading-snug text-slate-500">
                 <Info size={12} className="mt-0.5 shrink-0" />
                 This is your self-reported mood history — not a clinical or diagnostic score.
               </p>
@@ -57,11 +57,11 @@ export default function MoodHistoryPage() {
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <div className="card text-center">
                   <p className="text-2xl font-extrabold text-brand-600">{stats.avg.toFixed(1)}</p>
-                  <p className="text-xs text-slate-400">Average intensity</p>
+                  <p className="text-xs text-slate-500">Average intensity</p>
                 </div>
                 <div className="card text-center">
                   <p className="text-2xl">{stats.topEmotion?.emoji}</p>
-                  <p className="text-xs text-slate-400">Most frequent — {stats.topEmotion?.name}</p>
+                  <p className="text-xs text-slate-500">Most frequent — {stats.topEmotion?.name}</p>
                 </div>
               </div>
             )}
@@ -86,7 +86,7 @@ export default function MoodHistoryPage() {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between">
                           <p className="text-sm font-semibold text-slate-800">{emotion?.name}</p>
-                          <p className="text-xs text-slate-400">
+                          <p className="text-xs text-slate-500">
                             {new Date(entry.date).toLocaleDateString(undefined, {
                               month: "short",
                               day: "numeric",
@@ -103,18 +103,18 @@ export default function MoodHistoryPage() {
                               }}
                             />
                           </div>
-                          <span className="text-[11px] font-semibold text-slate-400">
+                          <span className="text-[11px] font-semibold text-slate-500">
                             {entry.intensity}/10
                           </span>
                         </div>
                         {entry.note && (
-                          <p className="mt-1 truncate text-xs italic text-slate-400">“{entry.note}”</p>
+                          <p className="mt-1 truncate text-xs italic text-slate-500">“{entry.note}”</p>
                         )}
                       </div>
                       <button
                         onClick={() => removeEntry(entry.id)}
-                        aria-label="Delete entry"
-                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-300 hover:bg-coral-50 hover:text-coral-500"
+                        aria-label={`Delete ${emotion?.name ?? "mood"} entry from ${new Date(entry.date).toLocaleDateString(undefined, { month: "long", day: "numeric" })}`}
+                        className="-mr-1.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-slate-500 hover:bg-coral-50 hover:text-coral-600"
                       >
                         <Trash2 size={15} />
                       </button>

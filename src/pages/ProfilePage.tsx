@@ -54,7 +54,7 @@ export default function ProfilePage() {
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <label htmlFor="displayName" className="text-xs font-semibold text-slate-400">
+            <label htmlFor="displayName" className="text-xs font-semibold text-slate-500">
               Display name
             </label>
             <input
@@ -72,7 +72,7 @@ export default function ProfilePage() {
             <AvatarPreview config={avatar ?? DEFAULT_AVATAR_CONFIG} size={44} variant="bust" />
             <div>
               <p className="text-sm font-semibold text-slate-800">Your Avatar</p>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500">
                 {hasAvatar ? getAvatarLabel(avatar!) : "Not created yet"}
               </p>
             </div>
@@ -92,12 +92,13 @@ export default function ProfilePage() {
             </span>
             <div>
               <p className="text-sm font-semibold text-slate-800">Notifications</p>
-              <p className="text-xs text-slate-400">Daily mood check-in reminder (placeholder)</p>
+              <p className="text-xs text-slate-500">Daily mood check-in reminder (placeholder)</p>
             </div>
           </div>
           <button
             onClick={() => updateProfile({ notificationsEnabled: !profile.notificationsEnabled })}
             aria-pressed={profile.notificationsEnabled}
+            aria-label="Daily mood check-in reminder"
             className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${
               profile.notificationsEnabled ? "bg-brand-600" : "bg-slate-200"
             }`}
@@ -116,7 +117,7 @@ export default function ProfilePage() {
             <h2 className="section-title">About MoodMeal</h2>
           </div>
           <p className="mt-2 text-xs leading-relaxed text-slate-500">
-            MoodMeal uses a local, sourced food library and transparent support-goal rules. No AI generates your recommendations and no live internet search runs when you check in. Artwork is illustrated; nutrition totals are not yet calculated.
+            MoodMeal uses a local, sourced food library and transparent support-goal rules. No AI generates your recommendations and no live internet search runs when you check in. Artwork is illustrated. Nutrition estimates appear only on recipes whose every ingredient has been reviewed against USDA data.
           </p>
         </div>
 

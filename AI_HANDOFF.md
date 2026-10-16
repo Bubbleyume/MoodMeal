@@ -1,5 +1,21 @@
 # MoodMeal AI Handoff
 
+## Usability review and accessibility fixes (Claude Code, 2026-10-15)
+
+Started at 64646f4, equal to origin. The full report is in `docs/USABILITY-REVIEW-2026-10-15.md`. All mobile results are **automated emulation** (Edge/Playwright at 360/390/430/768 px); no physical device was used.
+
+Fixed:
+- **High:** an invalid saved check-in, or a profile saved in the wrong shape, no longer blanks Result/Foods/Meals/Profile. `useDraftMood` validates the check-in, `readStorage` rejects an array where an object is expected, and `useProfile` merges defaults. Stored data is never rewritten.
+- Mood intensity sheet: focus moves to the slider when it opens; Escape closes it and returns focus to the mood card.
+- Bottom navigation: `aria-current`, a Leaf icon for Wellness, a screen-reader badge count, and better-contrast labels.
+- Grocery inputs are labelled; the Profile switch is named.
+- Touch targets are now 44 px for grocery done/remove/add, history delete and the sheet close button.
+- `text-slate-400` → `text-slate-500` (WCAG AA) across the app.
+- Heading structure on Result and Glossary; summaries at least 24 px; accurate About copy; "1 entry" pluralization.
+- `tests/knowledge.browser.cjs` gained regression checks for these fixes.
+
+Decisions still needed from the user (not changed): grocery unit conversion (tsp/tbsp rows stay separate), and confirm/undo for Mood History deletes. Also outstanding: the remaining 36 px controls and the non-modal sheet. Real-device testing (iOS Safari, Android Chrome, VoiceOver/TalkBack) is still required.
+
 ## Remaining 14 USDA labels approved, no new totals (Claude Code, 2026-10-14)
 
 Started at 887a7f9, equal to origin. The user approved every row marked **Approve** in `docs/usda/BATCH-REMAINING-14-PROPOSAL.md` (B1-B7, B9-B11, B13, B14, C1, C2) with their recommended conventions. Held uses stay on hold, and Greek yogurt (B8) and avocado (B12, "Prefer", not "Approve") stay pending. Honey and the skewers pilot are unchanged; the honey record is byte-identical.

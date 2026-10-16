@@ -64,7 +64,7 @@ export default function MoodResultPage() {
               avatar/emoji here is decorative to assistive tech. */}
           <EmotionFace emotion={emotion} emojiClassName="text-5xl" className="h-14 w-14 object-contain" decorative />
         </div>
-        <h2 className="mt-2 font-display text-2xl font-extrabold">{emotion.name}</h2>
+        <h1 className="mt-2 font-display text-2xl font-extrabold">{emotion.name}</h1>
         <div className="mx-auto mt-2 h-2 w-40 overflow-hidden rounded-full bg-white/25">
           <div className="h-full rounded-full bg-moodGreen-400" style={{ width: `${draft.intensity * 10}%` }} />
         </div>
@@ -86,7 +86,7 @@ export default function MoodResultPage() {
 
         <div className="mt-5 flex items-center justify-between">
           <h2 className="section-title">Foods for you</h2>
-          <span className="text-xs text-slate-400">{foods.length} suggestions</span>
+          <span className="text-xs text-slate-500">{foods.length} suggestions</span>
         </div>
         {!foods.length&&<p className="mt-3 text-sm">No food picks match these preferences. Try the meal ideas or edit your preferences.</p>}
         <div className="mt-3 space-y-3">
@@ -122,7 +122,7 @@ export default function MoodResultPage() {
             </span>
             <span>
               <span className="block text-sm font-bold text-slate-800">View Meal Ideas</span>
-              <span className="block text-[11px] text-slate-400">{meals.length} recipes for your support goal</span>
+              <span className="block text-[11px] text-slate-600">{meals.length} recipes for your support goal</span>
             </span>
           </span>
         </button>

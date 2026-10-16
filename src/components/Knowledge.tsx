@@ -16,7 +16,7 @@ export function Sources({ sources }: { sources: Provenance[] }) {
   );
   return (
     <details className="mt-3 text-xs text-slate-600">
-      <summary className="cursor-pointer font-semibold text-brand-700">
+      <summary className="min-h-[24px] cursor-pointer py-1 font-semibold text-brand-700">
         Sources & review notes
       </summary>
       <div className="mt-2 space-y-3">

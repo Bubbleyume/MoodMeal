@@ -21,6 +21,8 @@ export function readStorage<T>(key: string, fallback: T): T {
     const parsed = JSON.parse(raw);
     if(Array.isArray(fallback) && !Array.isArray(parsed)) return fallback;
     if(fallback !== null && typeof fallback === "object" && (parsed === null || typeof parsed !== "object")) return fallback;
+    // An object setting stored as an array (or vice versa) is unreadable, not data to render.
+    if(fallback !== null && typeof fallback === "object" && !Array.isArray(fallback) && Array.isArray(parsed)) return fallback;
     return parsed as T;
   } catch {
     return fallback;

@@ -26,7 +26,7 @@ export default function Header({ title, subtitle, showBack = true, right }: Head
       )}
       <div className="min-w-0 flex-1">
         <h1 className="truncate font-display text-base font-bold text-slate-900">{title}</h1>
-        {subtitle && <p className="truncate text-xs text-slate-400">{subtitle}</p>}
+        {subtitle && <p className="truncate text-xs text-slate-500">{subtitle}</p>}
       </div>
       {right ?? <div className="w-9" />}
     </header>

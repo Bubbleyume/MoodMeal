@@ -1,14 +1,14 @@
 import React from "react";
 import { Link, useLocation } from "../lib/router";
-import { Home, ShoppingCart, TrendingUp, User } from "./icons";
+import { Home, Leaf, ShoppingCart, TrendingUp, User } from "./icons";
 import { useGroceryList } from "../hooks/useGroceryList";
 
 const TABS = [
   { to: "/mood", label: "Home", icon: Home, match: ["/mood", "/result", "/foods", "/meals", "/recipe"] },
   { to: "/grocery", label: "Grocery", icon: ShoppingCart, match: ["/grocery"] },
   { to: "/history", label: "History", icon: TrendingUp, match: ["/history"] },
-  { to: "/wellness", label: "Wellness", icon: TrendingUp, match: ["/wellness", "/health", "/tracking", "/reminders", "/self-care", "/glossary"] },
-  { to: "/profile", label: "Profile", icon: User, match: ["/profile"] },
+  { to: "/wellness", label: "Wellness", icon: Leaf, match: ["/wellness", "/health", "/tracking", "/reminders", "/self-care", "/glossary", "/learn"] },
+  { to: "/profile", label: "Profile", icon: User, match: ["/profile", "/preferences", "/library"] },
 ];
 
 export default function BottomNavigation() {
@@ -25,8 +25,9 @@ export default function BottomNavigation() {
             <Link
               key={to}
               to={to}
+              aria-current={isActive ? "page" : undefined}
               className={`relative flex w-16 flex-col items-center gap-1 rounded-2xl py-1.5 text-[11px] font-semibold transition-colors ${
-                isActive ? "text-moodGreen-600" : "text-slate-400"
+                isActive ? "text-moodGreen-700" : "text-slate-500"
               }`}
             >
               <span
@@ -34,12 +35,13 @@ export default function BottomNavigation() {
                   isActive ? "bg-moodGreen-100" : ""
                 }`}
               >
-                <Icon size={20} strokeWidth={isActive ? 2.4 : 2} />
+                <Icon size={20} strokeWidth={isActive ? 2.4 : 2} aria-hidden="true" />
               </span>
               {label}
               {to === "/grocery" && activeGroceryCount > 0 && (
-                <span className="absolute right-2 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-coral-500 px-1 text-[9px] font-bold text-white">
+                <span className="absolute right-2 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white">
                   {activeGroceryCount}
+                  <span className="sr-only"> items to get</span>
                 </span>
               )}
             </Link>

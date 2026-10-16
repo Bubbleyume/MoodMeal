@@ -33,7 +33,7 @@ export default function IntensitySlider({ value, onChange, color = "#7c3aed" }: 
         style={{ accentColor: color }}
         aria-label="Mood intensity"
       />
-      <div className="mt-1 flex justify-between text-[10px] text-slate-400">
+      <div className="mt-1 flex justify-between text-[10px] text-slate-500">
         <span>1</span>
         <span>5</span>
         <span>10</span>

@@ -25,14 +25,14 @@ export default function RecipeNutrition({estimate}:{estimate:RecipeNutritionEsti
     <p className="mt-3 text-sm text-slate-600">Added sugars: <strong>{display(byId("1235"))}</strong>. Missing USDA values are not treated as zero.</p>
     <p className="mt-2 text-xs text-slate-500">Estimated from reviewed USDA records and reference portion weights, not individually weighed ingredients. Not laboratory-verified or kitchen-tested.</p>
     <details className="mt-3 text-sm text-slate-600">
-      <summary className="cursor-pointer font-semibold text-brand-700">Portions & calculation</summary>
+      <summary className="min-h-[24px] cursor-pointer py-1 font-semibold text-brand-700">Portions & calculation</summary>
       <ul className="mt-2 space-y-2">
         {estimate.ingredients.map(i => <li key={i.fdcId}><strong>{i.name}: {i.grams ?? "Unknown"} g</strong><br />{i.portionDescription}. FDC {i.fdcId}; portion {i.portionId}.</li>)}
       </ul>
       <p className="mt-3">383 g edible fruit for the recipe; 191.5 g per equal serving. Wooden skewers are equipment and excluded. Each nutrient is scaled from its amount per 100 g, summed across the fruit, then divided by two. Figures are rounded for display.</p>
     </details>
     <details className="mt-3 text-sm text-slate-600">
-      <summary className="cursor-pointer font-semibold text-brand-700">More nutrients per serving</summary>
+      <summary className="min-h-[24px] cursor-pointer py-1 font-semibold text-brand-700">More nutrients per serving</summary>
       <dl className="mt-2 space-y-2">
         {estimate.values.filter(n => !primary.some(p => p.id === n.id) && n.id !== "1235").map(n => <div key={n.id} className="flex flex-wrap justify-between gap-2"><dt>{n.name}</dt><dd>{display(n,2)}</dd></div>)}
       </dl>

@@ -44,7 +44,7 @@ export default function MealsPage() {
       <div className="screen-scroll px-4 pt-4">
         <HealthContext />
         {meals.length === 0 ? (
-          <div className="mt-10 flex flex-col items-center text-center text-slate-400">
+          <div className="mt-10 flex flex-col items-center text-center text-slate-500">
             <p className="mt-2 text-sm">No meals match your current filters yet.</p>
           </div>
         ) : (

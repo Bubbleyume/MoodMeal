@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "../lib/router";
 import EmotionCard from "../components/EmotionCard";
 import EmotionFace from "../components/EmotionFace";
@@ -17,6 +17,20 @@ export default function MoodSelectionPage() {
   const [selected, setSelected] = useState<Emotion | null>(null);
   const [intensity, setIntensity] = useState(5);
   const [note, setNote] = useState("");
+  const sheetRef = useRef<HTMLDivElement | null>(null);
+  const isOpen = selected !== null;
+
+  // Opening the sheet moves keyboard focus to the intensity slider; closing
+  // it returns focus to the mood that opened it.
+  const lastSelected = useRef<Emotion | null>(null);
+  useEffect(() => {
+    if (isOpen) sheetRef.current?.querySelector<HTMLInputElement>('input[type="range"]')?.focus();
+    else if (lastSelected.current)
+      document.querySelector<HTMLButtonElement>(`[aria-label="${lastSelected.current.name} mood"]`)?.focus();
+  }, [isOpen]);
+  useEffect(() => {
+    if (selected) lastSelected.current = selected;
+  }, [selected]);
 
   const handleContinue = () => {
     if (!selected) return;
@@ -54,8 +68,12 @@ export default function MoodSelectionPage() {
       {selected && (
         <div
           className="fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-app animate-sheet-up rounded-t-[2rem] bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_-12px_40px_-12px_rgba(30,10,60,0.35)]"
+          ref={sheetRef}
           role="dialog"
           aria-label={`Set intensity for feeling ${selected.name}`}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setSelected(null);
+          }}
         >
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -72,13 +90,13 @@ export default function MoodSelectionPage() {
               </span>
               <div className="text-left">
                 <p className="text-sm font-bold text-slate-900">Feeling {selected.name}</p>
-                <p className="text-[11px] text-slate-400">Set the intensity below</p>
+                <p className="text-[11px] text-slate-500">Set the intensity below</p>
               </div>
             </div>
             <button
               onClick={() => setSelected(null)}
               aria-label="Clear selected emotion"
-              className="flex h-8 w-8 items-center justify-center rounded-full text-slate-300 hover:bg-slate-50 hover:text-slate-500"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-slate-500 hover:bg-slate-50 hover:text-slate-700"
             >
               <X size={16} />
             </button>
@@ -88,7 +106,7 @@ export default function MoodSelectionPage() {
 
           <div className="mt-4">
             <label htmlFor="mood-note" className="mb-1.5 block text-sm font-semibold text-slate-700">
-              Add a note <span className="font-normal text-slate-400">(optional)</span>
+              Add a note <span className="font-normal text-slate-500">(optional)</span>
             </label>
             <textarea
               id="mood-note"
@@ -99,7 +117,7 @@ export default function MoodSelectionPage() {
               placeholder="What's on your mind?"
               className="w-full resize-none rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 outline-none transition-colors focus:border-brand-400 focus:bg-white"
             />
-            <p className="mt-1 text-right text-[10px] text-slate-300">{note.length}/240</p>
+            <p className="mt-1 text-right text-[11px] text-slate-500">{note.length}/240</p>
           </div>
 
           <button onClick={handleContinue} className="btn-accent mt-4 w-full">

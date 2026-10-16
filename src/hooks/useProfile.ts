@@ -10,14 +10,17 @@ export const DEFAULT_PROFILE: UserProfile = {
 };
 
 export function useProfile() {
-  const [profile, setProfile] = useLocalStorage<UserProfile>(
+  const [stored, setProfile] = useLocalStorage<UserProfile>(
     STORAGE_KEYS.profile,
     DEFAULT_PROFILE
   );
+  // Profiles saved by older versions may lack fields; fill them from defaults
+  // on read so screens never see undefined (the stored value is not rewritten).
+  const profile: UserProfile = { ...DEFAULT_PROFILE, ...stored };
 
   const updateProfile = useCallback(
     (patch: Partial<UserProfile>) => {
-      setProfile((prev) => ({ ...prev, ...patch }));
+      setProfile((prev) => ({ ...DEFAULT_PROFILE, ...prev, ...patch }));
     },
     [setProfile]
   );

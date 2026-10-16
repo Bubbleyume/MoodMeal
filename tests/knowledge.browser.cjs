@@ -66,7 +66,7 @@ const { zipSync, strToU8 } = require("fflate");
     );
     await page.goto(baseURL + "/history");
     await page.getByText(/You saved Salmon & Quinoa Bowl/).waitFor();
-    assert.equal(await page.getByText("1 entries").count(), 1);
+    assert.equal(await page.getByText("1 entry", { exact: true }).count(), 1);
     await page.goto(baseURL + "/preferences");
     await page.getByLabel("fish", { exact: true }).check();
     await page
@@ -279,6 +279,35 @@ const { zipSync, strToU8 } = require("fflate");
       }
     }
     assert.deepEqual(fullArtwork, [], "full-resolution ingredient PNGs requested");
+    // Usability regressions: mood sheet keyboard access and current-tab marking.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(baseURL + "/mood");
+    const tired = page.getByRole("button", { name: "Tired mood", exact: true });
+    await tired.focus();
+    await page.keyboard.press("Enter");
+    await page.getByRole("dialog").waitFor();
+    assert.equal(await page.evaluate(() => document.activeElement.getAttribute("aria-label")), "Mood intensity");
+    await page.keyboard.press("Escape");
+    assert.equal(await page.getByRole("dialog").count(), 0);
+    assert.equal(await page.evaluate(() => document.activeElement.getAttribute("aria-label")), "Tired mood");
+    assert.equal(await page.locator('nav a[aria-current="page"]').innerText(), "Home");
+    // Unreadable saved data must not blank a screen, and is left in storage untouched.
+    const savedDraft = await page.evaluate(() => localStorage.getItem("moodmeal:draftMood"));
+    const savedProfile = await page.evaluate(() => localStorage.getItem("moodmeal:profile"));
+    await page.evaluate(() => {
+      localStorage.setItem("moodmeal:draftMood", JSON.stringify({ emotionId: "unknown", intensity: 99 }));
+      localStorage.setItem("moodmeal:profile", "[]");
+    });
+    for (const route of ["/result", "/foods", "/meals", "/profile"]) {
+      await page.goto(baseURL + route);
+      assert((await page.locator("body").innerText()).trim().length > 20, `blank ${route}`);
+    }
+    assert.equal(new URL(page.url()).pathname, "/profile");
+    assert.equal(await page.evaluate(() => localStorage.getItem("moodmeal:profile")), "[]");
+    await page.evaluate(([d, p]) => {
+      d === null ? localStorage.removeItem("moodmeal:draftMood") : localStorage.setItem("moodmeal:draftMood", d);
+      p === null ? localStorage.removeItem("moodmeal:profile") : localStorage.setItem("moodmeal:profile", p);
+    }, [savedDraft, savedProfile]);
     console.log("BROWSER ERRORS", errors);
     assert.deepEqual(errors, []);
     console.log(

@@ -60,7 +60,7 @@ export default function MoodChart({ entries, height = 220 }: MoodChartProps) {
 
   if (sorted.length === 0) {
     return (
-      <div className="flex h-48 items-center justify-center rounded-2xl bg-brand-50 text-sm text-slate-400">
+      <div className="flex h-48 items-center justify-center rounded-2xl bg-brand-50 text-sm text-slate-500">
         No mood entries yet.
       </div>
     );
@@ -183,7 +183,7 @@ export default function MoodChart({ entries, height = 220 }: MoodChartProps) {
             {EMOTIONS.find((e) => e.id === hovered.entry.emotionId)?.name}
           </span>
           <span className="text-slate-300">· intensity {hovered.entry.intensity}/10</span>
-          <span className="text-slate-400">
+          <span className="text-slate-500">
             {new Date(hovered.entry.date).toLocaleDateString(undefined, {
               month: "short",
               day: "numeric",
