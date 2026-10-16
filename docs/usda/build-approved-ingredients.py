@@ -39,6 +39,9 @@ B_DECISIONS = 'User (project owner) approved recommended rows of BATCH-REMAINING
 DATE = '2026-10-14'
 SB = 'recipe-chamomile-comfort-toast'
 NO_ADDED_SUGARS = {'1235': 'USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars.'}
+# Cross-unit factors below (tsp from tbsp = 1/3, tbsp from cup = 1/16) use the
+# app's single volume standard, US customary: 1 cup = 16 tbsp = 48 tsp
+# (src/lib/units.ts). tests/knowledge.test.ts checks the built values agree.
 
 
 def conv(quantity, unit, notes, recipes, base, factor, derivation):

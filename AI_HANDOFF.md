@@ -1,5 +1,25 @@
 # MoodMeal AI Handoff
 
+## Verification of calculator count and polish items (Claude Code, 2026-10-15)
+
+Started at 4c351f9, equal to origin.
+
+Calculator count reconciled: `approved-ingredients.json` holds 16 approval records (honey H1–H3; B1–B7, B9–B11, B13, B14; C1, C2, with B4 split into raw egg 171287 and hard-boiled egg 173424). Those 16 records cover 15 unique FDC IDs, because "Eggs" (B5) reuses 171287. The pilot adds strawberries 167762 and blueberries 171711; its pineapple 169124 is already approved. 15 + 2 = 17 selectable foods.
+
+Not selectable:
+- pending Greek yogurt (2705422/3/4) and avocado (171705/171706);
+- unapproved alternates: 168483 baked sweet potato, 168875 medium-grain rice, 170401 boiled chard, 2346396 Foundation oats;
+- all unreviewed labels.
+
+Held recipe uses (power-bowl egg, chopped almonds, sautéed chard, diced pineapple, pancake cinnamon) don't remove a record. The calculator only offers that record's approved per-unit measures.
+
+The six polish items were already in place at 4c351f9: 10 s undo, per-deletion notices, notices in layout above the nav, single-entry wording, grocery fractions, and US customary standard. One gap was fixed: `tidyVolume` hardcoded 48 and 3, and now reads `US_VOLUME_IN_TSP`. The build script also gained a comment naming the standard. The approved data rebuilt byte-identical. The calculator test now asserts the 16 → 15 + 2 = 17 reconciliation and that the excluded IDs are not selectable.
+
+Validation:
+- Typecheck, avatar tests, 14 USDA tests, 22 FatSecret tests and the build pass.
+- 37 knowledge tests pass.
+- The browser suite passes.
+
 ## Undo and grocery polish (Claude Code, 2026-10-15)
 
 Started at 4bb9c94, equal to origin.

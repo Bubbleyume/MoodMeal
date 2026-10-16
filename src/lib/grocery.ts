@@ -13,7 +13,7 @@ const TSP_PER = US_VOLUME_IN_TSP;
  */
 export function tidyVolume(tsp: number): { amount: number; unit: string } {
   const step = (v: number, size: number) => Math.abs(v / size - Math.round(v / size)) < 1e-9;
-  const cups = tsp / 48, tbsp = tsp / 3;
+  const cups = tsp / TSP_PER.cup, tbsp = tsp / TSP_PER.tbsp;
   if (cups >= 0.25 && step(cups, 0.125)) return { amount: cups, unit: "cup" };
   if (tbsp >= 1 && step(tbsp, 0.5)) return { amount: tbsp, unit: "tbsp" };
   return { amount: Number(tsp.toFixed(4)), unit: "tsp" };

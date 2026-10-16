@@ -609,7 +609,15 @@ test("ingredient image resolver never borrows artwork from another food", () => 
 test("nutrition calculator offers only approved records, states and conversions", () => {
   const approvedIds = new Set([...APPROVED_INGREDIENTS.map((r) => r.fdcId), ...PILOT_INGREDIENTS.map((i) => i.fdcId)]);
   assert.deepEqual(new Set(CALCULATOR_FOODS.map((f) => f.fdcId)), approvedIds);
+  // 16 approval records share 15 FDC IDs ("Egg" B4 raw and "Eggs" B5 are both 171287);
+  // the pilot adds strawberries and blueberries (its pineapple 169124 is already approved).
+  assert.equal(APPROVED_INGREDIENTS.length, 16);
+  assert.equal(new Set(APPROVED_INGREDIENTS.map((r) => r.fdcId)).size, 15);
+  assert.deepEqual(PILOT_INGREDIENTS.map((i) => i.fdcId).filter((id) => !APPROVED_INGREDIENTS.some((r) => r.fdcId === id)), ["167762", "171711"]);
   assert.equal(CALCULATOR_FOODS.length, 17);
+  // Pending or unapproved candidates are not selectable (Greek yogurt, avocado, alternates).
+  for (const id of ["2705422", "2705423", "2705424", "171705", "171706", "168483", "168875", "170401", "2346396"])
+    assert.equal(findFood(id), undefined, id);
   for (const f of CALCULATOR_FOODS) {
     assert(f.state.length >= 3, f.name);
     assert(ingredientImages(f.imageLabel).length > 0, f.imageLabel);
