@@ -32,7 +32,10 @@ export const CALCULATOR_NUTRIENTS = [
 
 export interface CalculatorMeasure {
   id: string;
+  /** Full description, e.g. "medium banana (7–7⅞ in)"; shown below the unit menu and in details. */
   label: string;
+  /** Concise name for the unit menu, e.g. "medium banana", so it isn't cut off on phones. */
+  shortLabel: string;
   gramsPerUnit: number;
   portionId: string;
   basis: string;
@@ -62,7 +65,7 @@ export interface CalculatorFood {
 }
 
 const GRAMS: CalculatorMeasure = {
-  id: "g", label: "grams", gramsPerUnit: 1, portionId: "",
+  id: "g", label: "grams", shortLabel: "grams", gramsPerUnit: 1, portionId: "",
   basis: "Weighed amount in grams.",
 };
 
@@ -103,6 +106,24 @@ const UNIT_LABELS: Record<string, string> = {
   "174156:each": "cup brewed (1 bag in 8 fl oz water)",
 };
 
+/** Concise unit-menu names for long unit labels, keyed "fdcId:unit" (display only). */
+const UNIT_SHORT_LABELS: Record<string, string> = {
+  "173944:each": "medium banana",
+  "168482:each": "sweet potato",
+  "169704:cup": "cup",
+  "173904:cup": "cup",
+  "169124:cup": "cup",
+  "169991:cup": "cup",
+  "170567:cup": "cup",
+  "170567:tbsp": "tbsp",
+  "174156:each": "cup brewed",
+};
+
+/** Concise name: the explicit short label, else the label up to its first comma or bracket. */
+function shortLabelFor(key: string, label: string): string {
+  return UNIT_SHORT_LABELS[key] ?? label.split(/[,(]/)[0].trim();
+}
+
 /** Artwork labels for pilot foods (their pilot names are descriptive, not catalog labels). */
 const PILOT_IMAGE_LABELS: Record<string, string> = {
   "167762": "Strawberries", "169124": "Pineapple", "171711": "Blueberries",
@@ -128,9 +149,10 @@ function buildFoods(): CalculatorFood[] {
   for (const record of APPROVED_INGREDIENTS) {
     const food = base(record.fdcId, record.description, record.nutrients as Record<string, UsdaNutrientValue>, record.ingredient);
     for (const c of record.conversions) {
-      const label = UNIT_LABELS[`${record.fdcId}:${c.unit}`] ?? c.unit;
+      const key = `${record.fdcId}:${c.unit}`;
+      const label = UNIT_LABELS[key] ?? c.unit;
       addMeasure(food.measures, {
-        id: `${c.unit}-${c.basePortionId}`, label, gramsPerUnit: round(c.grams / c.quantity),
+        id: `${c.unit}-${c.basePortionId}`, label, shortLabel: shortLabelFor(key, label), gramsPerUnit: round(c.grams / c.quantity),
         portionId: c.basePortionId,
         basis: `Approved conversion: ${c.quantity} ${c.unit} = ${c.grams} g. ${c.derivation}`,
       });
@@ -143,6 +165,7 @@ function buildFoods(): CalculatorFood[] {
     addMeasure(food.measures, {
       id: `portion-${portion.id}`,
       label: UNIT_LABELS[`${input.fdcId}:cup`] ?? `${portion.modifier}`,
+      shortLabel: shortLabelFor(`${input.fdcId}:cup`, UNIT_LABELS[`${input.fdcId}:cup`] ?? `${portion.modifier}`),
       gramsPerUnit: round(Number(portion.gram_weight) / Number(portion.amount)),
       portionId: portion.id,
       basis: `Approved USDA portion ${portion.id}: ${portion.amount} ${portion.modifier} = ${portion.gram_weight} g (Rainbow Fruit Skewers review).`,
@@ -173,17 +196,17 @@ export function productFood(p: OffProduct, resolution?: ConflictResolution): Cal
     if (option.entry.per === "100g") {
       measures.push({ ...GRAMS, basis: `Weighed amount in grams; values from ${option.label} (chosen by you).` });
       if (p.servingGrams)
-        measures.push({ id: "off-serving", label: `product serving, ${p.servingLabel}`, gramsPerUnit: p.servingGrams, portionId: "",
+        measures.push({ id: "off-serving", shortLabel: "product serving", label: `product serving, ${p.servingLabel}`, gramsPerUnit: p.servingGrams, portionId: "",
           basis: `Product serving recorded by Open Food Facts: ${p.servingLabel}; values from ${option.label}.` });
     } else {
-      measures.push({ id: "off-serving", label: `product serving, ${option.entry.referenceGrams} g`, gramsPerUnit: option.entry.referenceGrams, portionId: "",
+      measures.push({ id: "off-serving", shortLabel: "product serving", label: `product serving, ${option.entry.referenceGrams} g`, gramsPerUnit: option.entry.referenceGrams, portionId: "",
         basis: `Serving weight from ${option.label} (chosen by you).` });
     }
   } else {
     if (p.basis === "per100g")
       measures.push({ ...GRAMS, basis: "Weighed amount in grams; Open Food Facts nutrition per 100 g." });
     if (p.servingGrams)
-      measures.push({ id: "off-serving", label: `product serving, ${p.servingLabel}`, gramsPerUnit: p.servingGrams, portionId: "",
+      measures.push({ id: "off-serving", shortLabel: "product serving", label: `product serving, ${p.servingLabel}`, gramsPerUnit: p.servingGrams, portionId: "",
         basis: `Product serving recorded by Open Food Facts: ${p.servingLabel}.` });
   }
   const name = p.name ?? `Product ${p.code}`;

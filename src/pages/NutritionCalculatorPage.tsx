@@ -149,8 +149,8 @@ export default function NutritionCalculatorPage() {
               const calcRow = result?.rows.find((r) => r.key === row.key);
               return (
                 <li key={row.key} className="py-3" data-testid="calc-row">
-                  <div className="flex items-start gap-3">
-                    <IngredientThumb name={food.imageLabel} />
+                  <div className="flex items-start gap-[12px]">
+                    <IngredientThumb name={food.imageLabel} className="h-[44px] w-[44px]" />
                     <div className="min-w-0 flex-1">
                       <p className="break-words text-sm font-semibold text-slate-800">{food.name}</p>
                       <p className="text-xs text-slate-600">
@@ -167,7 +167,7 @@ export default function NutritionCalculatorPage() {
                       type="button"
                       onClick={() => remove(row.key)}
                       aria-label={`Remove ${food.name}`}
-                      className="-mr-1.5 -mt-1.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-slate-500 hover:bg-coral-50 hover:text-coral-600"
+                      className="-mr-[6px] -mt-[6px] flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-slate-500 hover:bg-coral-50 hover:text-coral-600"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -185,20 +185,23 @@ export default function NutritionCalculatorPage() {
                       aria-describedby={showError ? `err-${row.key}` : undefined}
                     />
                     <select
-                      className="well-input mt-0 min-w-0 flex-1"
+                      className="well-input mt-0 min-w-0 flex-1 basis-40"
                       value={row.measureId}
                       onChange={(e: { target: { value: string } }) => update(row.key, { measureId: e.target.value })}
                       aria-label={`Unit for ${food.name}`}
+                      aria-describedby={measure && measure.id !== "g" ? `unit-detail-${row.key}` : undefined}
                     >
                       {food.measures.map((m) => (
-                        <option key={m.id} value={m.id}>
-                          {m.id === "g" ? "grams" : `${m.label}${isProduct ? "" : ` (${formatGrams(m.gramsPerUnit)})`}`}
-                        </option>
+                        <option key={m.id} value={m.id}>{m.shortLabel}</option>
                       ))}
                     </select>
                   </div>
-                  {calcRow && measure && measure.id !== "g" && (
-                    <p className="mt-1 text-xs text-slate-600">= {formatGrams(calcRow.grams ?? 0)}</p>
+                  {measure && measure.id !== "g" && (
+                    <p id={`unit-detail-${row.key}`} className="mt-1 break-words text-xs text-slate-600" data-testid="unit-detail">
+                      {calcRow
+                        ? `${calcRow.quantity} × ${measure.label} (${formatGrams(measure.gramsPerUnit)} each) = ${formatGrams(calcRow.grams ?? 0)}`
+                        : `1 ${measure.label} = ${formatGrams(measure.gramsPerUnit)}`}
+                    </p>
                   )}
                   {showError && (
                     <p id={`err-${row.key}`} className="mt-1 text-xs font-semibold text-red-700">{error}</p>

@@ -645,6 +645,18 @@ test("nutrition calculator offers only approved records, states and conversions"
   assert.deepEqual(labels("169704"), ["grams=1", "cup, cooked=202"]);
   assert.deepEqual(labels("170567"), ["grams=1", "cup, whole=143", "tbsp, whole=8.9375"]);
   assert.deepEqual(labels("174156"), ["grams=1", "cup brewed (1 bag in 8 fl oz water)=237"]);
+  // Unit menus use concise labels; the full description and grams stay unchanged in label/gramsPerUnit.
+  const short = (id: string) => findFood(id)!.measures.map((m) => m.shortLabel);
+  assert.deepEqual(short("173944"), ["grams", "medium banana"]);
+  assert.deepEqual(short("174156"), ["grams", "cup brewed"]);
+  assert.deepEqual(short("170567"), ["grams", "cup", "tbsp"]);
+  assert.deepEqual(short("169640"), ["grams", "tsp", "cup"]);
+  assert.deepEqual(short("167762"), ["grams", "cup"]);
+  for (const f of CALCULATOR_FOODS) {
+    const names = f.measures.map((m) => m.shortLabel);
+    assert(names.every((n) => n.length > 0 && n.length <= 15), `${f.name}: ${names.join("|")}`);
+    assert.equal(new Set(names).size, names.length, `duplicate unit names for ${f.name}`);
+  }
   assert.deepEqual(labels("171711"), ["grams=1", "cup=148"]);
   assert.equal(findFood("168482")!.state, "Raw, peeled flesh");
   assert.equal(findFood("173424")!.state, "Cooked (hard-boiled), without shell");
@@ -1097,6 +1109,7 @@ test("OFF conflicting products: one complete entry must be chosen, enforced in t
   const servingFood = productFood(p, "entry-1")!;
   assert.equal(servingFood.fdcId, "off:0810111890373:entry-1");
   assert.deepEqual(servingFood.measures.map((m) => [m.id, m.gramsPerUnit]), [["off-serving", 103]]);
+  assert.deepEqual(servingFood.measures.map((m) => m.shortLabel), ["product serving"]);
   assert.match(servingFood.stateNote!, /you chose Entry 2: packaging, as sold, per serving of 103 g/);
   // The row shows the chosen entry's basis, not the aggregated "per 100 g".
   assert.equal(p.basisLabel, "per 100 g");
@@ -1149,7 +1162,7 @@ test("OFF conflicting products: one complete entry must be chosen, enforced in t
   assert.equal(calculateCustom([{ key: "f", fdcId: noProduct.fdcId, measureId: "off-serving", quantity: "1" }], "1", [noProduct]).rowErrors.f, "This product's nutrition can't be used for calculation.");
   const tampered: CalculatorFood = { ...servingFood, nutrients: { ...servingFood.nutrients, "1008": { amount: 1, unit: "KCAL", sourceRowId: null } } };
   assert.deepEqual(calc(tampered, "off-serving", "1"), [103, 360, 12, 60, 8, 1, 7]);
-  const extraMeasure: CalculatorFood = { ...servingFood, measures: [...servingFood.measures, { id: "g", label: "grams", gramsPerUnit: 1, portionId: "", basis: "" }] };
+  const extraMeasure: CalculatorFood = { ...servingFood, measures: [...servingFood.measures, { id: "g", label: "grams", shortLabel: "grams", gramsPerUnit: 1, portionId: "", basis: "" }] };
   assert.equal(calculateCustom([{ key: "f", fdcId: extraMeasure.fdcId, measureId: "g", quantity: "50" }], "1", [extraMeasure]).rowErrors.f, "Choose an approved ingredient and unit.");
   // Consistent records keep the existing behavior (no choice required).
   const consistent = mapProduct(offSolid({ serving_quantity: 30, serving_quantity_unit: "g", nutrition: {

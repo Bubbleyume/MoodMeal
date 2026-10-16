@@ -1,5 +1,31 @@
 # MoodMeal AI Handoff
 
+## Concise unit labels in the Nutrition Calculator (Claude Code, 2026-10-16)
+
+Started at 9c34a8a, equal to origin.
+
+**Physical-phone evidence (user-provided screenshots only, Android, via http://192.168.1.57:5173/nutrition-calculator):** the banana's selected measurement was cut off in the unit dropdown, while "= 118 g" was visible below. Touch, keyboard and screen-reader behaviour on the phone is **not** confirmed. Nothing physical is marked as passed.
+
+Changes:
+- `CalculatorMeasure` has a new `shortLabel` used in the unit dropdown: "medium banana", "cup", "tbsp", "cup brewed", "product serving", and so on. The explicit list is `UNIT_SHORT_LABELS`; otherwise the label is used up to its first comma or bracket.
+- The full `label` and `gramsPerUnit` are unchanged, so approved conversions, quantities and calculations are identical.
+- A line below the dropdown shows the full measurement and grams, for example "1 × medium banana (7–7⅞ in) (118 g each) = 118 g", or "1 cup, cooked = 202 g" before an amount is entered. It's linked to the dropdown with `aria-describedby`. The dropdown keeps its native behaviour and its `aria-label`.
+- The dropdown wraps onto its own full-width line when space is tight and never exceeds the card (`min-w-0 flex-1 basis-40`).
+- Calculator rows now use a fixed 44 px thumbnail, a fixed 44 px delete button and a 12 px gap, so enlarged text no longer squeezes the ingredient name into mid-word breaks. Touch targets stay 44 px.
+
+Emulated checks (Edge/Playwright, not a physical device), at 320/360/390 px with root text at 100/150/200%:
+- No horizontal overflow, and the full measurement line is always present and unclipped.
+- At 100% the concise dropdown label fits.
+- The dropdown's own label is clipped at 320 px/150% and at 200% on all three widths; the full text remains readable on the line below.
+- The name stays on one line up to 150% (and at 360/390 px with 200%). It breaks once at 320 px/200%.
+- Root-font scaling is harsher than Android's text scaling, so this is a conservative approximation.
+
+Tests:
+- Unit: concise labels of at most 15 characters and unique per food, short labels for banana, chamomile, almonds, honey and strawberries, and "product serving" for Open Food Facts.
+- Browser: selected text, the detail line, `aria-describedby`, and the scale/width matrix.
+- 47 knowledge tests, typecheck, avatar tests, 14 USDA tests, 22 FatSecret tests, the build and the browser suite pass.
+- Open Food Facts conflict handling is unchanged.
+
 ## Chosen-entry basis shown on calculator rows (Claude Code, 2026-10-16)
 
 Started at 6e87ba0, equal to origin.

@@ -426,6 +426,53 @@ const { zipSync, strToU8 } = require("fflate");
     for (const v of ["105 kcal", "53 kcal", "27.0 g", "3.1 g", "14.4 g", "Total sugars"]) assert(resultText.includes(v), v);
     await page.getByText("Ingredient weights & calculation").click();
     await page.getByText(/Banana: 1 medium banana .* = 118 g/).waitFor();
+    // The unit menu shows a concise label; the full measurement and grams are shown below and linked to it.
+    const unitSelect = page.getByLabel("Unit for Banana");
+    assert.equal(await unitSelect.evaluate((el) => el.selectedOptions[0].textContent), "medium banana");
+    const unitDetail = page.getByTestId("unit-detail");
+    assert.equal(await unitDetail.innerText(), "1 × medium banana (7–7⅞ in) (118 g each) = 118 g");
+    assert.equal(await unitSelect.getAttribute("aria-describedby"), await unitDetail.getAttribute("id"));
+    const clippedMenus = [];
+    for (const width of [320, 360, 390]) {
+      for (const scale of [100, 150, 200]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.evaluate((pct) => { document.documentElement.style.fontSize = `${pct}%`; }, scale);
+        const fit = await page.evaluate(() => {
+          const select = document.querySelector('select[aria-label="Unit for Banana"]');
+          const detail = document.querySelector('[data-testid="unit-detail"]');
+          const row = select.closest('[data-testid="calc-row"]');
+          const style = getComputedStyle(select);
+          const ctx = document.createElement("canvas").getContext("2d");
+          ctx.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+          const textWidth = ctx.measureText(select.selectedOptions[0].textContent).width;
+          // Room for text: content box minus space for the native arrow.
+          const room = select.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - parseFloat(style.fontSize) * 1.25;
+          const name = [...row.querySelectorAll("p")].find((el) => el.textContent === "Banana");
+          return {
+            nameLines: Math.round(name.getBoundingClientRect().height / parseFloat(getComputedStyle(name).lineHeight)),
+            textFits: textWidth <= room,
+            selectInsideRow: select.getBoundingClientRect().right <= row.getBoundingClientRect().right + 0.5,
+            detailText: detail.textContent,
+            detailClipped: detail.scrollWidth > detail.clientWidth + 1,
+            pageOverflow: document.documentElement.scrollWidth > innerWidth,
+          };
+        });
+        // The full measurement is always readable below; nothing spills or scrolls sideways.
+        assert(fit.detailText.includes("medium banana (7–7⅞ in) (118 g each)"), fit.detailText);
+        assert(fit.selectInsideRow && !fit.detailClipped && !fit.pageOverflow, `overflow at ${width}px ${scale}%: ${JSON.stringify(fit)}`);
+        // The ingredient name isn't squeezed into a mid-word break up to 150% text (and 200% from 360 px).
+        if (scale <= 150 || width >= 360) assert.equal(fit.nameLines, 1, `name wraps at ${width}px ${scale}%`);
+        else if (fit.nameLines > 1) clippedMenus.push(`name wraps at ${width}px/${scale}%`);
+        // At normal text size the concise menu label always fits.
+        if (scale === 100) assert(fit.textFits, `unit menu text clipped at ${width}px 100%`);
+        else if (!fit.textFits) clippedMenus.push(`${width}px/${scale}%`);
+        if (width === 320 && scale === 200) await page.getByTestId("calc-row").first().screenshot({ path: "work/qa-calculator-unit-320-200pct.png" });
+      }
+    }
+    console.log("Enlarged-text limits (full measurement still shown below):", clippedMenus.join(", ") || "none");
+    await page.evaluate(() => { document.documentElement.style.fontSize = ""; });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.getByTestId("calc-row").first().screenshot({ path: "work/qa-calculator-unit-390.png" });
     for (const width of [320, 390, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `calculator overflow ${width}`);
