@@ -82,8 +82,6 @@ The fixed issues are listed in section 5. Remaining:
 - **Low:** Grocery items saved under the old "Whole-grain bread" name show the leaf fallback image.
 - **Low:** The emoji/avatar inconsistency in Mood History.
 - **Low:** The Profile notification switch is still a placeholder.
-- **Low:** With a single entry, Mood History says "ranged from 6 to 6/10".
-- **Low:** For up to 8 seconds, the undo snackbar can cover the last history row.
 
 ## 8. Test results
 
@@ -121,3 +119,13 @@ Ready for continued internal testing on the current branch. Before any public re
 - Existing saved lists are not rewritten; conversion applies only when items are added.
 
 Tests: one new knowledge test and new browser checks (keyboard and pointer undo, auto-dismiss, soy sauce "4 tsp").
+
+## Polish follow-up (2026-10-15)
+
+- **Undo:** the window is 10 s. Every deletion gets its own Undo notice, so several deletions can each be recovered. Hover or focus pauses the countdown, and Escape dismisses the notices.
+- **Layout:** notices now take layout space above the bottom nav, so they can't cover the last entry.
+- **Wording:** one entry reads "Your tired mood intensity was 6/10."
+- **Grocery fractions:** quantities show common fractions, such as ⅞ cup, while stored values keep full precision.
+- **Units:** one explicit volume standard, US customary (1 cup = 16 tbsp = 48 tsp), defined in `src/lib/units.ts`.
+
+These were tested by automated browser emulation (360 and 390 px, desktop) only, not on a physical device.

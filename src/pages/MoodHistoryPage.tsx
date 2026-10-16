@@ -9,58 +9,87 @@ import { Trash2, TrendingUp, Info } from "../components/icons";
 import { Link } from "../lib/router";
 import type { EmotionId, MoodHistoryEntry } from "../types";
 
-const UNDO_MS = 8000;
+const UNDO_MS = 10000;
+
+const longDate = (iso: string) =>
+  new Date(iso).toLocaleDateString(undefined, { month: "long", day: "numeric" });
 
 export default function MoodHistoryPage() {
   const { entries, removeEntry, restoreEntry } = useMoodHistory();
   const [events]=useLocalStorage<Interaction[]>("moodmeal:interactions",[]);
-  // The most recent deletion, kept in memory only so it can be undone.
-  const [deleted, setDeleted] = useState<{ entry: MoodHistoryEntry; index: number } | null>(null);
-  const timer = useRef<number>(0);
-  const undoRef = useRef<HTMLButtonElement | null>(null);
-  // After Undo, focus returns to the restored row once it has rendered.
-  const [refocusId, setRefocusId] = useState<string | null>(null);
-  useEffect(() => {
-    if (!refocusId) return;
-    document.querySelector<HTMLButtonElement>(`[data-entry-id="${refocusId}"]`)?.focus();
-    setRefocusId(null);
-  }, [refocusId, entries]);
+  // Recently deleted entries, newest last, kept in memory only so each can be
+  // undone during its own UNDO_MS window.
+  const [pending, setPending] = useState<MoodHistoryEntry[]>([]);
+  const timers = useRef<Map<string, { handle: number; remaining: number; started: number }>>(new Map());
+  const paused = useRef<boolean>(false);
+  const hovered = useRef<boolean>(false);
+  const regionRef = useRef<HTMLDivElement | null>(null);
+  const listHeadingRef = useRef<HTMLHeadingElement | null>(null);
 
-  // The snackbar closes after UNDO_MS; focus or hover pauses the countdown.
-  const startTimer = () => {
-    window.clearTimeout(timer.current ?? undefined);
-    timer.current = window.setTimeout(() => setDeleted(null), UNDO_MS);
+  const expire = (id: string) => {
+    timers.current!.delete(id);
+    setPending((p) => p.filter((e) => e.id !== id));
   };
-  const pauseTimer = () => window.clearTimeout(timer.current ?? undefined);
-  useEffect(() => () => window.clearTimeout(timer.current ?? undefined), []);
+  const schedule = (id: string, ms: number) => {
+    const handle = paused.current ? 0 : window.setTimeout(() => expire(id), ms);
+    timers.current!.set(id, { handle, remaining: ms, started: Date.now() });
+  };
+  const cancel = (id: string) => {
+    window.clearTimeout(timers.current!.get(id)?.handle);
+    timers.current!.delete(id);
+  };
+  // Hovering or focusing the notices pauses every countdown; leaving resumes it.
+  const pause = () => {
+    if (paused.current) return;
+    paused.current = true;
+    for (const t of timers.current!.values()) {
+      window.clearTimeout(t.handle);
+      t.remaining = Math.max(0, t.remaining - (Date.now() - t.started));
+    }
+  };
+  const resume = () => {
+    if (!paused.current) return;
+    paused.current = false;
+    for (const [id, t] of [...timers.current!.entries()]) schedule(id, Math.max(t.remaining, 1000));
+  };
+  const resumeIfIdle = () =>
+    window.setTimeout(() => {
+      if (!hovered.current && !regionRef.current?.contains(document.activeElement)) resume();
+    }, 0);
+  useEffect(() => () => { for (const t of timers.current!.values()) window.clearTimeout(t.handle); }, []);
 
-  // After a keyboard delete, focus moves to Undo once the snackbar has rendered.
-  const [focusUndo, setFocusUndo] = useState(false);
+  // Focus targets are applied after render: the new notice's Undo button after
+  // a keyboard delete, or the restored row after Undo.
+  const [focusTarget, setFocusTarget] = useState<string | null>(null);
   useEffect(() => {
-    if (!focusUndo || !deleted) return;
-    undoRef.current?.focus();
-    setFocusUndo(false);
-  }, [focusUndo, deleted]);
+    if (!focusTarget) return;
+    document.querySelector<HTMLElement>(focusTarget)?.focus();
+    setFocusTarget(null);
+  }, [focusTarget, pending, entries]);
 
   const handleDelete = (id: string, viaKeyboard: boolean) => {
     const removed = removeEntry(id);
     if (!removed) return;
-    setDeleted(removed);
-    startTimer();
-    // The row's button is gone, so keyboard focus moves to Undo instead of being
-    // lost (focus pauses the countdown). Pointer users keep the timed snackbar.
-    setFocusUndo(viaKeyboard);
+    setPending((p) => [...p.filter((e) => e.id !== id), removed]);
+    schedule(id, UNDO_MS);
+    // The row's button is gone, so keyboard focus moves to its Undo instead of
+    // being lost (focus pauses the countdown). Pointer users keep the timer.
+    if (viaKeyboard) setFocusTarget(`[data-undo-id="${id}"]`);
   };
 
-  const handleUndo = () => {
-    if (!deleted) return;
-    pauseTimer();
-    restoreEntry(deleted.entry, deleted.index);
-    setRefocusId(deleted.entry.id);
-    setDeleted(null);
+  const handleUndo = (entry: MoodHistoryEntry) => {
+    cancel(entry.id);
+    restoreEntry(entry);
+    setPending((p) => p.filter((e) => e.id !== entry.id));
+    setFocusTarget(`[data-entry-id="${entry.id}"]`);
   };
 
-  const deletedName = deleted ? getEmotionById(deleted.entry.emotionId)?.name ?? "Mood" : "";
+  const dismissAll = () => {
+    for (const id of [...timers.current!.keys()]) cancel(id);
+    paused.current = false;
+    setPending([]);
+    listHeadingRef.current?.focus();
+  };
 
   const stats = useMemo(() => {
     if (entries.length === 0) return null;
@@ -77,7 +106,7 @@ export default function MoodHistoryPage() {
         <h1 className="font-display text-xl font-extrabold">Mood History</h1>
         <p className="mt-0.5 text-xs text-white/70">See how you've been feeling</p>
       </div>
-      <div className="screen-scroll -mt-4 rounded-t-[2rem] bg-transparent px-4 pt-5">
+      <div className={`screen-scroll -mt-4 rounded-t-[2rem] bg-transparent px-4 pt-5 ${pending.length ? "!pb-4" : ""}`}>
         {entries.length === 0 ? (
           <div className="mt-16 flex flex-col items-center text-center text-slate-500">
             <span className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-50 text-brand-300">
@@ -117,7 +146,7 @@ export default function MoodHistoryPage() {
 
             <section className="card mt-4"><h2 className="section-title">Your observations</h2><ul className="mt-3 space-y-3 text-sm text-slate-600">{historyInsights(entries,events).map(t=><li key={t}>{t}</li>)}</ul><p className="mt-3 text-xs text-slate-500">These are patterns in your records, not evidence that a food caused a change. Previous demo entries are excluded.</p></section>
             <div className="mt-5">
-              <h2 className="section-title mb-2">All Entries</h2>
+              <h2 ref={listHeadingRef} tabIndex={-1} className="section-title mb-2 outline-none">All Entries</h2>
               <div className="space-y-2">
                 {entries.map((entry) => {
                   const emotion = getEmotionById(entry.emotionId);
@@ -163,7 +192,7 @@ export default function MoodHistoryPage() {
                       <button
                         onClick={(e) => handleDelete(entry.id, e.detail === 0)}
                         data-entry-id={entry.id}
-                        aria-label={`Delete ${emotion?.name ?? "mood"} entry from ${new Date(entry.date).toLocaleDateString(undefined, { month: "long", day: "numeric" })}`}
+                        aria-label={`Delete ${emotion?.name ?? "mood"} entry from ${longDate(entry.date)}`}
                         className="-mr-1.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-slate-500 hover:bg-coral-50 hover:text-coral-600"
                       >
                         <Trash2 size={15} />
@@ -176,32 +205,40 @@ export default function MoodHistoryPage() {
           </>
         )}
       </div>
+      {/* Notices take real layout space above the bottom navigation, so the
+          list scrolls above them and they can never cover an entry. */}
       <div
+        ref={regionRef}
         role="status"
         aria-live="polite"
-        className="pointer-events-none fixed inset-x-0 bottom-[calc(6rem+env(safe-area-inset-bottom))] z-40 mx-auto w-full max-w-app px-4"
+        className={pending.length ? "shrink-0 space-y-2 px-4 pt-2 pb-[calc(5.75rem+env(safe-area-inset-bottom))]" : ""}
+        onMouseEnter={() => { hovered.current = true; pause(); }}
+        onMouseLeave={() => { hovered.current = false; resumeIfIdle(); }}
+        onFocus={pause}
+        onBlur={resumeIfIdle}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") dismissAll();
+        }}
       >
-        {deleted && (
-          <div
-            className="pointer-events-auto flex items-center justify-between gap-3 rounded-2xl bg-slate-800 py-1.5 pl-4 pr-1.5 text-sm text-white shadow-lg animate-fade-in"
-            onMouseEnter={pauseTimer}
-            onMouseLeave={startTimer}
-            onFocus={pauseTimer}
-            onBlur={startTimer}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") setDeleted(null);
-            }}
-          >
-            <span>{deletedName} entry deleted.</span>
-            <button
-              ref={undoRef}
-              onClick={handleUndo}
-              className="min-h-[44px] rounded-xl px-4 font-bold text-moodGreen-300 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        {pending.map((entry) => {
+          const name = getEmotionById(entry.emotionId)?.name ?? "Mood";
+          return (
+            <div
+              key={entry.id}
+              className="flex items-center justify-between gap-3 rounded-2xl bg-slate-800 py-1.5 pl-4 pr-1.5 text-sm text-white shadow-lg animate-fade-in"
             >
-              Undo
-            </button>
-          </div>
-        )}
+              <span>{name} entry from {longDate(entry.date)} deleted.</span>
+              <button
+                data-undo-id={entry.id}
+                onClick={() => handleUndo(entry)}
+                aria-label={`Undo delete of ${name} entry from ${longDate(entry.date)}`}
+                className="min-h-[44px] shrink-0 rounded-xl px-4 font-bold text-moodGreen-300 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              >
+                Undo
+              </button>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -55,7 +55,11 @@ export function historyInsights(
   const low = Math.min(...group.map((e) => e.intensity)),
     high = Math.max(...group.map((e) => e.intensity));
   result.push(
-    `Your ${top[0]} check-ins ranged from ${low} to ${high}/10 intensity.`,
+    group.length === 1
+      ? `Your ${top[0]} mood intensity was ${low}/10.`
+      : low === high
+        ? `Your ${top[0]} check-ins were all ${low}/10 intensity.`
+        : `Your ${top[0]} check-ins ranged from ${low} to ${high}/10 intensity.`,
   );
   const morning = group.filter((e) => new Date(e.date).getHours() < 12);
   if (group.length >= 3 && morning.length > group.length / 2)

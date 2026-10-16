@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useLocalStorage } from "./useLocalStorage";
-import { STORAGE_KEYS } from "../lib/storage";
+import { STORAGE_KEYS, readStorage } from "../lib/storage";
 import type { EmotionId, MoodHistoryEntry } from "../types";
 import { SAMPLE_MOOD_HISTORY } from "../data/moodHistory";
 
@@ -29,25 +29,30 @@ export function useMoodHistory() {
     [setEntries]
   );
 
-  /** Removes an entry and returns it with its stored position, so it can be restored. */
+  /** Removes an entry and returns it, so it can be restored (undo). */
   const removeEntry = useCallback(
     (id: string) => {
-      const index = entries.findIndex((e) => e.id === id);
-      const removed = index >= 0 ? { entry: entries[index], index } : null;
+      // Read the stored list so back-to-back deletions see each other.
+      const removed = readStorage<MoodHistoryEntry[]>(STORAGE_KEYS.moodHistory, []).find((e) => e.id === id) ?? null;
       setEntries((prev) => prev.filter((e) => e.id !== id));
       return removed;
     },
-    [entries, setEntries]
+    [setEntries]
   );
 
-  /** Puts a removed entry back at its original stored position (undo). */
+  /**
+   * Puts a removed entry back (undo). The stored list is newest-first, so the
+   * entry goes before the first older entry. This keeps the original order
+   * even when several deletions are undone in any order.
+   */
   const restoreEntry = useCallback(
-    (entry: MoodHistoryEntry, index: number) => {
-      setEntries((prev) =>
-        prev.some((e) => e.id === entry.id)
-          ? prev
-          : [...prev.slice(0, index), entry, ...prev.slice(index)]
-      );
+    (entry: MoodHistoryEntry) => {
+      setEntries((prev) => {
+        if (prev.some((e) => e.id === entry.id)) return prev;
+        const time = new Date(entry.date).getTime();
+        const at = prev.findIndex((e) => new Date(e.date).getTime() < time);
+        return at < 0 ? [...prev, entry] : [...prev.slice(0, at), entry, ...prev.slice(at)];
+      });
     },
     [setEntries]
   );

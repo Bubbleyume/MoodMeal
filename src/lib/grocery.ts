@@ -1,9 +1,10 @@
 import type { GroceryItem } from "../types";
 import { parseIngredient, ingredientId } from "./catalog";
+import { US_VOLUME_IN_TSP } from "./units";
 
-// US kitchen volume measures, in teaspoons. Only these units are converted;
-// weights, counts and other units stay on their own rows.
-const TSP_PER: Record<string, number> = { tsp: 1, tbsp: 3, cup: 48 };
+// Only US customary volume units (see units.ts) are converted; weights,
+// counts and other units stay on their own rows.
+const TSP_PER = US_VOLUME_IN_TSP;
 
 /**
  * Expresses a volume total in the largest unit that gives a tidy amount:

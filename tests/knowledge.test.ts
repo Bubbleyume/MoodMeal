@@ -32,6 +32,7 @@ import {
 } from "../src/lib/libraryReview";
 import { historyInsights } from "../src/lib/interactions";
 import { NUTRIENTS, GOALS, source } from "../src/data/knowledge";
+import { readableQuantity, US_VOLUME_IN_TSP } from "../src/lib/units";
 import { CALCULATOR_FOODS, calculateCustom, parseQuantity, parseServings, findFood } from "../src/lib/nutritionCalculator";
 import { PILOT_INGREDIENTS } from "../src/data/usdaPilot";
 
@@ -711,5 +712,53 @@ test("nutrition calculator never changes catalog nutrition or approvals", () => 
   assert.equal(snapshot(), before);
   assert.equal(toast.nutritionEstimate, null);
   assert.equal(RECIPES.filter((r) => r.nutritionEstimate).length, 1);
+});
+test("grocery fractions display readably while stored precision is unchanged", () => {
+  const show = (q: string) => readableQuantity(q).text;
+  assert.equal(show("0.875 cup"), "⅞ cup");
+  assert.equal(show("1.5 cup cooked"), "1½ cup cooked");
+  assert.equal(show("0.25 sliced"), "¼ sliced");
+  assert.equal(show("0.3333 cup"), "⅓ cup");
+  assert.equal(show("2.6667 tbsp"), "2⅔ tbsp");
+  assert.equal(show("0.0625 tsp"), "1/16 tsp");
+  assert.equal(show("1.0625 tsp"), "1 1/16 tsp");
+  assert.equal(show("0.75 cup"), "¾ cup");
+  // Not common fractions, whole numbers and non-numeric text stay as stored.
+  for (const q of ["0.4 g weighed", "151.5 g", "4 tsp", "2 cup", "to taste", "1 carton", ""])
+    assert.equal(show(q), q === "151.5 g" ? "151½ g" : q, q);
+  assert.equal(readableQuantity("1.5 cup").spoken, "1 and 1/2 cup");
+  assert.equal(readableQuantity("0.875 cup").spoken, "7/8 cup");
+  // Aggregation stores full precision; only the display changes.
+  const merged = aggregateGroceries([], [{ name: "Oats", quantity: "0.75 cup" }, { name: "Oats", quantity: "2 tbsp" }]);
+  assert.equal(merged[0].quantity, "0.875 cup");
+  assert.equal(readableQuantity(merged[0].quantity).text, "⅞ cup");
+});
+test("one US customary volume standard is used for grocery and USDA-derived conversions", () => {
+  assert.deepEqual(US_VOLUME_IN_TSP, { tsp: 1, tbsp: 3, cup: 48 });
+  // Approved conversions derived across units (tsp from tbsp, tbsp from cup) follow the same ratios.
+  let crossUnit = 0;
+  for (const record of APPROVED_INGREDIENTS) {
+    for (const c of record.conversions) {
+      const base = record.portions.find((p) => p.id === c.basePortionId)!;
+      const baseUnit = base.modifier.split(",")[0].trim();
+      if (!(baseUnit in US_VOLUME_IN_TSP) || !(c.unit in US_VOLUME_IN_TSP) || baseUnit === c.unit) continue;
+      crossUnit++;
+      const expected = Number(base.gram_weight) / Number(base.amount) * US_VOLUME_IN_TSP[c.unit] / US_VOLUME_IN_TSP[baseUnit];
+      assert(Math.abs(c.grams / c.quantity - expected) < 1e-9, `${record.ingredient} ${c.quantity} ${c.unit}`);
+    }
+  }
+  assert.equal(crossUnit, 4); // honey tsp from tbsp; pumpkin seeds (1 and 2 tbsp) and almonds tbsp from cup
+  // Ingredient identity and notes still gate merging; units only convert within volume.
+  assert.equal(aggregateGroceries([], [{ name: "Brown rice", quantity: "0.5 cup cooked" }, { name: "Brown rice", quantity: "0.5 cup" }]).length, 2);
+  assert.equal(aggregateGroceries([], [{ name: "Honey", quantity: "1 tbsp" }, { name: "Honey", quantity: "21 g" }]).length, 2);
+});
+test("single-entry and identical-intensity observations read naturally", () => {
+  const now = new Date("2026-10-15T15:00:00Z");
+  const entry = (id: string, intensity: number) => ({ id, date: now.toISOString(), emotionId: "tired" as const, intensity });
+  const lines = (entries: ReturnType<typeof entry>[]) => historyInsights(entries, [], now);
+  assert(lines([entry("a", 6)]).includes("Your tired mood intensity was 6/10."));
+  assert(!lines([entry("a", 6)]).some((t) => /ranged/.test(t)));
+  assert(lines([entry("a", 6), entry("b", 6)]).includes("Your tired check-ins were all 6/10 intensity."));
+  assert(lines([entry("a", 3), entry("b", 7)]).includes("Your tired check-ins ranged from 3 to 7/10 intensity."));
 });
 console.log(`${checks} knowledge-system tests passed`);

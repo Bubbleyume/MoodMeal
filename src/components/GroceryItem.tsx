@@ -2,6 +2,7 @@ import React from "react";
 import type { GroceryItem as GroceryItemType } from "../types";
 import { Check, Trash2 } from "./icons";
 import IngredientThumb from "./IngredientThumb";
+import { readableQuantity } from "../lib/units";
 
 interface GroceryItemProps {
   item: GroceryItemType;
@@ -10,6 +11,8 @@ interface GroceryItemProps {
 }
 
 export default function GroceryItem({ item, onToggle, onRemove }: GroceryItemProps) {
+  // Display-only fractions (0.875 cup → ⅞ cup); the stored quantity is unchanged.
+  const quantity = item.quantity ? readableQuantity(item.quantity) : null;
   return (
     <div className="flex items-center gap-3 rounded-2xl bg-white px-3 py-2.5 shadow-card ring-1 ring-slate-100 animate-fade-in">
       <IngredientThumb name={item.name} />
@@ -37,7 +40,16 @@ export default function GroceryItem({ item, onToggle, onRemove }: GroceryItemPro
         >
           {item.name}
           {item.quantity ? (
-            <span className="ml-1.5 text-xs font-normal text-slate-500">{item.quantity}</span>
+            <span className="ml-1.5 text-xs font-normal text-slate-500">
+              {quantity && quantity.text !== quantity.spoken ? (
+                <>
+                  <span aria-hidden="true">{quantity.text}</span>
+                  <span className="sr-only">{quantity.spoken}</span>
+                </>
+              ) : (
+                item.quantity
+              )}
+            </span>
           ) : null}
         </p>
         {item.addedFrom && (

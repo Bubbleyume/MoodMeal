@@ -1,5 +1,34 @@
 # MoodMeal AI Handoff
 
+## Undo and grocery polish (Claude Code, 2026-10-15)
+
+Started at 4bb9c94, equal to origin.
+
+**Undo:**
+- `UNDO_MS` is 10 s.
+- Each deleted entry gets its own notice ("Tired entry from October 14 deleted." / Undo) with its own timer, so consecutive deletions stay recoverable in any order.
+- Hovering or focusing the notices pauses every countdown, which resumes with the time remaining. Escape dismisses all notices and moves focus to "All Entries".
+- A keyboard delete moves focus to that notice's Undo; Undo moves focus back to the restored row.
+- `restoreEntry` puts an entry back by date in the newest-first stored list, replacing the old index-based restore.
+- The notices now take real layout space above the bottom nav instead of floating over the list, so they can't cover any entry, including the last one, at any width.
+
+**History wording:**
+- One entry: "Your tired mood intensity was 6/10."
+- Several identical entries: "…were all 6/10 intensity".
+- Otherwise the range is unchanged.
+
+**Grocery:**
+- New `src/lib/units.ts` defines the single volume standard, US customary: 1 cup = 8 US fl oz = 16 tbsp = 48 tsp.
+- Grocery aggregation uses it. A test checks that the 4 cross-unit USDA-derived approved conversions (honey tsp; pumpkin seed and almond tbsp) follow the same ratios.
+- `readableQuantity` shows common fractions on grocery rows (0.875 cup → ⅞ cup, 1.5 → 1½, 0.0625 → 1/16), with a screen-reader form ("7/8 cup"). Stored quantities are unchanged.
+- Ingredient and notes matching are unchanged.
+
+**Validation:**
+- Typecheck, avatar tests, 14 USDA tests, 22 FatSecret tests and the build pass.
+- 37 knowledge tests pass, 3 of them new.
+- The browser suite passes, run once at a time. New checks: 10-second expiry, pause and resume, Escape, three deletions undone in any order with storage restored exactly, no overlap with the list or nav at 360 px, the last row of a long list sits above the notices, and ⅞ cup / 1½ cup cooked.
+- Mobile results are emulation only, not tested on a physical device.
+
 ## Nutrition Calculator (Claude Code, 2026-10-15)
 
 Started at e452f05, equal to origin. Location: Wellness tab → "Nutrition Calculator" card (route `/nutrition-calculator`; the Wellness tab is highlighted).

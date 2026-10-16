@@ -308,31 +308,84 @@ const { zipSync, strToU8 } = require("fflate");
       d === null ? localStorage.removeItem("moodmeal:draftMood") : localStorage.setItem("moodmeal:draftMood", d);
       p === null ? localStorage.removeItem("moodmeal:profile") : localStorage.setItem("moodmeal:profile", p);
     }, [savedDraft, savedProfile]);
-    // Mood History delete offers Undo; restoring puts back the identical entry.
+    // Mood History delete offers Undo for each deletion; restoring puts back the identical entries.
+    await page.setViewportSize({ width: 360, height: 740 });
     await page.evaluate(() => localStorage.setItem("moodmeal:moodHistory", JSON.stringify([
       { id: "m-test-1", date: "2026-10-14T09:00:00.000Z", emotionId: "tired", intensity: 6, note: "Long day" },
       { id: "m-test-2", date: "2026-10-13T09:00:00.000Z", emotionId: "happy", intensity: 4 },
+      { id: "m-test-3", date: "2026-10-12T09:00:00.000Z", emotionId: "worried", intensity: 7 },
     ])));
     const historyBefore = await page.evaluate(() => localStorage.getItem("moodmeal:moodHistory"));
+    const storedCount = () => page.evaluate(() => JSON.parse(localStorage.getItem("moodmeal:moodHistory")).length);
     await page.goto(baseURL + "/history");
-    const deleteTired = page.getByRole("button", { name: /^Delete Tired entry from / });
-    await deleteTired.focus();
+    // Keyboard delete moves focus to that notice's Undo; Undo restores and refocuses the row.
+    await page.getByRole("button", { name: /^Delete Tired entry from / }).focus();
     await page.keyboard.press("Enter");
-    const snackbar = page.getByRole("status").filter({ hasText: "Tired entry deleted." });
-    await snackbar.waitFor();
-    assert.equal(await page.evaluate(() => document.activeElement.textContent.trim()), "Undo");
-    assert.equal((await page.evaluate(() => JSON.parse(localStorage.getItem("moodmeal:moodHistory")))).length, 1);
+    await page.getByText(/^Tired entry from .* deleted\.$/).waitFor();
+    assert.match(await page.evaluate(() => document.activeElement.getAttribute("aria-label")), /^Undo delete of Tired entry/);
+    assert.equal(await storedCount(), 2);
     await page.keyboard.press("Enter");
     assert.equal(await page.evaluate(() => localStorage.getItem("moodmeal:moodHistory")), historyBefore);
-    assert.equal(await page.getByText("Tired entry deleted.").count(), 0);
+    assert.equal(await page.getByText(/^Tired entry from .* deleted\.$/).count(), 0);
     assert.match(await page.evaluate(() => document.activeElement.getAttribute("aria-label")), /^Delete Tired entry/);
-    // Pointer delete: no focus jump, and the snackbar closes on its own after 8 s.
+    // Consecutive deletions each stay recoverable, undone in any order.
     await page.getByRole("button", { name: /^Delete Happy entry from / }).click();
-    await page.getByText("Happy entry deleted.").waitFor();
+    await page.getByRole("button", { name: /^Delete Worried entry from / }).click();
+    await page.getByRole("button", { name: /^Delete Tired entry from / }).click();
+    assert.equal(await storedCount(), 0);
+    assert.equal(await page.locator("[data-undo-id]").count(), 3);
     assert.notEqual(await page.evaluate(() => document.activeElement.textContent.trim()), "Undo");
-    await page.mouse.move(0, 0);
-    await page.getByText("Happy entry deleted.").waitFor({ state: "detached", timeout: 10000 });
-    assert.equal((await page.evaluate(() => JSON.parse(localStorage.getItem("moodmeal:moodHistory")))).length, 1);
+    // Notices take layout space above the nav: they never overlap the list or the nav.
+    const layout = await page.evaluate(() => {
+      const region = document.querySelector('[role="status"][aria-live="polite"]').getBoundingClientRect();
+      const scroll = document.querySelector(".screen-scroll").getBoundingClientRect();
+      const nav = document.querySelector("nav").getBoundingClientRect();
+      return { regionTop: region.top, scrollBottom: scroll.bottom, lastNotice: [...document.querySelectorAll("[data-undo-id]")].pop().getBoundingClientRect().bottom, navTop: nav.top };
+    });
+    assert(layout.scrollBottom <= layout.regionTop + 0.5, JSON.stringify(layout));
+    assert(layout.lastNotice <= layout.navTop + 0.5, JSON.stringify(layout));
+    await page.getByRole("button", { name: /^Undo delete of Happy entry/ }).click();
+    await page.getByRole("button", { name: /^Undo delete of Worried entry/ }).click();
+    await page.getByRole("button", { name: /^Undo delete of Tired entry/ }).click();
+    assert.equal(await page.evaluate(() => localStorage.getItem("moodmeal:moodHistory")), historyBefore);
+    // With a long list, the last entry scrolls fully above the notices.
+    await page.evaluate(() => localStorage.setItem("moodmeal:moodHistory", JSON.stringify(
+      Array.from({ length: 12 }, (_, i) => ({ id: `m-long-${i}`, date: new Date(Date.UTC(2026, 9, 14 - i, 9)).toISOString(), emotionId: "tired", intensity: 5 })))));
+    await page.goto(baseURL + "/history");
+    await page.getByRole("button", { name: /^Delete Tired entry from / }).first().click();
+    await page.locator(".screen-scroll").evaluate((el) => { el.scrollTop = el.scrollHeight; });
+    const lastRow = await page.evaluate(() => {
+      const rows = [...document.querySelectorAll("[data-entry-id]")];
+      const last = rows[rows.length - 1].closest("div.flex").getBoundingClientRect();
+      const region = document.querySelector('[role="status"][aria-live="polite"]').getBoundingClientRect();
+      return { lastBottom: last.bottom, regionTop: region.top };
+    });
+    assert(lastRow.lastBottom <= lastRow.regionTop, JSON.stringify(lastRow));
+    await page.screenshot({ path: "work/qa-history-undo-360.png" });
+    // Hover pauses the 10 s countdown; leaving resumes it; Escape dismisses all notices.
+    await page.locator("[data-undo-id]").first().hover();
+    await page.waitForTimeout(10500);
+    assert.equal(await page.locator("[data-undo-id]").count(), 1);
+    await page.mouse.move(5, 5);
+    // The remaining time (nearly all 10 s, since hover began right away) resumes.
+    await page.waitForTimeout(5000);
+    assert.equal(await page.locator("[data-undo-id]").count(), 1);
+    await page.locator("[data-undo-id]").waitFor({ state: "detached", timeout: 7000 });
+    assert.equal(await storedCount(), 11);
+    await page.getByRole("button", { name: /^Delete Tired entry from / }).first().focus();
+    await page.keyboard.press("Enter");
+    await page.locator("[data-undo-id]").waitFor();
+    await page.keyboard.press("Escape");
+    assert.equal(await page.locator("[data-undo-id]").count(), 0);
+    assert.equal(await page.evaluate(() => document.activeElement.textContent.trim()), "All Entries");
+    assert.equal(await storedCount(), 10);
+    // Pointer delete with no interaction closes on its own after 10 s, not before.
+    await page.getByRole("button", { name: /^Delete Tired entry from / }).first().click();
+    await page.mouse.move(5, 5);
+    await page.waitForTimeout(8500);
+    assert.equal(await page.locator("[data-undo-id]").count(), 1);
+    await page.locator("[data-undo-id]").waitFor({ state: "detached", timeout: 3500 });
+    await page.setViewportSize({ width: 390, height: 844 });
     // Recipe-to-grocery converts 1 tsp + 1 tbsp soy sauce into one row.
     await page.evaluate(() => localStorage.setItem("moodmeal:groceryList", "[]"));
     for (const id of ["recipe-energizing-power-bowl", "recipe-iron-rich-stir-fry"]) {
@@ -343,6 +396,18 @@ const { zipSync, strToU8 } = require("fflate");
     assert.deepEqual(soyRows.map((i) => i.quantity), ["4 tsp"]);
     await page.goto(baseURL + "/grocery");
     await page.getByText("4 tsp").waitFor();
+    // ¾ cup + 2 tbsp is stored precisely and shown as ⅞ cup; brown rice 1½ cup cooked.
+    await page.getByLabel("Item name").fill("Rolled oats");
+    await page.getByLabel("Quantity (optional)").fill("0.75 cup");
+    await page.getByRole("button", { name: "Add item" }).click();
+    await page.getByLabel("Item name").fill("Rolled oats");
+    await page.getByLabel("Quantity (optional)").fill("2 tbsp");
+    await page.getByRole("button", { name: "Add item" }).click();
+    const oats = (await page.evaluate(() => JSON.parse(localStorage.getItem("moodmeal:groceryList")))).filter((i) => i.name === "Rolled oats");
+    assert.deepEqual(oats.map((i) => i.quantity), ["0.875 cup"]);
+    await page.getByText("⅞ cup", { exact: true }).waitFor();
+    await page.getByText("1½ cup cooked", { exact: true }).waitFor();
+    assert.equal(await page.getByText("0.875 cup").count(), 0);
     await page.screenshot({ path: "work/qa-grocery-converted-390.png" });
     // Nutrition Calculator: reached from Wellness, calculates, validates, saves nothing.
     const storageBefore = await page.evaluate(() => JSON.stringify(Object.keys(localStorage).sort()));
