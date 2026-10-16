@@ -1,17 +1,58 @@
 import {historyInsights} from "../lib/interactions";
 import {useLocalStorage} from "../hooks/useLocalStorage";
 import type {Interaction} from "../types/library";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import MoodChart from "../components/MoodChart";
 import { useMoodHistory } from "../hooks/useMoodHistory";
 import { getEmotionById } from "../data/emotions";
 import { Trash2, TrendingUp, Info } from "../components/icons";
 import { Link } from "../lib/router";
-import type { EmotionId } from "../types";
+import type { EmotionId, MoodHistoryEntry } from "../types";
+
+const UNDO_MS = 8000;
 
 export default function MoodHistoryPage() {
-  const { entries, removeEntry } = useMoodHistory();
+  const { entries, removeEntry, restoreEntry } = useMoodHistory();
   const [events]=useLocalStorage<Interaction[]>("moodmeal:interactions",[]);
+  // The most recent deletion, kept in memory only so it can be undone.
+  const [deleted, setDeleted] = useState<{ entry: MoodHistoryEntry; index: number } | null>(null);
+  const timer = useRef<number>(0);
+  const undoRef = useRef<HTMLButtonElement | null>(null);
+  // After Undo, focus returns to the restored row once it has rendered.
+  const [refocusId, setRefocusId] = useState<string | null>(null);
+  useEffect(() => {
+    if (!refocusId) return;
+    document.querySelector<HTMLButtonElement>(`[data-entry-id="${refocusId}"]`)?.focus();
+    setRefocusId(null);
+  }, [refocusId, entries]);
+
+  // The snackbar closes after UNDO_MS; focus or hover pauses the countdown.
+  const startTimer = () => {
+    window.clearTimeout(timer.current ?? undefined);
+    timer.current = window.setTimeout(() => setDeleted(null), UNDO_MS);
+  };
+  const pauseTimer = () => window.clearTimeout(timer.current ?? undefined);
+  useEffect(() => () => window.clearTimeout(timer.current ?? undefined), []);
+
+  const handleDelete = (id: string, viaKeyboard: boolean) => {
+    const removed = removeEntry(id);
+    if (!removed) return;
+    setDeleted(removed);
+    startTimer();
+    // The row's button is gone, so keyboard focus moves to Undo instead of being
+    // lost (focus pauses the countdown). Pointer users keep the timed snackbar.
+    if (viaKeyboard) window.setTimeout(() => undoRef.current?.focus(), 0);
+  };
+
+  const handleUndo = () => {
+    if (!deleted) return;
+    pauseTimer();
+    restoreEntry(deleted.entry, deleted.index);
+    setRefocusId(deleted.entry.id);
+    setDeleted(null);
+  };
+
+  const deletedName = deleted ? getEmotionById(deleted.entry.emotionId)?.name ?? "Mood" : "";
 
   const stats = useMemo(() => {
     if (entries.length === 0) return null;
@@ -112,7 +153,8 @@ export default function MoodHistoryPage() {
                         )}
                       </div>
                       <button
-                        onClick={() => removeEntry(entry.id)}
+                        onClick={(e) => handleDelete(entry.id, e.detail === 0)}
+                        data-entry-id={entry.id}
                         aria-label={`Delete ${emotion?.name ?? "mood"} entry from ${new Date(entry.date).toLocaleDateString(undefined, { month: "long", day: "numeric" })}`}
                         className="-mr-1.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-slate-500 hover:bg-coral-50 hover:text-coral-600"
                       >
@@ -124,6 +166,33 @@ export default function MoodHistoryPage() {
               </div>
             </div>
           </>
+        )}
+      </div>
+      <div
+        role="status"
+        aria-live="polite"
+        className="pointer-events-none fixed inset-x-0 bottom-[calc(6rem+env(safe-area-inset-bottom))] z-40 mx-auto w-full max-w-app px-4"
+      >
+        {deleted && (
+          <div
+            className="pointer-events-auto flex items-center justify-between gap-3 rounded-2xl bg-slate-800 py-1.5 pl-4 pr-1.5 text-sm text-white shadow-lg animate-fade-in"
+            onMouseEnter={pauseTimer}
+            onMouseLeave={startTimer}
+            onFocus={pauseTimer}
+            onBlur={startTimer}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setDeleted(null);
+            }}
+          >
+            <span>{deletedName} entry deleted.</span>
+            <button
+              ref={undoRef}
+              onClick={handleUndo}
+              className="min-h-[44px] rounded-xl px-4 font-bold text-moodGreen-300 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              Undo
+            </button>
+          </div>
         )}
       </div>
     </div>

@@ -29,9 +29,25 @@ export function useMoodHistory() {
     [setEntries]
   );
 
+  /** Removes an entry and returns it with its stored position, so it can be restored. */
   const removeEntry = useCallback(
     (id: string) => {
+      const index = entries.findIndex((e) => e.id === id);
+      const removed = index >= 0 ? { entry: entries[index], index } : null;
       setEntries((prev) => prev.filter((e) => e.id !== id));
+      return removed;
+    },
+    [entries, setEntries]
+  );
+
+  /** Puts a removed entry back at its original stored position (undo). */
+  const restoreEntry = useCallback(
+    (entry: MoodHistoryEntry, index: number) => {
+      setEntries((prev) =>
+        prev.some((e) => e.id === entry.id)
+          ? prev
+          : [...prev.slice(0, index), entry, ...prev.slice(index)]
+      );
     },
     [setEntries]
   );
@@ -40,5 +56,5 @@ export function useMoodHistory() {
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
-  return { entries: sorted, addEntry, removeEntry };
+  return { entries: sorted, addEntry, removeEntry, restoreEntry };
 }

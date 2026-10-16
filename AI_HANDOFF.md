@@ -14,7 +14,7 @@ Fixed:
 - Heading structure on Result and Glossary; summaries at least 24 px; accurate About copy; "1 entry" pluralization.
 - `tests/knowledge.browser.cjs` gained regression checks for these fixes.
 
-Decisions still needed from the user (not changed): grocery unit conversion (tsp/tbsp rows stay separate), and confirm/undo for Mood History deletes. Also outstanding: the remaining 36 px controls and the non-modal sheet. Real-device testing (iOS Safari, Android Chrome, VoiceOver/TalkBack) is still required.
+Follow-up approved by the user and done: an undo snackbar for Mood History deletes (in memory only, 8 s, paused on focus or hover) and tsp/tbsp/cup grocery conversion (`tidyVolume` in src/lib/grocery.ts; same-unit rows preferred; saved lists not rewritten). Still outstanding: the remaining 36 px controls and the non-modal sheet. Real-device testing (iOS Safari, Android Chrome, VoiceOver/TalkBack) is still required.
 
 ## Remaining 14 USDA labels approved, no new totals (Claude Code, 2026-10-14)
 

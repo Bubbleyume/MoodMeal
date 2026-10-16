@@ -55,6 +55,8 @@ declare module "react" {
     interface MouseEvent<T = Element> extends SyntheticEvent<T> {
       clientX: number;
       clientY: number;
+      /** Click count; 0 when the click came from the keyboard (Enter/Space). */
+      detail: number;
     }
     interface TouchEvent<T = Element> extends SyntheticEvent<T> {
       touches: { clientX: number; clientY: number }[];

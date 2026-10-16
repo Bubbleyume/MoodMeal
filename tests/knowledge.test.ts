@@ -23,7 +23,7 @@ import { RECIPES } from "../src/data/recipes";
 import { EMOTIONS } from "../src/data/emotions";
 import { DEFAULT_PREFERENCES, eligible } from "../src/lib/preferences";
 import { aggregateGroceries } from "../src/lib/grocery";
-import { parseIngredient } from "../src/lib/catalog";
+import { parseIngredient, ingredientLine } from "../src/lib/catalog";
 import {
   extractCandidates,
   transition,
@@ -170,6 +170,34 @@ test("grocery keeps incompatible units, notes and completed entries", () => {
     parseIngredient({ name: "Oats", quantity: "1 1/2 cups" }).quantity,
     1.5,
   );
+});
+test("grocery converts tsp/tbsp/cup of the same ingredient into one row", () => {
+  const add = (...quantities: string[]) =>
+    aggregateGroceries([], quantities.map((quantity) => ({ name: "Soy sauce", quantity })), "R");
+  // 1 tbsp + 1 tsp = 4 tsp: no tidy tbsp or cup amount, so teaspoons.
+  assert.deepEqual(add("1 tbsp", "1 tsp").map((i) => i.quantity), ["4 tsp"]);
+  assert.deepEqual(add("1 tbsp", "3 tsp").map((i) => i.quantity), ["2 tbsp"]);
+  assert.deepEqual(add("0.75 cup", "2 tbsp").map((i) => i.quantity), ["0.875 cup"]);
+  assert.deepEqual(add("2 tbsp", "6 tsp").map((i) => i.quantity), ["0.25 cup"]);
+  assert.deepEqual(add("1 tsp", "0.5 tsp").map((i) => i.quantity), ["1.5 tsp"]);
+  // Same-unit rows keep their unit (no conversion when it isn't needed).
+  assert.deepEqual(add("2 tbsp", "2 tbsp").map((i) => i.quantity), ["4 tbsp"]);
+  // A same-unit row is preferred over a convertible one.
+  const mixed = aggregateGroceries(
+    [{ id: "a", name: "Soy sauce", quantity: "1 tbsp", checked: false, createdAt: "" },
+     { id: "b", name: "Soy sauce", quantity: "1 tsp", checked: false, createdAt: "" }],
+    [{ name: "Soy sauce", quantity: "1 tsp" }]);
+  assert.deepEqual(mixed.map((i) => i.quantity), ["1 tbsp", "2 tsp"]);
+  // Never converted: different notes, weights or counts, other ingredients, completed rows.
+  assert.equal(aggregateGroceries([], [{ name: "Brown rice", quantity: "0.75 cup cooked" }, { name: "Brown rice", quantity: "1 tbsp" }]).length, 2);
+  assert.equal(aggregateGroceries([], [{ name: "Honey", quantity: "1 tsp" }, { name: "Honey", quantity: "21 g" }]).length, 2);
+  assert.equal(aggregateGroceries([], [{ name: "Honey", quantity: "1 tsp" }, { name: "Soy sauce", quantity: "1 tbsp" }]).length, 2);
+  const done = add("1 tbsp").map((i) => ({ ...i, checked: true }));
+  assert.equal(aggregateGroceries(done, [{ name: "Soy sauce", quantity: "1 tsp" }]).length, 2);
+  // Real recipes: the bowl's 1 tsp and the stir-fry's 1 tbsp soy sauce become 4 tsp.
+  const lines = ["recipe-energizing-power-bowl", "recipe-iron-rich-stir-fry"].flatMap((id) =>
+    RECIPES.find((r) => r.id === id)!.structuredIngredients.filter((i) => i.name === "Soy sauce").map(ingredientLine));
+  assert.deepEqual(aggregateGroceries([], lines).map((i) => i.quantity), ["4 tsp"]);
 });
 test("every meal uses canonical recipe quantity and time", () => {
   for (const m of MEALS) {

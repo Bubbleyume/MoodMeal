@@ -1,5 +1,23 @@
 import type { GroceryItem } from "../types";
 import { parseIngredient, ingredientId } from "./catalog";
+
+// US kitchen volume measures, in teaspoons. Only these units are converted;
+// weights, counts and other units stay on their own rows.
+const TSP_PER: Record<string, number> = { tsp: 1, tbsp: 3, cup: 48 };
+
+/**
+ * Expresses a volume total in the largest unit that gives a tidy amount:
+ * cups in 1/8 steps (from 1/4 cup), then tablespoons in 1/2 steps (from
+ * 1 tbsp), otherwise teaspoons. 1 tbsp + 1 tsp stays "4 tsp".
+ */
+export function tidyVolume(tsp: number): { amount: number; unit: string } {
+  const step = (v: number, size: number) => Math.abs(v / size - Math.round(v / size)) < 1e-9;
+  const cups = tsp / 48, tbsp = tsp / 3;
+  if (cups >= 0.25 && step(cups, 0.125)) return { amount: cups, unit: "cup" };
+  if (tbsp >= 1 && step(tbsp, 0.5)) return { amount: tbsp, unit: "tbsp" };
+  return { amount: Number(tsp.toFixed(4)), unit: "tsp" };
+}
+
 export function aggregateGroceries(
   previous: GroceryItem[],
   entries: { name: string; quantity?: string }[],
@@ -11,28 +29,38 @@ export function aggregateGroceries(
       name: entry.name,
       quantity: entry.quantity ?? "",
     });
-    const existing = next.find((i) => {
+    const candidates = next.filter((i) => {
       const p = parseIngredient({ name: i.name, quantity: i.quantity ?? "" });
       return (
         !i.checked &&
         ingredientId(i.name) === parsed.ingredientId &&
         p.quantity !== null &&
         parsed.quantity !== null &&
-        p.unit === parsed.unit &&
         p.notes === parsed.notes
       );
     });
+    const unitOf = (i: GroceryItem) =>
+      parseIngredient({ name: i.name, quantity: i.quantity ?? "" }).unit;
+    // Prefer a row in the same unit; otherwise a convertible volume row.
+    const existing =
+      candidates.find((i) => unitOf(i) === parsed.unit) ??
+      candidates.find((i) => unitOf(i) in TSP_PER && parsed.unit in TSP_PER);
     if (existing) {
       const old = parseIngredient({
         name: existing.name,
         quantity: existing.quantity ?? "",
       });
-      const amount = Number(
-        ((old.quantity ?? 0) + (parsed.quantity ?? 0)).toFixed(4),
-      );
+      let amount: number;
+      let unit = parsed.unit;
+      if (old.unit === parsed.unit) {
+        amount = Number(((old.quantity ?? 0) + (parsed.quantity ?? 0)).toFixed(4));
+      } else {
+        const total = (old.quantity ?? 0) * TSP_PER[old.unit] + (parsed.quantity ?? 0) * TSP_PER[parsed.unit];
+        ({ amount, unit } = tidyVolume(total));
+      }
       existing.quantity = [
         amount,
-        parsed.unit === "each" ? "" : parsed.unit,
+        unit === "each" ? "" : unit,
         parsed.notes,
       ]
         .filter((x) => x !== "")

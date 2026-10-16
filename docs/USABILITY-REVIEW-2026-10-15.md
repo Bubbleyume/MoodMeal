@@ -78,12 +78,12 @@ The fixed issues are listed in section 5. Remaining:
 
 ## 7. Remaining issues (not changed)
 
-- **Medium:** Grocery doesn't convert between units, so 1 tbsp and 1 tsp of soy sauce stay on separate rows. A fix needs unit-conversion rules; this is a design decision.
-- **Medium:** Deleting a Mood History entry is immediate, with no confirmation or undo. Changing that changes how deleting user data behaves, so it needs approval.
 - **Medium:** Several 36 px controls and the non-modal intensity sheet (section 4).
 - **Low:** Grocery items saved under the old "Whole-grain bread" name show the leaf fallback image.
 - **Low:** The emoji/avatar inconsistency in Mood History.
 - **Low:** The Profile notification switch is still a placeholder.
+- **Low:** With a single entry, Mood History says "ranged from 6 to 6/10".
+- **Low:** For up to 8 seconds, the undo snackbar can cover the last history row.
 
 ## 8. Test results
 
@@ -102,6 +102,22 @@ The fixed issues are listed in section 5. Remaining:
 
 Ready for continued internal testing on the current branch. Before any public release:
 1. Test on at least one real iPhone (Safari) and one Android phone (Chrome), including VoiceOver/TalkBack and the on-screen keyboard over the grocery form and the mood sheet.
-2. Decide on grocery unit conversion and on confirming Mood History deletions.
+2. Grocery unit conversion and Mood History undo are done (see the follow-up below).
 3. Raise the remaining 36 px controls to 44 px.
 4. Keep the wellness and medical disclaimers and the USDA review gates as they are.
+
+## Follow-up (user-approved, 2026-10-15)
+
+**Undo for Mood History deletes.** Deleting an entry shows a snackbar ("Tired entry deleted." / Undo) above the bottom nav.
+- Undo puts back the identical entry at its original stored position, and focus returns to that row's delete button.
+- The snackbar is a `role="status"` live region and closes after 8 s; focus or hover pauses the countdown, and Escape dismisses it.
+- After a keyboard delete, focus moves to Undo. After a pointer or touch delete, focus doesn't move, so the timer runs normally.
+- Only the most recent deletion is undoable. It is held in memory only: the delete is saved immediately, and Undo re-adds the entry.
+
+**Grocery unit conversion.** tsp, tbsp and cup of the same ingredient with the same notes now combine into one row.
+- A row in the same unit is still preferred, so 2 tbsp + 2 tbsp stays "4 tbsp".
+- Converted totals use the largest tidy unit: cups in 1/8 steps from 1/4 cup, then tablespoons in 1/2 steps, otherwise teaspoons. For example, 1 tbsp + 1 tsp = 4 tsp and 2 tbsp + 6 tsp = 0.25 cup.
+- Weights, counts, different notes and completed rows are never converted.
+- Existing saved lists are not rewritten; conversion applies only when items are added.
+
+Tests: one new knowledge test and new browser checks (keyboard and pointer undo, auto-dismiss, soy sauce "4 tsp").

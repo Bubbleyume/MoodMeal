@@ -308,6 +308,42 @@ const { zipSync, strToU8 } = require("fflate");
       d === null ? localStorage.removeItem("moodmeal:draftMood") : localStorage.setItem("moodmeal:draftMood", d);
       p === null ? localStorage.removeItem("moodmeal:profile") : localStorage.setItem("moodmeal:profile", p);
     }, [savedDraft, savedProfile]);
+    // Mood History delete offers Undo; restoring puts back the identical entry.
+    await page.evaluate(() => localStorage.setItem("moodmeal:moodHistory", JSON.stringify([
+      { id: "m-test-1", date: "2026-10-14T09:00:00.000Z", emotionId: "tired", intensity: 6, note: "Long day" },
+      { id: "m-test-2", date: "2026-10-13T09:00:00.000Z", emotionId: "happy", intensity: 4 },
+    ])));
+    const historyBefore = await page.evaluate(() => localStorage.getItem("moodmeal:moodHistory"));
+    await page.goto(baseURL + "/history");
+    const deleteTired = page.getByRole("button", { name: /^Delete Tired entry from / });
+    await deleteTired.focus();
+    await page.keyboard.press("Enter");
+    const snackbar = page.getByRole("status").filter({ hasText: "Tired entry deleted." });
+    await snackbar.waitFor();
+    assert.equal(await page.evaluate(() => document.activeElement.textContent.trim()), "Undo");
+    assert.equal((await page.evaluate(() => JSON.parse(localStorage.getItem("moodmeal:moodHistory")))).length, 1);
+    await page.keyboard.press("Enter");
+    assert.equal(await page.evaluate(() => localStorage.getItem("moodmeal:moodHistory")), historyBefore);
+    assert.equal(await page.getByText("Tired entry deleted.").count(), 0);
+    assert.match(await page.evaluate(() => document.activeElement.getAttribute("aria-label")), /^Delete Tired entry/);
+    // Pointer delete: no focus jump, and the snackbar closes on its own after 8 s.
+    await page.getByRole("button", { name: /^Delete Happy entry from / }).click();
+    await page.getByText("Happy entry deleted.").waitFor();
+    assert.notEqual(await page.evaluate(() => document.activeElement.textContent.trim()), "Undo");
+    await page.mouse.move(0, 0);
+    await page.getByText("Happy entry deleted.").waitFor({ state: "detached", timeout: 10000 });
+    assert.equal((await page.evaluate(() => JSON.parse(localStorage.getItem("moodmeal:moodHistory")))).length, 1);
+    // Recipe-to-grocery converts 1 tsp + 1 tbsp soy sauce into one row.
+    await page.evaluate(() => localStorage.setItem("moodmeal:groceryList", "[]"));
+    for (const id of ["recipe-energizing-power-bowl", "recipe-iron-rich-stir-fry"]) {
+      await page.goto(baseURL + "/recipe/" + id);
+      await page.getByRole("button", { name: "Add ingredients to Grocery", exact: true }).click();
+    }
+    const soyRows = (await page.evaluate(() => JSON.parse(localStorage.getItem("moodmeal:groceryList")))).filter((i) => i.name === "Soy sauce");
+    assert.deepEqual(soyRows.map((i) => i.quantity), ["4 tsp"]);
+    await page.goto(baseURL + "/grocery");
+    await page.getByText("4 tsp").waitFor();
+    await page.screenshot({ path: "work/qa-grocery-converted-390.png" });
     console.log("BROWSER ERRORS", errors);
     assert.deepEqual(errors, []);
     console.log(
