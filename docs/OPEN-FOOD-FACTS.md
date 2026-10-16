@@ -1,6 +1,6 @@
 # Open Food Facts barcode lookup (Nutrition Calculator)
 
-Added 2026-10-15. Code: `src/lib/openFoodFacts.ts`, `src/components/ProductLookup.tsx`, and the calculator integration in `src/lib/nutritionCalculator.ts` and `src/pages/NutritionCalculatorPage.tsx`.
+Added 2026-10-15. Code: `src/lib/openFoodFacts.ts` (lookup and product mapping), `src/lib/offNutritionAdapter.ts` (v3.5 schema adapter and consistency check), `src/components/ProductLookup.tsx`, and the calculator integration in `src/lib/nutritionCalculator.ts` and `src/pages/NutritionCalculatorPage.tsx`.
 
 ## What it does
 
@@ -49,22 +49,59 @@ Added 2026-10-15. Code: `src/lib/openFoodFacts.ts`, `src/components/ProductLooku
   - `en:none` reads "None recorded … Always check the package."
 - **Safe rendering:** API text is rendered as plain React text (never as HTML) and truncated. Product links are built from the barcode, never taken from API URLs.
 
-## Conflict check (shown, never corrected)
+## Nutrition-basis conflict detection (2026-10-16)
 
-`findConflicts` compares the record's `nutrition.input_sets` as contributors entered them. It uses a packaging or manufacturer set per 100 g and a per-serving set with a gram weight, both "as sold". For each mapped nutrient, the per-100 g value scaled to the serving weight is compared with the per-serving value.
+**Schema (official Product-Nutrition v3.5 docs):**
+- `aggregated_set` is read-only. It is computed from the input sets in source priority: manufacturer, packaging, USDA, estimate.
+- Each input set is defined by its source, its `preparation` (`as_sold` / `prepared`) and its `per` (`100g` / `100ml` / `serving`).
+- Each nutrient entry has `value_string` (as entered), `value`, `value_computed` (system-derived), `unit` (a free string) and an optional `modifier` (`< <= ~ >= >`).
+- The docs ask clients to tolerate unexpected nutrient keys.
+- The rendered docs don't define `per_quantity` / `per_unit`. Their meaning here (for example 103 / "g" for a serving set) comes from real records.
 
-- **Tolerance:** a nutrient is flagged only when the difference is larger than both labels' rounding could explain. Half of the US label rounding step (21 CFR 101.9) is allowed for each value:
-  - calories: 5 kcal (2.5 kcal at or below 50 kcal);
+**Adapter (`src/lib/offNutritionAdapter.ts`, testable on its own):**
+- `adaptNutrition` normalizes `per`, `preparation`, `per_unit` and `per_quantity`, so variants like "100 g", "SERVING", "G" and "103" are handled. Unknown nutrient keys and extra fields are ignored.
+- Missing or unexpected set fields become **schema issues** instead of being skipped. For example: an unexpected basis, a missing preparation, an invalid reference quantity, missing or non-list input sets.
+- `readEntry` / `readMapped` convert units explicitly (g, mg, µg, kcal, kJ). They keep null distinct from zero, exclude modifiers and `source: "estimate"` entries, and record each value's **declared precision** from `value_string` ("12" means ±0.5; "11.7" means ±0.05).
+
+**When sets are compared (`checkConsistency`):** a per-100 g set (g) is compared with a per-serving set only when:
+- both sets have the **same source** and the **same preparation state** (as-sold with as-sold, prepared with prepared);
+- the serving set states its **weight in grams** (`per_unit: "g"` with a `per_quantity`).
+
+These are never compared:
+- estimate sets;
+- sets from different sources or preparation states;
+- serving sets measured in ml or without a gram weight.
+
+Only nutrients present as exact values in both sets are compared.
+
+**Tolerance:**
+- For each side, the allowance is the larger of half the US label rounding step (21 CFR 101.9) and the value's declared precision. The rounding steps:
+  - calories: 5 kcal (2.5 at or below 50 kcal);
   - fat: 0.25 g below 5 g, otherwise 0.5 g;
   - other nutrients: 0.5 g.
-- **Energy** is compared in kcal, with kJ converted at 4.184.
-- **Not compared:** sets per ml, estimate sets, and prepared-product sets.
-- **Where it shows:**
-  - a red notice in the preview, for example "Carbohydrates: 60 g per 100 g would be 61.8 g per 103 g serving, but the per-serving entry says 60 g";
-  - a sentence in the ingredient row's note;
-  - an amber "Source values conflict for … ; check the package" line under the affected nutrient in the results;
-  - the notice again in the calculation details.
-- **Values are not changed:** the calculation still uses the aggregated per-100 g values as recorded. The check is general; no product is special-cased.
+- The per-100 g side's allowance is scaled to the serving weight.
+- A nutrient is a **material conflict** only when the scaled per-100 g value and the per-serving value differ by more than both allowances combined. Identical rounded values are not treated as proof of an error. For example, 12 g per 100 g and 12 g per 103 g are consistent, because 12.36 g rounds to 12 g.
+
+**Statuses:**
+
+| Status | Meaning | What the user sees |
+|---|---|---|
+| `conflict` | At least one material conflict | The resolution panel (below) |
+| `consistent` | A comparable pair agreed | A short green note |
+| `not-comparable` | Nothing could be compared, with the reason (one entry only, no serving weight, ml serving, different source or preparation, no shared exact values) | A grey note |
+| `unverifiable` | Schema issues prevented a full check, with the issues listed | An amber note asking the user to compare with the package |
+
+A conflict found in a comparable pair is still reported even when other sets have schema issues.
+
+**When there's a conflict:**
+- The preview shows **"Conflicting source nutrition values."** It explains the two bases (source, preparation, per 100 g vs per N g serving) and shows both entries side by side, with the per-100 g entry scaled to the serving weight. Conflicting nutrients are marked.
+- The usual values table is hidden.
+- **The product can't be added until the user explicitly chooses** which entry matches their package. Choosing the **per-serving entry** offers servings only, using the values as entered. Choosing the **per-100 g entry** offers grams and the serving, and needs weight evidence for the product.
+- For volume products, neither entry can be chosen, because no density is assumed.
+- Nothing is selected, averaged or corrected automatically. Without a choice, `productFood` returns null and `per100gNutrients` returns only nulls.
+- The chosen entry is labelled on the ingredient row ("you chose the Per-serving entry (103 g, packaging)"), on each conflicting nutrient in the results, and in the calculation details ("The other entry was not used").
+
+**Not changed:** consistent and single-entry records behave as before: grams for per-100 g products sold by weight, servings only with a gram weight, liquids and unclear bases blocked. The 17 USDA foods, catalog approvals, published nutrition and FatSecret are untouched, and everything stays in memory only.
 
 ## Licensing and API terms (reviewed 2026-10-15)
 
@@ -120,4 +157,4 @@ Evidence, from 4 read-only requests, with responses kept only in the local scrat
 - When a gram serving is recorded, the table adds a **Per serving (N g)** column scaled from the per-100 g values, so users can compare directly with a per-serving package label. For this record it shows 360 kcal, 12.36 g protein and 61.8 g carbs per pack, which makes the mismatch visible.
 - A note asks users to compare with their package and states that records are shown as recorded and not corrected.
 
-**Follow-up done (2026-10-16):** the mapper now uses API v3.5 (`nutrition.aggregated_set`) and checks the input sets for conflicts. This record flags **carbohydrates**: 60 g per 100 g would be 61.8 g per 103 g, but the per-serving entry says 60 g. Protein, fat, fiber, sugars and calories match their per-serving entries within label rounding, so they aren't flagged, although they were also copied. Calculated values are unchanged and are not corrected. The source record was not edited: MoodMeal never writes to Open Food Facts, and a contributor can correct it on openfoodfacts.org.
+**Follow-up done (2026-10-16):** the mapper now uses API v3.5 (`nutrition.aggregated_set`) and the adapter checks the input sets for conflicts. The product now requires the user to choose an entry before it can be added. This record flags **carbohydrates**: 60 g per 100 g would be 61.8 g per 103 g, but the per-serving entry says 60 g. Protein, fat, fiber, sugars and calories match their per-serving entries within label rounding, so they aren't flagged, although they were also copied. Calculated values are unchanged and are not corrected. The source record was not edited: MoodMeal never writes to Open Food Facts, and a contributor can correct it on openfoodfacts.org.

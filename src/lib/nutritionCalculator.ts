@@ -15,7 +15,7 @@ import pilotData from "../data/usda/pilot-foods.json";
 import { APPROVED_INGREDIENTS } from "../data/usdaApprovals";
 import { PILOT_INGREDIENTS } from "../data/usdaPilot";
 import { calculateNutrition } from "./nutrition";
-import { isCalculable, per100gNutrients, type OffProduct } from "./openFoodFacts";
+import { isCalculable, per100gNutrients, type ConflictResolution, type OffProduct } from "./openFoodFacts";
 import type { NutritionInput, NutritionValue, UsdaNutrientValue } from "../types/nutrition";
 
 export const SNAPSHOT = pilotData.snapshot;
@@ -47,6 +47,8 @@ export interface CalculatorFood {
   source: FoodSource;
   /** Open Food Facts product details (provenance) when source is "openfoodfacts". */
   product?: OffProduct;
+  /** The package entry the user chose when the product's entries conflict. */
+  resolution?: ConflictResolution;
   name: string;
   description: string;
   /** Preparation state the USDA values describe (raw, cooked, peeled…). */
@@ -160,30 +162,36 @@ export function findFood(fdcId: string, extraFoods: CalculatorFood[] = []) {
  * when its nutrition basis can't be used. Grams are offered only for
  * nutrition per 100 g; a product serving only with an explicit gram weight.
  */
-export function productFood(p: OffProduct): CalculatorFood | null {
-  if (!isCalculable(p)) return null;
+export function productFood(p: OffProduct, resolution?: ConflictResolution): CalculatorFood | null {
+  if (!isCalculable(p, resolution)) return null;
+  const conflict = p.consistency.status === "conflict";
+  const option = conflict ? p.resolutionOptions.find((o) => o.id === resolution)! : undefined;
   const measures: CalculatorMeasure[] = [];
-  if (p.basis === "per100g")
-    measures.push({ ...GRAMS, basis: "Weighed amount in grams; Open Food Facts nutrition per 100 g." });
-  if (p.servingGrams)
+  const perGrams = option ? option.id === "per100g" : p.basis === "per100g";
+  if (perGrams)
+    measures.push({ ...GRAMS, basis: option ? "Weighed amount in grams; the per-100 g package entry you chose." : "Weighed amount in grams; Open Food Facts nutrition per 100 g." });
+  const servingWeight = option ? option.servingGrams : p.servingGrams;
+  const servingLabel = option ? `${option.servingGrams} g` : p.servingLabel;
+  if (servingWeight)
     measures.push({
-      id: "off-serving", label: `product serving, ${p.servingLabel}`, gramsPerUnit: p.servingGrams, portionId: "",
-      basis: `Product serving recorded by Open Food Facts: ${p.servingLabel}.`,
+      id: "off-serving", label: `product serving, ${servingLabel}`, gramsPerUnit: servingWeight, portionId: "",
+      basis: option ? `Serving weight from the per-serving package entry: ${servingWeight} g.` : `Product serving recorded by Open Food Facts: ${servingLabel}.`,
     });
   const name = p.name ?? `Product ${p.code}`;
   return {
-    fdcId: `off:${p.code}`,
+    fdcId: option ? `off:${p.code}:${option.id}` : `off:${p.code}`,
     source: "openfoodfacts",
     product: p,
+    resolution: option?.id,
     name,
     description: `${name}${p.brand ? ` (${p.brand})` : ""}, barcode ${p.code}`,
-    state: `Open Food Facts product data · ${p.basisLabel}`,
-    stateNote: p.conflicts.length
-      ? `Crowd-sourced label data, not reviewed by MoodMeal. Source record has conflicting values for ${p.conflicts.map((c) => c.label.toLowerCase()).join(", ")}.`
+    state: `Open Food Facts product data · ${option ? `${option.id === "per100g" ? "per-100 g" : "per-serving"} entry you chose` : p.basisLabel}`,
+    stateNote: option
+      ? `Crowd-sourced label data, not reviewed by MoodMeal. Conflicting source nutrition values: you chose the ${option.label}.`
       : "Crowd-sourced label data, not reviewed by MoodMeal.",
     imageLabel: "",
     measures,
-    nutrients: per100gNutrients(p),
+    nutrients: per100gNutrients(p, resolution),
     sourceURL: p.url,
   };
 }

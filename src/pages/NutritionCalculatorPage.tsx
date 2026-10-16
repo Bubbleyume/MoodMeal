@@ -2,13 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import IngredientThumb from "../components/IngredientThumb";
-import ProductLookup, { AllergenInfo, ConflictNotice, OffAttribution } from "../components/ProductLookup";
+import ProductLookup, { AllergenInfo, ConsistencyNotice, OffAttribution } from "../components/ProductLookup";
 import { Plus, Trash2 } from "../components/icons";
 import {
   CALCULATOR_FOODS, SNAPSHOT, calculateCustom, findFood, productFood, searchFoods,
   type CalculatorFood, type CalculatorRow, type CalculatedNutrient,
 } from "../lib/nutritionCalculator";
-import { OFF_NUTRIENT_MAP, type OffProduct } from "../lib/openFoodFacts";
+import { OFF_NUTRIENT_MAP, type ConflictResolution, type OffProduct } from "../lib/openFoodFacts";
 
 function amount(n: CalculatedNutrient, value: number | null) {
   if (value === null) return "Unknown";
@@ -50,8 +50,8 @@ export default function NutritionCalculatorPage() {
     addRow(findFood(fdcId)!);
     setQuery("");
   };
-  const addProduct = (product: OffProduct) => {
-    const food = productFood(product);
+  const addProduct = (product: OffProduct, resolution?: ConflictResolution) => {
+    const food = productFood(product, resolution);
     if (!food) return;
     setProducts((p) => (p.some((f) => f.fdcId === food.fdcId) ? p : [...p, food]));
     addRow(food, true);
@@ -266,11 +266,11 @@ export default function NutritionCalculatorPage() {
                         )}
                         {(() => {
                           const conflicting = [...new Set(result.rows
-                            .filter((r) => r.food.product?.conflicts.some((c) => c.id === n.id))
-                            .map((r) => r.food.name))];
+                            .filter((r) => r.food.product?.consistency.conflicts.some((c) => c.id === n.id))
+                            .map((r) => `${r.food.name} (you chose the ${r.food.resolution === "per100g" ? "per-100 g" : "per-serving"} entry)`))];
                           return conflicting.length > 0 && (
                             <span className="block text-xs font-normal text-amber-900" data-testid="calc-conflict">
-                              Source values conflict for {conflicting.join(", ")}; check the package
+                              Conflicting source nutrition values: {conflicting.join(", ")}
                             </span>
                           );
                         })()}
@@ -314,7 +314,7 @@ export default function NutritionCalculatorPage() {
                           {OFF_NUTRIENT_MAP.filter((m) => r.food.product!.nutrients[m.id].note).map((m) => (
                             <span key={m.id} className="block text-xs">{m.label}: {r.food.product!.nutrients[m.id].note}</span>
                           ))}
-                          <ConflictNotice product={r.food.product!} />
+                          <ConsistencyNotice product={r.food.product!} chosen={r.food.resolution} />
                           <AllergenInfo product={r.food.product!} />
                         </>
                       )}

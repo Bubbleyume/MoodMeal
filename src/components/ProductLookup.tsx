@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import Button from "./Button";
 import {
-  OFF_ATTRIBUTION, createLookupLimiter, describeConflict, isCalculable, lookupProduct, previewValues, validateBarcode,
-  type LookupOutcome, type OffProduct,
+  OFF_ATTRIBUTION, OFF_NUTRIENT_MAP, createLookupLimiter, isCalculable, lookupProduct, previewValues, validateBarcode,
+  type ConflictResolution, type LookupOutcome, type OffProduct,
 } from "../lib/openFoodFacts";
 
 // Session-only: one limiter and a small cache shared while the app is open,
@@ -34,20 +34,63 @@ export function AllergenInfo({ product }: { product: OffProduct }) {
   );
 }
 
-/** Conflicting package entries in the source record: shown as recorded, never corrected. */
-export function ConflictNotice({ product }: { product: OffProduct }) {
-  if (!product.conflicts.length) return null;
-  return (
-    <div role="note" className="mt-2 rounded-xl bg-red-50 p-2 text-xs text-red-800 ring-1 ring-red-200" data-testid="off-conflicts">
-      <p className="font-bold">This Open Food Facts record has conflicting values.</p>
-      <ul className="mt-1 list-disc space-y-1 pl-4">
-        {product.conflicts.map((c) => <li key={c.id}>{describeConflict(c)}</li>)}
-      </ul>
-      <p className="mt-1">
-        Check your package. MoodMeal calculates from the per-100 g values as recorded and does not correct them.
-      </p>
-    </div>
-  );
+/**
+ * Result of comparing the record's package entries. A conflict lists both
+ * bases side by side; values are never selected, averaged or corrected.
+ */
+export function ConsistencyNotice({ product, chosen }: { product: OffProduct; chosen?: ConflictResolution }) {
+  const c = product.consistency;
+  if (c.status === "conflict" && c.pair) {
+    const per100 = product.resolutionOptions.find((o) => o.id === "per100g")!;
+    const serving = product.resolutionOptions.find((o) => o.id === "perServing")!;
+    const conflicting = new Set(c.conflicts.map((x) => x.id));
+    const grams = c.pair.servingGrams;
+    return (
+      <div role="note" className="mt-2 rounded-xl bg-red-50 p-2 text-xs text-red-900 ring-1 ring-red-200" data-testid="off-conflicts">
+        <p className="font-bold">Conflicting source nutrition values.</p>
+        <p className="mt-1">
+          Open Food Facts has two {c.pair.source} entries for this product ({c.pair.preparation === "as_sold" ? "as sold" : "prepared"}):
+          one per 100 g and one per {grams} g serving. Scaled to the same weight, they disagree by more than label
+          rounding can explain for the nutrients marked below.
+        </p>
+        <table className="mt-2 w-full">
+          <thead>
+            <tr>
+              <th scope="col" className="text-left font-semibold">Nutrient</th>
+              <th scope="col" className="pl-2 text-right font-semibold">Per-100 g entry</th>
+              <th scope="col" className="pl-2 text-right font-semibold">Scaled to {grams} g</th>
+              <th scope="col" className="pl-2 text-right font-semibold">Per-serving entry ({grams} g)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {OFF_NUTRIENT_MAP.map((m) => {
+              const a = per100.nutrients[m.id], b = serving.nutrients[m.id];
+              return (
+                <tr key={m.id} className={conflicting.has(m.id) ? "font-bold" : ""}>
+                  <th scope="row" className="text-left font-normal">
+                    {m.label}{conflicting.has(m.id) ? <span className="font-bold"> (conflict)</span> : null}
+                  </th>
+                  <td className="whitespace-nowrap pl-2 text-right">{amount(a)}</td>
+                  <td className="whitespace-nowrap pl-2 text-right">{amount({ amount: a.amount === null ? null : (a.amount * grams) / 100, unit: a.unit })}</td>
+                  <td className="whitespace-nowrap pl-2 text-right">{amount(b)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <p className="mt-1">
+          {chosen
+            ? `You chose the ${product.resolutionOptions.find((o) => o.id === chosen)?.label}. The other entry was not used.`
+            : "MoodMeal won't pick, average or correct these values. Check your package and choose the matching entry to continue."}
+        </p>
+      </div>
+    );
+  }
+  if (c.status === "unverifiable")
+    return <p role="note" className="mt-2 rounded-xl bg-amber-100 p-2 text-xs text-amber-900" data-testid="off-consistency">{c.reason} Compare the values with your package.</p>;
+  if (c.status === "consistent")
+    return <p className="mt-2 text-xs text-moodGreen-700" data-testid="off-consistency">Package entries checked: {c.reason.charAt(0).toLowerCase() + c.reason.slice(1)}</p>;
+  return <p className="mt-2 text-xs text-slate-500" data-testid="off-consistency">{c.reason}</p>;
 }
 
 export function OffAttribution({ code }: { code?: string }) {
@@ -66,8 +109,9 @@ export function OffAttribution({ code }: { code?: string }) {
  * Explicit, read-only barcode lookup. A product joins the calculator only
  * after the user reviews the preview and confirms it.
  */
-export default function ProductLookup({ onConfirm }: { onConfirm: (product: OffProduct) => void }) {
+export default function ProductLookup({ onConfirm }: { onConfirm: (product: OffProduct, resolution?: ConflictResolution) => void }) {
   const [barcode, setBarcode] = useState("");
+  const [resolution, setResolution] = useState<ConflictResolution | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [outcome, setOutcome] = useState<LookupOutcome | null>(null);
@@ -76,6 +120,7 @@ export default function ProductLookup({ onConfirm }: { onConfirm: (product: OffP
 
   const lookUp = async () => {
     setNotice(null);
+    setResolution(null);
     const valid = validateBarcode(barcode);
     if ("error" in valid) { setError(valid.error); setOutcome(null); return; }
     setError(null);
@@ -101,8 +146,10 @@ export default function ProductLookup({ onConfirm }: { onConfirm: (product: OffP
     setLoading(false);
   };
 
-  const cancel = () => { requestId.current = (requestId.current ?? 0) + 1; setOutcome(null); setLoading(false); };
+  const cancel = () => { requestId.current = (requestId.current ?? 0) + 1; setOutcome(null); setLoading(false); setResolution(null); };
   const product = outcome?.status === "found" ? outcome.product : null;
+  const conflict = product?.consistency.status === "conflict";
+  const canAdd = !!product && isCalculable(product, resolution ?? undefined);
 
   return (
     <section className="card" aria-labelledby="off-heading">
@@ -158,7 +205,7 @@ export default function ProductLookup({ onConfirm }: { onConfirm: (product: OffP
             <dt className="font-semibold">Nutrition basis</dt><dd>{product.basisLabel}</dd>
             {product.servingLabel && (<><dt className="font-semibold">Serving</dt><dd>{product.servingLabel}</dd></>)}
           </dl>
-          {product.basis !== "none" && (() => {
+          {product.basis !== "none" && !conflict && (() => {
             const table = previewValues(product);
             return (
               <>
@@ -190,16 +237,43 @@ export default function ProductLookup({ onConfirm }: { onConfirm: (product: OffP
               </>
             );
           })()}
-          <ConflictNotice product={product} />
-          <p className={`mt-2 text-xs font-semibold ${isCalculable(product) ? "text-moodGreen-700" : "text-red-700"}`}>{product.calculation}</p>
+          <ConsistencyNotice product={product} />
+          {conflict && (
+            <fieldset className="mt-2 text-xs text-slate-800" data-testid="off-resolution">
+              <legend className="font-semibold">Which entry matches your package?</legend>
+              {product.resolutionOptions.map((o) => (
+                <label key={o.id} className={`mt-1 flex min-h-[44px] items-start gap-2 rounded-xl bg-white p-2 ring-1 ring-slate-200 ${o.available ? "" : "opacity-60"}`}>
+                  <input
+                    type="radio"
+                    name={`off-resolution-${product.code}`}
+                    className="mt-0.5"
+                    disabled={!o.available}
+                    checked={resolution === o.id}
+                    onChange={() => setResolution(o.id)}
+                  />
+                  <span>
+                    <span className="block font-semibold">{o.label}</span>
+                    <span className="block text-slate-600">
+                      {OFF_NUTRIENT_MAP.map((m) => `${m.label} ${amount(o.nutrients[m.id])}`).join(" · ")}
+                      {o.id === "perServing" ? ` (per ${o.servingGrams} g)` : " (per 100 g)"}
+                    </span>
+                    {!o.available && <span className="block text-red-700">{o.unavailableReason}</span>}
+                  </span>
+                </label>
+              ))}
+            </fieldset>
+          )}
+          <p className={`mt-2 text-xs font-semibold ${canAdd ? "text-moodGreen-700" : "text-red-700"}`}>
+            {conflict && resolution ? "You chose an entry. It will be labeled as your choice in the calculation." : product.calculation}
+          </p>
           <AllergenInfo product={product} />
           <div className="mt-2"><OffAttribution code={product.code} /></div>
           <div className="mt-3 flex flex-wrap gap-2">
             <Button
-              disabled={!isCalculable(product)}
-              onClick={() => { onConfirm(product); setOutcome(null); setBarcode(""); }}
+              disabled={!canAdd}
+              onClick={() => { onConfirm(product, resolution ?? undefined); setOutcome(null); setBarcode(""); setResolution(null); }}
             >
-              Add to calculator
+              {conflict ? "Add using chosen entry" : "Add to calculator"}
             </Button>
             <Button variant="ghost" onClick={cancel}>Cancel</Button>
           </div>

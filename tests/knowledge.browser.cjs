@@ -544,14 +544,31 @@ const { zipSync, strToU8 } = require("fflate");
     await lookUp("0810111890373");
     await preview.waitFor();
     const conflictText = await page.getByTestId("off-conflicts").innerText();
-    assert(conflictText.includes("Carbohydrates: 60 g per 100 g would be 61.8 g per 103 g serving, but the per-serving entry says 60 g."), conflictText);
-    assert(!/Protein:/.test(conflictText), "protein differs only within label rounding");
+    assert(conflictText.startsWith("Conflicting source nutrition values."), conflictText);
+    assert(/two packaging entries .*as sold.*per 100 g and one per 103 g serving/s.test(conflictText), conflictText);
+    assert(/Carbohydrates \(conflict\)\s+60 g\s+61\.8 g\s+60 g/.test(conflictText), conflictText);
+    assert(!/Protein \(conflict\)/.test(conflictText), "protein differs only within label rounding");
+    assert.equal(await page.getByTestId("off-values").count(), 0, "aggregated table hidden while entries conflict");
+    // Resolution is required: nothing is chosen automatically.
+    const addChosen = page.getByRole("button", { name: "Add using chosen entry" });
+    assert(await addChosen.isDisabled());
+    for (const width of [320, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `conflict preview overflow ${width}`);
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
     await preview.screenshot({ path: "work/qa-off-conflict-390.png" });
-    await page.getByRole("button", { name: "Add to calculator" }).click();
-    await page.keyboard.type("103");
+    await page.getByRole("radio", { name: /Per-serving entry \(103 g, packaging\)/ }).check();
+    assert(!(await addChosen.isDisabled()));
+    await addChosen.click();
+    await page.keyboard.type("1");
+    const conflictRow = page.getByTestId("calc-row").filter({ hasText: "Mixed-basis Noodles" });
+    assert((await conflictRow.innerText()).includes("you chose the Per-serving entry (103 g, packaging)"));
     const conflictMarkers = await page.getByTestId("calc-conflict").allInnerTexts();
-    assert.deepEqual(conflictMarkers, ["Source values conflict for Mixed-basis Noodles; check the package"]);
-    assert((await page.getByTestId("calc-results").innerText()).includes("Carbohydrates"));
+    assert.deepEqual(conflictMarkers, ["Conflicting source nutrition values: Mixed-basis Noodles (you chose the per-serving entry)"]);
+    await page.getByText("Ingredient weights & calculation").click();
+    const chosenNote = await page.getByTestId("calc-provenance").filter({ hasText: "Mixed-basis Noodles" }).innerText();
+    assert(chosenNote.includes("You chose the Per-serving entry (103 g, packaging). The other entry was not used."), chosenNote);
     await page.getByRole("button", { name: "Remove Mixed-basis Noodles" }).click();
     assert.equal(await page.getByTestId("calc-conflict").count(), 0);
     // Liquid recorded per 100 ml: explained and not addable.

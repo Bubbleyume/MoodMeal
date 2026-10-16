@@ -1,5 +1,36 @@
 # MoodMeal AI Handoff
 
+## Open Food Facts nutrition-basis conflict detection with required resolution (Claude Code, 2026-10-16)
+
+Started at bd1a52b, equal to origin. The user's brief named 1ef2f8b, but bd1a52b already had a v3.5 mapper with a display-only conflict check; this work builds on it.
+
+New adapter, `src/lib/offNutritionAdapter.ts` (testable on its own):
+- `adaptNutrition` normalizes sets and records schema issues.
+- `readEntry` / `readMapped` handle units, modifiers and estimates, and keep each value's declared precision from `value_string`.
+- `checkConsistency` returns one of consistent, conflict, not-comparable or unverifiable.
+
+Comparison rules:
+- A per-100 g set is compared only with a per-serving set that has the same source and preparation and a gram weight.
+- Estimate sets and ml servings are never compared.
+- Tolerance on each side is the larger of half the US label rounding step and the declared precision, so identical rounded values aren't flagged.
+
+When a conflict is found:
+- The preview shows "Conflicting source nutrition values." with both entries side by side, and the product can't be added until the user explicitly chooses an entry.
+- Choosing the per-serving entry offers servings only. Choosing the per-100 g entry offers grams and the serving, and needs weight evidence.
+- For volume products neither entry can be chosen.
+- `productFood(p, resolution)` uses the food ID `off:<code>:<choice>`. The choice is labelled on the row, in the results and in the details.
+- Nothing is picked, averaged or corrected automatically.
+
+Other:
+- Unverifiable schemas show an amber note rather than skipping the check.
+- Consistent and single-entry records behave as before. USDA, catalog and FatSecret are unchanged.
+- Docs: the "Nutrition-basis conflict detection" section in `docs/OPEN-FOOD-FACTS.md`.
+
+Validation:
+- 46 knowledge tests pass, with 3 new synthetic adapter, consistency and resolution tests.
+- Typecheck, avatar tests, 14 USDA tests, 22 FatSecret tests, the build, and the browser suite (required-choice flow, overflow at 320/390/1440 px, emulation only) pass.
+- No live requests. The saved real noodles response was rerun offline: conflict on carbohydrates; one pack is 360 kcal / 12 / 60 / 8 / 1 / 7 g with the per-serving entry, and 12.36 / 61.8 g … with the per-100 g entry.
+
 ## Open Food Facts mapper on API v3.5, with conflict check (Claude Code, 2026-10-16)
 
 Started at 1ef2f8b, equal to origin.
