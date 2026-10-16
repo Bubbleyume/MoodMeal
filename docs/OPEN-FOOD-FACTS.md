@@ -4,49 +4,67 @@ Added 2026-10-15. Code: `src/lib/openFoodFacts.ts`, `src/components/ProductLooku
 
 ## What it does
 
-- **Lookup:** one explicit, read-only request per barcode button press: `GET https://world.openfoodfacts.org/api/v3/product/{barcode}?fields=…`. There is no camera scanning, no account, and nothing is ever written to Open Food Facts.
-- **Barcodes:** EAN-8, UPC-A (12), EAN-13 and GTIN-14, with the GS1 check digit verified. The code is kept as a string, so leading zeros are preserved. Spaces and hyphens are ignored.
+- **Lookup:** one explicit, read-only request per barcode button press: `GET https://world.openfoodfacts.org/api/v3.5/product/{barcode}?fields=…`. This uses API v3.5 since 2026-10-16; it was v3 before. There is no camera scanning, no account, and nothing is ever written to Open Food Facts.
+- **Barcodes:** EAN-8, UPC-A (12), EAN-13 and GTIN-14, with the GS1 check digit verified. The code is kept as a string, so leading zeros are preserved. Spaces and hyphens are ignored. Open Food Facts may normalize a code (for example, adding a leading zero to a UPC-A); MoodMeal shows the server's code.
 - **Lookup states:**
   - loading, product found, not found (HTTP 404 or `result.id = product_not_found`);
   - timeout (10 s), network error;
   - rate limited (HTTP 429/503), other HTTP error, or unexpected response.
 
   A lookup is never retried automatically.
-- **Preview:** shows name, brand, barcode, package size, nutrition basis, serving (when known), label values, ingredients, allergens and traces, a link to the product page, and attribution. A product joins the calculator only after the user presses **Add to calculator**.
+- **Preview:** shows name, brand, barcode, package size, nutrition basis, serving (when known), and the Open Food Facts values. The values appear per 100 g, plus a scaled per-serving column when a gram serving is known. It also shows any conflict warning, ingredients, allergens and traces, a link to the product page, and attribution. A product joins the calculator only after the user presses **Add to calculator**.
 - **Labelling:** product rows say "Open Food Facts product data". Results say "Estimate from mixed sources" when USDA foods and products are combined, or "Estimate from Open Food Facts product data" when only products are used. Each ingredient's provenance appears in the expandable calculation details.
 - **Nothing is stored:** lookups, the session cache and calculator inputs live in memory only. No localStorage key is added, and products are never approved, published or added to the USDA list (still 17 foods) or to recipes.
 
-## Nutrition rules
+## Nutrition rules (v3.5 `nutrition` schema)
 
-- **Grams:** allowed only when nutrition is recorded per 100 g **and** the product is sold by weight.
-  - Open Food Facts' `_100g` fields can actually be per 100 ml for liquids. For example, a 1.5 L water on staging had `nutrition_data_per: "100g"` with `product_quantity_unit: "ml"`.
-  - Volume units (ml, cl, dl, l, fl oz) on the product or the serving, or `nutrition_data_per: "100ml"`, mark the product per 100 ml. Those products are not calculable, and no density is assumed.
-  - If the unit is unknown, the basis is "unclear" and the product is not calculable.
+- **Source of values:** values come from `nutrition.aggregated_set`. Each nutrient there has `value`, `unit`, `source`, `source_per` and an optional `modifier`, and the set's `per` (100g / 100ml / serving) is explicit.
+  - The legacy v3 `nutriments` fields are not requested or read; v3.5 no longer returns them.
+  - The v3.5 top-level `nutrition_data_per` can disagree with the aggregated set, so it isn't used.
+- **Grams:** allowed only when the aggregated set is per 100 g **and** the product is sold by weight.
+  - Volume units (ml, cl, dl, l, fl oz) on the product or the serving, or `per: "100ml"`, mark the product per 100 ml. Those products are not calculable, and no density is assumed. Older records can still carry per-100 g values for liquids: a 1.5 L water on staging had nutrition "per 100 g" with `product_quantity_unit: "ml"`.
+  - If the product's unit is unknown, the basis is "unclear" and the product is not calculable.
 - **Product serving:** offered only with an explicit gram weight: `serving_quantity` with `serving_quantity_unit: "g"`, or a `serving_size` that states the same grams. Never from ml.
 - **Per-serving products:** labels that give nutrition per serving can be added only by the serving, and only with a gram weight. The result equals servings × label values.
-- **Explicit mapping:**
+- **Explicit mapping** (first usable key wins):
 
-  | Calculator nutrient | Open Food Facts field |
+  | Calculator nutrient | Open Food Facts v3.5 key(s) |
   |---|---|
-  | Calories | `energy-kcal`, in kcal |
-  | Protein | `proteins`, in g |
-  | Carbohydrates | `carbohydrates`, in g |
-  | Fat | `fat`, in g |
-  | Fiber | `fiber`, in g |
-  | Total sugars | `sugars`, in g |
+  | Calories | `energy-kcal`, then `energy-kj`, then `energy` |
+  | Protein | `proteins` |
+  | Carbohydrates | `carbohydrates-total` (includes fiber), then `carbohydrates` |
+  | Fat | `fat` |
+  | Fiber | `fiber` |
+  | Total sugars | `sugars` |
 
-  The `_100g` / `_serving` values are in these standard units.
-- **Energy:** if kcal is missing, `energy-kj` (or `energy`, which is kJ) is converted at 1 kcal = 4.184 kJ, and the conversion is noted.
+- **Units** are converted explicitly from each entry's `unit`: g as is, mg ÷ 1000, µg ÷ 1,000,000, kcal as is, kJ ÷ 4.184 (the conversion is noted). Any other unit is refused (null, with the reason shown).
 - **Missing values:** missing keys stay null and the nutrient is labelled "Not recorded". Recorded zeros stay zero.
 - **Inexact values:** values with a modifier (`<`, `~`, …) and non-numeric values become null, with the reason shown.
-- **Estimates ignored:** `nutriments_estimated`, which OFF returns alongside the data, is never used.
+- **Estimates ignored:** entries whose `source` is `estimate` (computed from ingredients, not from the package) are never used. A per-100 g value that Open Food Facts converted from a per-serving entry (`source_per: "serving"`) is accepted as given.
 - **Incomplete totals:** any null makes that nutrient's total Unknown, with "Incomplete: no recorded value for …".
-- **Carbohydrates:** these follow each product's label, and some labels exclude fiber. A note says they may not match USDA "carbohydrate, by difference".
+- **Carbohydrates:** `carbohydrates-total` is labelled "Total carbohydrate, including fiber", which matches USDA "carbohydrate, by difference". Plain `carbohydrates` follows the product label, and a note says some labels exclude fiber.
 - **Allergens:**
   - Recorded allergens and traces are listed.
   - An empty or missing list reads "Not recorded. This does not mean the product is free of them."
   - `en:none` reads "None recorded … Always check the package."
 - **Safe rendering:** API text is rendered as plain React text (never as HTML) and truncated. Product links are built from the barcode, never taken from API URLs.
+
+## Conflict check (shown, never corrected)
+
+`findConflicts` compares the record's `nutrition.input_sets` as contributors entered them. It uses a packaging or manufacturer set per 100 g and a per-serving set with a gram weight, both "as sold". For each mapped nutrient, the per-100 g value scaled to the serving weight is compared with the per-serving value.
+
+- **Tolerance:** a nutrient is flagged only when the difference is larger than both labels' rounding could explain. Half of the US label rounding step (21 CFR 101.9) is allowed for each value:
+  - calories: 5 kcal (2.5 kcal at or below 50 kcal);
+  - fat: 0.25 g below 5 g, otherwise 0.5 g;
+  - other nutrients: 0.5 g.
+- **Energy** is compared in kcal, with kJ converted at 4.184.
+- **Not compared:** sets per ml, estimate sets, and prepared-product sets.
+- **Where it shows:**
+  - a red notice in the preview, for example "Carbohydrates: 60 g per 100 g would be 61.8 g per 103 g serving, but the per-serving entry says 60 g";
+  - a sentence in the ingredient row's note;
+  - an amber "Source values conflict for … ; check the package" line under the affected nutrient in the results;
+  - the notice again in the calculation details.
+- **Values are not changed:** the calculation still uses the aggregated per-100 g values as recorded. The check is general; no product is special-cased.
 
 ## Licensing and API terms (reviewed 2026-10-15)
 
@@ -102,6 +120,4 @@ Evidence, from 4 read-only requests, with responses kept only in the local scrat
 - When a gram serving is recorded, the table adds a **Per serving (N g)** column scaled from the per-100 g values, so users can compare directly with a per-serving package label. For this record it shows 360 kcal, 12.36 g protein and 61.8 g carbs per pack, which makes the mismatch visible.
 - A note asks users to compare with their package and states that records are shown as recorded and not corrected.
 
-**Not done, and why:**
-- **Automatic consistency detection** would need the v3.5 `nutrition.input_sets`. The v3 endpoint doesn't return them, and v3.5 no longer returns the legacy `nutriments` the mapper uses. Detection therefore needs a mapper migration to the v3.5 schema, which is a separate, larger change.
-- **The source record was not edited.** MoodMeal never writes to Open Food Facts. The data can be corrected on openfoodfacts.org by a contributor.
+**Follow-up done (2026-10-16):** the mapper now uses API v3.5 (`nutrition.aggregated_set`) and checks the input sets for conflicts. This record flags **carbohydrates**: 60 g per 100 g would be 61.8 g per 103 g, but the per-serving entry says 60 g. Protein, fat, fiber, sugars and calories match their per-serving entries within label rounding, so they aren't flagged, although they were also copied. Calculated values are unchanged and are not corrected. The source record was not edited: MoodMeal never writes to Open Food Facts, and a contributor can correct it on openfoodfacts.org.

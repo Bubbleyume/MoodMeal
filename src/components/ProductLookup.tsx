@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import Button from "./Button";
 import {
-  OFF_ATTRIBUTION, createLookupLimiter, isCalculable, lookupProduct, previewValues, validateBarcode,
+  OFF_ATTRIBUTION, createLookupLimiter, describeConflict, isCalculable, lookupProduct, previewValues, validateBarcode,
   type LookupOutcome, type OffProduct,
 } from "../lib/openFoodFacts";
 
@@ -29,6 +29,22 @@ export function AllergenInfo({ product }: { product: OffProduct }) {
       {list(product.traces, "May contain (traces)", "None recorded by Open Food Facts. Always check the package.")}
       <p className="mt-1">
         <strong>Ingredients:</strong> {product.ingredientsText ?? "Not recorded."}
+      </p>
+    </div>
+  );
+}
+
+/** Conflicting package entries in the source record: shown as recorded, never corrected. */
+export function ConflictNotice({ product }: { product: OffProduct }) {
+  if (!product.conflicts.length) return null;
+  return (
+    <div role="note" className="mt-2 rounded-xl bg-red-50 p-2 text-xs text-red-800 ring-1 ring-red-200" data-testid="off-conflicts">
+      <p className="font-bold">This Open Food Facts record has conflicting values.</p>
+      <ul className="mt-1 list-disc space-y-1 pl-4">
+        {product.conflicts.map((c) => <li key={c.id}>{describeConflict(c)}</li>)}
+      </ul>
+      <p className="mt-1">
+        Check your package. MoodMeal calculates from the per-100 g values as recorded and does not correct them.
       </p>
     </div>
   );
@@ -174,6 +190,7 @@ export default function ProductLookup({ onConfirm }: { onConfirm: (product: OffP
               </>
             );
           })()}
+          <ConflictNotice product={product} />
           <p className={`mt-2 text-xs font-semibold ${isCalculable(product) ? "text-moodGreen-700" : "text-red-700"}`}>{product.calculation}</p>
           <AllergenInfo product={product} />
           <div className="mt-2"><OffAttribution code={product.code} /></div>

@@ -1,5 +1,28 @@
 # MoodMeal AI Handoff
 
+## Open Food Facts mapper on API v3.5, with conflict check (Claude Code, 2026-10-16)
+
+Started at 1ef2f8b, equal to origin.
+
+Mapper changes (`src/lib/openFoodFacts.ts`):
+- Lookups use `/api/v3.5/product/{code}` with `fields=…,nutrition` and read `nutrition.aggregated_set`. The legacy `nutriments` and the top-level `nutrition_data_per` are no longer read.
+- All existing rules are kept: grams only for per-100 g products sold by weight, no ml→g conversion, a product serving only with an explicit gram weight, null for missing values, zeros kept, modifiers excluded.
+- Units are converted explicitly per entry (g/mg/µg; kcal/kJ at 4.184); other units are refused.
+- Values from `source: "estimate"` are excluded.
+- Carbohydrates prefer `carbohydrates-total` (which includes fiber).
+
+Conflict check:
+- `findConflicts` compares the as-sold packaging input sets (per 100 g vs per serving with a gram weight).
+- It flags only differences beyond half the US label rounding step on each side.
+- Conflicts appear in the preview (`ConflictNotice`), the ingredient row's note, a per-nutrient "Source values conflict" marker in the results, and the calculation details.
+- Values are never corrected, and no product is special-cased.
+- The investigated noodles record (0810111890373) flags carbohydrates only; its other copied values fall within rounding.
+
+Validation:
+- 44 knowledge tests pass. The mocked v3.5 fixtures replace the legacy ones and cover units, estimates, carbohydrates-total, legacy fields ignored, and the conflict cases (rounding edges, kJ, ml/estimate/prepared sets).
+- Typecheck, avatar tests, 14 USDA tests, 22 FatSecret tests, the build, and the browser suite (v3.5 mock routes plus a conflict flow) pass. Mobile was checked by emulation only.
+- Live: 1 v3.5 read (Nutella) matched the earlier v3 values with no false conflict. The noodles record was verified offline from the saved v3.5 response.
+
 ## Open Food Facts discrepancy investigation (Claude Code, 2026-10-16)
 
 Started at cbdc99a, equal to origin. Barcode 810111890373 (normalized by OFF to 0810111890373) is Momofuku Sesame Miso Noodles.

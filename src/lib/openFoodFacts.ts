@@ -4,8 +4,10 @@
  * only: it is never approved, stored or added to MoodMeal's catalog, and
  * nothing is ever written to Open Food Facts.
  *
- * API: GET {base}/api/v3/product/{barcode}?fields=… (read requests need no
- * account). Limit: 15 product reads per minute per IP, so lookups only run
+ * API: GET {base}/api/v3.5/product/{barcode}?fields=… (read requests need no
+ * account). v3.5 returns nutrition as `nutrition.aggregated_set` (explicit
+ * per 100 g / 100 ml / serving, value, unit, source, modifier) plus the
+ * `input_sets` exactly as contributors entered them. Limit: 15 product reads per minute per IP, so lookups only run
  * on an explicit button press and a client-side limiter stays well below
  * that. Browsers cannot set User-Agent, so the app identifies itself with
  * the X-User-Agent header that OFF's CORS policy allows.
@@ -24,8 +26,8 @@ export const OFF_ATTRIBUTION =
 
 const FIELDS = [
   "code", "product_name", "brands", "quantity", "product_quantity", "product_quantity_unit",
-  "serving_size", "serving_quantity", "serving_quantity_unit", "nutrition_data_per",
-  "no_nutrition_data", "nutriments", "ingredients_text", "allergens_tags", "traces_tags",
+  "serving_size", "serving_quantity", "serving_quantity_unit",
+  "no_nutrition_data", "nutrition", "ingredients_text", "allergens_tags", "traces_tags",
 ];
 
 // ---------------------------------------------------------------- barcodes
@@ -83,7 +85,7 @@ export async function lookupProduct(
   const fetchImpl = options.fetchImpl ?? (globalThis.fetch as unknown as FetchLike);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? OFF_TIMEOUT_MS);
-  const url = `${options.baseUrl ?? OFF_BASE_URL}/api/v3/product/${encodeURIComponent(code)}?fields=${FIELDS.join(",")}`;
+  const url = `${options.baseUrl ?? OFF_BASE_URL}/api/v3.5/product/${encodeURIComponent(code)}?fields=${FIELDS.join(",")}`;
   try {
     const res = await fetchImpl(url, {
       headers: { Accept: "application/json", "X-User-Agent": OFF_APP_ID },
@@ -134,14 +136,18 @@ export function createLookupLimiter({ maxPerMinute = 10, minIntervalMs = 3000 } 
 
 export type NutritionBasis = "per100g" | "perServing" | "per100ml" | "unclear" | "none";
 
-/** Explicit mapping from OFF nutriment keys to the calculator's nutrients. */
+/**
+ * Explicit mapping from OFF v3.5 nutrient keys to the calculator's nutrients.
+ * Carbohydrates prefer "carbohydrates-total" (includes fiber, like USDA
+ * "carbohydrate, by difference"), falling back to the label "carbohydrates".
+ */
 export const OFF_NUTRIENT_MAP = [
-  { id: "1008", label: "Calories", offKey: "energy-kcal", unit: "KCAL" },
-  { id: "1003", label: "Protein", offKey: "proteins", unit: "G" },
-  { id: "1005", label: "Carbohydrates", offKey: "carbohydrates", unit: "G" },
-  { id: "1004", label: "Fat", offKey: "fat", unit: "G" },
-  { id: "1079", label: "Fiber", offKey: "fiber", unit: "G" },
-  { id: "2000", label: "Total sugars", offKey: "sugars", unit: "G" },
+  { id: "1008", label: "Calories", offKeys: ["energy-kcal", "energy-kj", "energy"], unit: "KCAL" },
+  { id: "1003", label: "Protein", offKeys: ["proteins"], unit: "G" },
+  { id: "1005", label: "Carbohydrates", offKeys: ["carbohydrates-total", "carbohydrates"], unit: "G" },
+  { id: "1004", label: "Fat", offKeys: ["fat"], unit: "G" },
+  { id: "1079", label: "Fiber", offKeys: ["fiber"], unit: "G" },
+  { id: "2000", label: "Total sugars", offKeys: ["sugars"], unit: "G" },
 ] as const;
 
 export const KJ_PER_KCAL = 4.184;
@@ -152,6 +158,18 @@ export interface OffNutrient {
   unit: "KCAL" | "G";
   /** Why the amount is unknown, or how it was derived. */
   note?: string;
+}
+
+/** A nutrient whose per-100 g and per-serving package entries disagree beyond label rounding. */
+export interface OffConflict {
+  id: string;
+  label: string;
+  unit: "KCAL" | "G";
+  per100g: number;
+  perServing: number;
+  servingGrams: number;
+  /** The per-100 g entry scaled to the serving weight. */
+  expectedPerServing: number;
 }
 
 export interface OffProduct {
@@ -166,12 +184,31 @@ export interface OffProduct {
   servingGrams: number | null;
   servingLabel: string | null;
   nutrients: Record<string, OffNutrient>;
+  /** Conflicting package entries in the source record (shown, never corrected). */
+  conflicts: OffConflict[];
   notes: string[];
   ingredientsText: string | null;
   allergens: string[] | "none" | null;
   traces: string[] | "none" | null;
   url: string;
   retrievedAt: string;
+}
+
+/** One OFF v3.5 nutrient entry: value, unit, optional modifier and source. */
+interface V35Nutrient {
+  value?: unknown;
+  unit?: unknown;
+  modifier?: unknown;
+  source?: unknown;
+  source_per?: unknown;
+}
+interface V35Set {
+  per?: unknown;
+  per_quantity?: unknown;
+  per_unit?: unknown;
+  preparation?: unknown;
+  source?: unknown;
+  nutrients?: Record<string, V35Nutrient>;
 }
 
 const VOLUME = /^(ml|cl|dl|l|fl ?oz|fl\. ?oz)$/i;
@@ -192,23 +229,70 @@ const num = (v: unknown): number | null => {
   const n = typeof v === "number" ? v : typeof v === "string" && /^\s*\d+(\.\d+)?\s*$/.test(v) ? Number(v) : NaN;
   return Number.isFinite(n) && n >= 0 ? n : null;
 };
+const obj = <T>(v: unknown): T | null => (v && typeof v === "object" && !Array.isArray(v) ? (v as T) : null);
 
-function determineBasis(p: Record<string, unknown>): { basis: NutritionBasis; reason: string } {
+/** Converts a value in an OFF unit to the calculator unit, or null when the unit isn't supported. */
+function toStandard(value: number, unit: string, target: "KCAL" | "G"): { amount: number; converted?: string } | null {
+  const u = unit.trim();
+  if (target === "KCAL") {
+    if (/^kcal$/i.test(u)) return { amount: value };
+    if (/^kj$/i.test(u)) return { amount: value / KJ_PER_KCAL, converted: `Converted from ${value} kJ (1 kcal = ${KJ_PER_KCAL} kJ).` };
+    return null;
+  }
+  if (u === "g") return { amount: value };
+  if (u === "mg") return { amount: value / 1000 };
+  if (u === "µg" || u === "μg" || u === "mcg") return { amount: value / 1e6 };
+  return null;
+}
+
+/** Reads one nutrient entry exactly; estimates, modifiers and unknown units are not used. */
+function readEntry(entry: V35Nutrient | undefined, target: "KCAL" | "G"): OffNutrient | null {
+  if (!entry) return null;
+  if (entry.value === undefined || entry.value === null || entry.value === "") return null;
+  if (entry.source === "estimate")
+    return { amount: null, unit: target, note: "Only an Open Food Facts estimate is available (not from the package); not used." };
+  const value = num(entry.value);
+  if (value === null) return { amount: null, unit: target, note: "Recorded value isn't a valid number." };
+  const modifier = text(entry.modifier, 4);
+  if (modifier) return { amount: null, unit: target, note: `Recorded as "${modifier} ${value}", not an exact amount.` };
+  const unit = text(entry.unit, 10);
+  const std = unit ? toStandard(value, unit, target) : null;
+  if (!std) return { amount: null, unit: target, note: `Unit "${unit ?? "missing"}" can't be converted safely.` };
+  return { amount: std.amount, unit: target, ...(std.converted ? { note: std.converted } : {}) };
+}
+
+/** First usable key for a mapped nutrient, in the map's order of preference. */
+function readMapped(nutrients: Record<string, V35Nutrient>, m: (typeof OFF_NUTRIENT_MAP)[number]): OffNutrient {
+  let firstProblem: OffNutrient | null = null;
+  for (const key of m.offKeys) {
+    const n = readEntry(nutrients[key], m.unit);
+    if (n && n.amount !== null) {
+      if (m.id === "1005" && key === "carbohydrates-total") return { ...n, note: "Total carbohydrate, including fiber." };
+      return n;
+    }
+    firstProblem ??= n;
+  }
+  return firstProblem ?? { amount: null, unit: m.unit, note: "Not recorded by Open Food Facts." };
+}
+
+function determineBasis(p: Record<string, unknown>, agg: V35Set | null): { basis: NutritionBasis; reason: string } {
   const productUnit = text(p.product_quantity_unit, 20) ?? "";
   const servingUnit = text(p.serving_quantity_unit, 20) ?? "";
   const quantity = text(p.quantity) ?? "";
   const isVolume = VOLUME.test(productUnit) || VOLUME.test(servingUnit)
     || /\d\s*(ml|cl|dl|l|fl\.? ?oz)\b/i.test(quantity);
   const isMass = !isVolume && (MASS.test(productUnit) || /\d\s*(g|kg)\b/i.test(quantity));
-  const per = text(p.nutrition_data_per, 20);
+  const per = text(agg?.per, 20);
   if (p.no_nutrition_data === "on")
     return { basis: "none", reason: "Open Food Facts records that this product's label has no nutrition facts." };
+  if (!agg || !obj(agg.nutrients) || !Object.keys(agg.nutrients!).length)
+    return { basis: "none", reason: "Open Food Facts has no nutrition values for this product." };
   if (per === "100ml" || (isVolume && (per === "100g" || per === "serving")))
     return { basis: "per100ml", reason: "Nutrition is recorded per 100 ml (a liquid). MoodMeal does not convert milliliters to grams, because that needs the product's density." };
   if (per === "100g" && isMass) return { basis: "per100g", reason: "Nutrition is recorded per 100 g and the product is sold by weight." };
   if (per === "serving") return { basis: "perServing", reason: "Nutrition is recorded per serving." };
   if (per === "100g")
-    return { basis: "unclear", reason: "Open Food Facts lists nutrition per 100 g or 100 ml, and this product's unit (weight or volume) isn't recorded, so the basis can't be confirmed." };
+    return { basis: "unclear", reason: "Nutrition is listed per 100 g, but the product's weight or volume unit isn't recorded, so MoodMeal can't confirm it isn't a liquid." };
   return { basis: "unclear", reason: "The nutrition basis (per 100 g, per 100 ml or per serving) isn't recorded." };
 }
 
@@ -224,38 +308,66 @@ function servingGrams(p: Record<string, unknown>): number | null {
   return !unit && stated && Number(stated[1]) === amount ? amount : null;
 }
 
-export function mapProduct(p: Record<string, unknown>, requestedCode: string, retrievedAt: Date): OffProduct {
-  const code = text(p.code, 20) && /^\d+$/.test(String(p.code)) ? String(p.code) : requestedCode;
-  const { basis, reason } = determineBasis(p);
-  const grams = servingGrams(p);
-  const nutriments = (p.nutriments && typeof p.nutriments === "object" ? p.nutriments : {}) as Record<string, unknown>;
-  const suffix = basis === "perServing" ? "_serving" : "_100g";
-  const notes: string[] = [];
-  const read = (key: string): OffNutrient | null => {
-    const modifier = text(nutriments[`${key}_modifier`], 4);
-    const raw = nutriments[`${key}${suffix}`];
-    if (raw === undefined || raw === null || raw === "") return null;
-    const value = num(raw);
-    if (value === null) return { amount: null, unit: "G", note: "Recorded value isn't a valid number." };
-    if (modifier) return { amount: null, unit: "G", note: `Recorded as "${modifier} ${value}", not an exact amount.` };
-    return { amount: value, unit: "G" };
-  };
-  const nutrients: Record<string, OffNutrient> = {};
+/** "30 g", or "1 bowl (30 g)" when the label wording doesn't already state the grams. */
+function servingText(size: string | null, grams: number) {
+  if (!size) return `${grams} g`;
+  const stated = size.match(/(\d+(?:\.\d+)?)\s*g\b/i);
+  return stated && Number(stated[1]) === grams ? size : `${size} (${grams} g)`;
+}
+
+/**
+ * Half of the US label rounding step for a value (21 CFR 101.9): calories
+ * to 5 or 10 kcal; fat to 0.5 g below 5 g, otherwise 1 g; other grams to 1 g.
+ */
+function halfRoundingStep(unit: "KCAL" | "G", id: string, value: number): number {
+  if (unit === "KCAL") return value > 50 ? 5 : 2.5;
+  if (id === "1004" && value < 5) return 0.25;
+  return 0.5;
+}
+
+/**
+ * Compares the source record's package entries: a per-100 g set and a
+ * per-serving set with a gram weight (as sold). A nutrient conflicts when the
+ * per-100 g value, scaled to the serving, differs from the per-serving value
+ * by more than both labels' rounding could explain. Values are not changed.
+ */
+export function findConflicts(nutrition: unknown): OffConflict[] {
+  const sets = (obj<{ input_sets?: unknown }>(nutrition)?.input_sets ?? []) as V35Set[];
+  if (!Array.isArray(sets)) return [];
+  const label = (s: V35Set) => (s.source === "packaging" || s.source === "manufacturer") && (s.preparation ?? "as_sold") === "as_sold";
+  const per100 = sets.find((s) => obj(s) && label(s) && s.per === "100g" && (s.per_unit ?? "g") === "g");
+  const serving = sets.find((s) => obj(s) && label(s) && s.per === "serving" && s.per_unit === "g" && (num(s.per_quantity) ?? 0) > 0);
+  if (!per100?.nutrients || !serving?.nutrients) return [];
+  const grams = num(serving.per_quantity)!;
+  const conflicts: OffConflict[] = [];
   for (const m of OFF_NUTRIENT_MAP) {
-    if (m.id === "1008") {
-      const kcal = read("energy-kcal");
-      if (kcal) { nutrients[m.id] = { ...kcal, unit: "KCAL" }; continue; }
-      // _100g / _serving energy values are in kJ for "energy-kj" and "energy".
-      const kj = read("energy-kj") ?? read("energy");
-      nutrients[m.id] = kj && kj.amount !== null
-        ? { amount: kj.amount / KJ_PER_KCAL, unit: "KCAL", note: `Converted from ${kj.amount} kJ (1 kcal = ${KJ_PER_KCAL} kJ).` }
-        : { amount: null, unit: "KCAL", note: kj?.note ?? "Not recorded by Open Food Facts." };
-      continue;
+    for (const key of m.offKeys) {
+      const a = readEntry(per100.nutrients[key], m.unit);
+      const b = readEntry(serving.nutrients[key], m.unit);
+      if (!a || !b || a.amount === null || b.amount === null) continue;
+      const expected = (a.amount * grams) / 100;
+      const tolerance = halfRoundingStep(m.unit, m.id, b.amount) + (halfRoundingStep(m.unit, m.id, a.amount) * grams) / 100;
+      if (Math.abs(expected - b.amount) > tolerance + 1e-9)
+        conflicts.push({ id: m.id, label: m.label, unit: m.unit, per100g: a.amount, perServing: b.amount, servingGrams: grams, expectedPerServing: expected });
+      break;
     }
-    nutrients[m.id] = read(m.offKey) ?? { amount: null, unit: "G", note: "Not recorded by Open Food Facts." };
   }
+  return conflicts;
+}
+
+export function mapProduct(p: Record<string, unknown>, requestedCode: string, retrievedAt: Date): OffProduct {
+  const code = typeof p.code === "string" && /^\d{8,14}$/.test(p.code) ? p.code : requestedCode;
+  const nutrition = obj<{ aggregated_set?: unknown }>(p.nutrition);
+  const agg = obj<V35Set>(nutrition?.aggregated_set);
+  const { basis, reason } = determineBasis(p, agg);
+  const grams = servingGrams(p);
+  const aggNutrients = obj<Record<string, V35Nutrient>>(agg?.nutrients) ?? {};
+  const nutrients: Record<string, OffNutrient> = {};
+  for (const m of OFF_NUTRIENT_MAP) nutrients[m.id] = readMapped(aggNutrients, m);
+  const notes: string[] = [];
   if (nutrients["1008"].note?.startsWith("Converted")) notes.push("Calories were converted from kilojoules.");
-  notes.push("Carbohydrates follow the product label. Some labels exclude fiber, so they may not match USDA \"carbohydrate, by difference\".");
+  if (nutrients["1005"].note !== "Total carbohydrate, including fiber.")
+    notes.push("Carbohydrates follow the product label. Some labels exclude fiber, so they may not match USDA \"carbohydrate, by difference\".");
 
   let calculation: string;
   if (basis === "per100g") calculation = grams ? "Can be calculated by grams or by product serving." : "Can be calculated by grams. Product servings aren't offered because no serving weight in grams is recorded.";
@@ -273,6 +385,7 @@ export function mapProduct(p: Record<string, unknown>, requestedCode: string, re
     servingGrams: grams,
     servingLabel: grams ? servingText(text(p.serving_size, 60), grams) : null,
     nutrients,
+    conflicts: findConflicts(nutrition),
     notes,
     ingredientsText: text(p.ingredients_text, 800),
     allergens: tags(p.allergens_tags),
@@ -282,11 +395,10 @@ export function mapProduct(p: Record<string, unknown>, requestedCode: string, re
   };
 }
 
-/** "30 g", or "1 bowl (30 g)" when the label wording doesn't already state the grams. */
-function servingText(size: string | null, grams: number) {
-  if (!size) return `${grams} g`;
-  const stated = size.match(/(\d+(?:\.\d+)?)\s*g\b/i);
-  return stated && Number(stated[1]) === grams ? size : `${size} (${grams} g)`;
+/** Plain-language summary of one conflict, e.g. for the preview and calculation details. */
+export function describeConflict(c: OffConflict): string {
+  const f = (v: number) => (c.unit === "KCAL" ? `${Number(v.toFixed(0))} kcal` : `${Number(v.toFixed(2))} g`);
+  return `${c.label}: ${f(c.per100g)} per 100 g would be ${f(c.expectedPerServing)} per ${c.servingGrams} g serving, but the per-serving entry says ${f(c.perServing)}.`;
 }
 
 /**

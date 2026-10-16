@@ -447,20 +447,31 @@ const { zipSync, strToU8 } = require("fflate");
     assert.equal(await page.evaluate(() => JSON.stringify(Object.keys(localStorage).sort())), storageBefore);
     // Open Food Facts barcode lookup (all responses mocked; no live requests).
     const offRequests = [];
+    // v3.5 nutrition: aggregated set plus input sets as entered.
+    const offNut = (m) => Object.fromEntries(Object.entries(m).map(([k, v]) => [k, { value: v, unit: k === "energy-kcal" ? "kcal" : "g", source: "packaging" }]));
+    const offSet = (per, perQuantity, m) => ({ per, per_quantity: perQuantity, per_unit: "g", preparation: "as_sold", source: "packaging", nutrients: offNut(m) });
+    const offNutrition = (per, m, sets) => ({ aggregated_set: { per, preparation: "as_sold", nutrients: offNut(m) }, input_sets: sets ?? [offSet(per, 100, m)] });
     const offProduct = (extra) => ({
       code: "0012345678905", product_name: "Test Granola", brands: "Example Co", quantity: "400 g",
-      product_quantity: 400, product_quantity_unit: "g", nutrition_data_per: "100g",
+      product_quantity: 400, product_quantity_unit: "g",
       serving_quantity: 30, serving_quantity_unit: "g", serving_size: "30 g",
-      nutriments: { "energy-kcal_100g": 400, proteins_100g: 10, carbohydrates_100g: 60, fat_100g: 12, fiber_100g: 0 },
+      nutrition: offNutrition("100g", { "energy-kcal": 400, proteins: 10, carbohydrates: 60, fat: 12, fiber: 0 }),
       allergens_tags: ["en:milk"], ingredients_text: "Oats, <script>alert(1)</script> honey", ...extra,
     });
-    await page.route("**/api/v3/product/**", async (route) => {
+    const mixedPer100 = { "energy-kcal": 360 / 103 * 100, proteins: 12, carbohydrates: 60, fat: 8, fiber: 1, sugars: 7 };
+    const mixedPerPack = { "energy-kcal": 360, proteins: 12, carbohydrates: 60, fat: 8, fiber: 1, sugars: 7 };
+    await page.route("**/api/v3.5/product/**", async (route) => {
       const url = route.request().url();
       offRequests.push({ url, ua: route.request().headers()["x-user-agent"] });
       const code = url.match(/product\/(\d+)/)[1];
       const json = (status, body, headers = {}) => route.fulfill({ status, contentType: "application/json", headers: { "Access-Control-Allow-Origin": "*", ...headers }, body: JSON.stringify(body) });
       if (code === "0012345678905") return json(200, { status: "success", result: { id: "product_found" }, product: offProduct() });
       if (code === "96385074") return json(200, { status: "success", result: { id: "product_found" }, product: offProduct({ code: "96385074", product_name: "Test Juice", quantity: "1 L", product_quantity_unit: "ml", serving_quantity: 250, serving_quantity_unit: "ml", serving_size: "250 ml" }) });
+      if (code === "0810111890373") return json(200, { status: "success", result: { id: "product_found" }, product: offProduct({
+        code: "0810111890373", product_name: "Mixed-basis Noodles", quantity: "3.62 oz", product_quantity: 102.6,
+        serving_quantity: 103, serving_size: "1 pack (103 g)",
+        nutrition: offNutrition("100g", mixedPer100, [offSet("100g", 100, mixedPer100), offSet("serving", 103, mixedPerPack)]),
+      }) });
       if (code === "00012345678905") return json(404, { status: "failure", result: { id: "product_not_found" } });
       if (code === "4006381333931") return json(429, {}, { "Retry-After": "30" });
       return route.abort("failed");
@@ -528,6 +539,21 @@ const { zipSync, strToU8 } = require("fflate");
     await preview.waitFor();
     assert.equal(offRequests.length, 1);
     await page.getByRole("button", { name: "Cancel" }).click();
+    // Conflicting package entries in the source record: flagged in the preview and results, not corrected.
+    await page.waitForTimeout(3100);
+    await lookUp("0810111890373");
+    await preview.waitFor();
+    const conflictText = await page.getByTestId("off-conflicts").innerText();
+    assert(conflictText.includes("Carbohydrates: 60 g per 100 g would be 61.8 g per 103 g serving, but the per-serving entry says 60 g."), conflictText);
+    assert(!/Protein:/.test(conflictText), "protein differs only within label rounding");
+    await preview.screenshot({ path: "work/qa-off-conflict-390.png" });
+    await page.getByRole("button", { name: "Add to calculator" }).click();
+    await page.keyboard.type("103");
+    const conflictMarkers = await page.getByTestId("calc-conflict").allInnerTexts();
+    assert.deepEqual(conflictMarkers, ["Source values conflict for Mixed-basis Noodles; check the package"]);
+    assert((await page.getByTestId("calc-results").innerText()).includes("Carbohydrates"));
+    await page.getByRole("button", { name: "Remove Mixed-basis Noodles" }).click();
+    assert.equal(await page.getByTestId("calc-conflict").count(), 0);
     // Liquid recorded per 100 ml: explained and not addable.
     await page.waitForTimeout(3100);
     await lookUp("96385074");
@@ -537,7 +563,7 @@ const { zipSync, strToU8 } = require("fflate");
     // Lookups are spaced out by the client limiter; failures are reported once, never retried.
     await lookUp("00012345678905");
     await page.getByText(/wait \d+ s before the next lookup/).waitFor();
-    assert.equal(offRequests.length, 2);
+    assert.equal(offRequests.length, 3);
     await page.waitForTimeout(3100);
     await lookUp("00012345678905");
     await page.getByText("No product with barcode 00012345678905 was found on Open Food Facts.").waitFor();
@@ -555,9 +581,10 @@ const { zipSync, strToU8 } = require("fflate");
     await lookUp("0012345678905");
     await preview.waitFor();
     await page.getByRole("button", { name: "Cancel" }).click();
-    assert.equal(offRequests.length, 5);
-    assert.deepEqual(offRequests.map((r) => r.url.match(/product\/(\d+)/)[1]), ["0012345678905", "96385074", "00012345678905", "5901234123457", "4006381333931"]);
-    await page.unroute("**/api/v3/product/**");
+    assert.equal(offRequests.length, 6);
+    assert.deepEqual(offRequests.map((r) => r.url.match(/product\/(\d+)/)[1]), ["0012345678905", "0810111890373", "96385074", "00012345678905", "5901234123457", "4006381333931"]);
+    assert(offRequests.every((r) => /\/api\/v3\.5\/product\//.test(r.url)));
+    await page.unroute("**/api/v3.5/product/**");
     // Removing the product row drops it; nothing was written to browser storage.
     await page.getByRole("button", { name: "Remove Test Granola" }).click();
     await page.getByRole("button", { name: "Remove Banana" }).click();

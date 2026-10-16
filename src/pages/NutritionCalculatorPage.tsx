@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import IngredientThumb from "../components/IngredientThumb";
-import ProductLookup, { AllergenInfo, OffAttribution } from "../components/ProductLookup";
+import ProductLookup, { AllergenInfo, ConflictNotice, OffAttribution } from "../components/ProductLookup";
 import { Plus, Trash2 } from "../components/icons";
 import {
   CALCULATOR_FOODS, SNAPSHOT, calculateCustom, findFood, productFood, searchFoods,
@@ -264,6 +264,16 @@ export default function NutritionCalculatorPage() {
                             Incomplete: no recorded value for {n.missing.join(", ")}
                           </span>
                         )}
+                        {(() => {
+                          const conflicting = [...new Set(result.rows
+                            .filter((r) => r.food.product?.conflicts.some((c) => c.id === n.id))
+                            .map((r) => r.food.name))];
+                          return conflicting.length > 0 && (
+                            <span className="block text-xs font-normal text-amber-900" data-testid="calc-conflict">
+                              Source values conflict for {conflicting.join(", ")}; check the package
+                            </span>
+                          );
+                        })()}
                       </th>
                       <td className="whitespace-nowrap py-2 pl-2 text-right font-bold text-brand-700">{amount(n, n.total)}</td>
                       <td className="whitespace-nowrap py-2 pl-2 text-right font-bold text-brand-700">{amount(n, n.perServing)}</td>
@@ -304,6 +314,7 @@ export default function NutritionCalculatorPage() {
                           {OFF_NUTRIENT_MAP.filter((m) => r.food.product!.nutrients[m.id].note).map((m) => (
                             <span key={m.id} className="block text-xs">{m.label}: {r.food.product!.nutrients[m.id].note}</span>
                           ))}
+                          <ConflictNotice product={r.food.product!} />
                           <AllergenInfo product={r.food.product!} />
                         </>
                       )}

@@ -178,7 +178,9 @@ export function productFood(p: OffProduct): CalculatorFood | null {
     name,
     description: `${name}${p.brand ? ` (${p.brand})` : ""}, barcode ${p.code}`,
     state: `Open Food Facts product data · ${p.basisLabel}`,
-    stateNote: "Crowd-sourced label data, not reviewed by MoodMeal.",
+    stateNote: p.conflicts.length
+      ? `Crowd-sourced label data, not reviewed by MoodMeal. Source record has conflicting values for ${p.conflicts.map((c) => c.label.toLowerCase()).join(", ")}.`
+      : "Crowd-sourced label data, not reviewed by MoodMeal.",
     imageLabel: "",
     measures,
     nutrients: per100gNutrients(p),
