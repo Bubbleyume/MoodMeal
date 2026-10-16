@@ -289,6 +289,31 @@ function servingText(size: string | null, grams: number) {
   return stated && Number(stated[1]) === grams ? size : `${size} (${grams} g)`;
 }
 
+/**
+ * Values for the preview table, exactly as Open Food Facts reports them, plus
+ * a per-serving column scaled from per-100 g values when a gram serving is
+ * recorded. This lets users compare with a per-serving package label. Values
+ * are never corrected: if the record is inconsistent, the mismatch shows.
+ */
+export function previewValues(p: OffProduct): {
+  columns: string[];
+  rows: { id: string; label: string; unit: "KCAL" | "G"; values: (number | null)[] }[];
+} {
+  const scaled = p.basis === "per100g" && p.servingGrams;
+  const columns = p.basis === "per100g"
+    ? ["Per 100 g", ...(scaled ? [`Per serving (${p.servingGrams} g)`] : [])]
+    : p.basis === "perServing"
+      ? [p.servingGrams ? `Per serving (${p.servingGrams} g)` : "Per serving"]
+      : [`As recorded (${p.basisLabel})`];
+  const rows = OFF_NUTRIENT_MAP.map((m) => {
+    const amount = p.nutrients[m.id].amount;
+    const values = [amount];
+    if (scaled) values.push(amount === null ? null : (amount * p.servingGrams!) / 100);
+    return { id: m.id, label: m.label, unit: m.unit, values };
+  });
+  return { columns, rows };
+}
+
 /** True when the product can join a calculation (grams and/or serving). */
 export function isCalculable(p: OffProduct) {
   return p.basis === "per100g" || (p.basis === "perServing" && p.servingGrams !== null);

@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import Button from "./Button";
 import {
-  OFF_ATTRIBUTION, OFF_NUTRIENT_MAP, createLookupLimiter, isCalculable, lookupProduct, validateBarcode,
+  OFF_ATTRIBUTION, createLookupLimiter, isCalculable, lookupProduct, previewValues, validateBarcode,
   type LookupOutcome, type OffProduct,
 } from "../lib/openFoodFacts";
 
@@ -142,19 +142,38 @@ export default function ProductLookup({ onConfirm }: { onConfirm: (product: OffP
             <dt className="font-semibold">Nutrition basis</dt><dd>{product.basisLabel}</dd>
             {product.servingLabel && (<><dt className="font-semibold">Serving</dt><dd>{product.servingLabel}</dd></>)}
           </dl>
-          {product.basis !== "none" && (
-            <table className="mt-2 w-full text-xs">
-              <caption className="text-left font-semibold text-slate-700">Label values {product.basis === "perServing" ? "per serving" : product.basis === "per100g" ? "per 100 g" : `(${product.basisLabel})`}</caption>
-              <tbody>
-                {OFF_NUTRIENT_MAP.map((m) => (
-                  <tr key={m.id}>
-                    <th scope="row" className="py-0.5 text-left font-normal">{m.label}</th>
-                    <td className="py-0.5 text-right">{amount(product.nutrients[m.id])}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+          {product.basis !== "none" && (() => {
+            const table = previewValues(product);
+            return (
+              <>
+                <table className="mt-2 w-full text-xs" data-testid="off-values">
+                  <caption className="text-left font-semibold text-slate-700">Open Food Facts values</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col" className="py-0.5 text-left font-normal text-slate-500">Nutrient</th>
+                      {table.columns.map((c) => (
+                        <th key={c} scope="col" className="py-0.5 pl-2 text-right font-semibold">{c}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {table.rows.map((r) => (
+                      <tr key={r.id}>
+                        <th scope="row" className="py-0.5 text-left font-normal">{r.label}</th>
+                        {r.values.map((v, i) => (
+                          <td key={i} className="whitespace-nowrap py-0.5 pl-2 text-right">{amount({ amount: v, unit: r.unit })}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p className="mt-1 text-xs text-slate-600">
+                  Compare these with your package. Open Food Facts records are crowd-sourced and can contain entry
+                  errors; MoodMeal shows them as recorded and does not correct them.
+                </p>
+              </>
+            );
+          })()}
           <p className={`mt-2 text-xs font-semibold ${isCalculable(product) ? "text-moodGreen-700" : "text-red-700"}`}>{product.calculation}</p>
           <AllergenInfo product={product} />
           <div className="mt-2"><OffAttribution code={product.code} /></div>

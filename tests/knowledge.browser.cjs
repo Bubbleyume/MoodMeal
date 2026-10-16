@@ -482,6 +482,11 @@ const { zipSync, strToU8 } = require("fflate");
     for (const t of ["Open Food Facts product data", "Test Granola", "Example Co", "0012345678905", "per 100 g", "30 g", "Allergens recorded: milk", "May contain (traces): Not recorded. This does not mean", "Open Database License", "Product page"])
       assert(previewText.toLowerCase().includes(t.toLowerCase()), t);
     assert(previewText.includes("<script>alert(1)</script>"), "ingredient text shown as plain text");
+    // Values are shown as recorded per 100 g, with a per-serving column to compare with the package.
+    const valuesTable = await page.getByTestId("off-values").innerText();
+    for (const t of ["Per 100 g", "Per serving (30 g)", "400 kcal", "120 kcal"])
+      assert(valuesTable.includes(t), t);
+    assert(previewText.includes("Compare these with your package"));
     assert.equal(await page.locator("script:not([src])").filter({ hasText: "alert(1)" }).count(), 0);
     assert.equal(offRequests.length, 1);
     assert.match(offRequests[0].url, /\/product\/0012345678905\?/);

@@ -33,7 +33,7 @@ import {
 import { historyInsights } from "../src/lib/interactions";
 import { NUTRIENTS, GOALS, source } from "../src/data/knowledge";
 import { readableQuantity, US_VOLUME_IN_TSP } from "../src/lib/units";
-import { validateBarcode, mapProduct, isCalculable, lookupProduct, createLookupLimiter, OFF_NUTRIENT_MAP, OFF_APP_ID } from "../src/lib/openFoodFacts";
+import { validateBarcode, mapProduct, isCalculable, lookupProduct, createLookupLimiter, OFF_NUTRIENT_MAP, OFF_APP_ID, previewValues } from "../src/lib/openFoodFacts";
 import { CALCULATOR_FOODS, calculateCustom, parseQuantity, parseServings, findFood, productFood } from "../src/lib/nutritionCalculator";
 import { PILOT_INGREDIENTS } from "../src/data/usdaPilot";
 
@@ -892,6 +892,47 @@ test("Open Food Facts products join calculations without changing USDA foods; mi
   assert(CALCULATOR_FOODS.every((f) => f.source === "usda"));
   assert.equal(findFood(solid.fdcId), undefined);
   assert.equal(RECIPES.filter((x) => x.nutritionEstimate).length, 1);
+});
+test("Open Food Facts records with mixed bases are shown as recorded, with a per-serving column to compare", () => {
+  // Pattern seen in a real record: energy scaled to per 100 g from a 103 g serving,
+  // while the other values copy the per-serving label into the per-100 g fields.
+  const record = offSolid({
+    code: "0810111890373", product_name: "Mixed-basis Noodles", quantity: "3.62 oz", product_quantity: 102.6, product_quantity_unit: "g",
+    serving_quantity: 103, serving_quantity_unit: "g", serving_size: "1 pack (103 g)",
+  }, {
+    "energy-kcal_100g": 360 / 103 * 100, "energy-kj_100g": 1528, "energy-kj_modifier": "~",
+    proteins_100g: 12, carbohydrates_100g: 60, fat_100g: 8, fiber_100g: 1, sugars_100g: 7,
+  });
+  // Server-normalized barcode (leading zero added) is kept.
+  assert.deepEqual(validateBarcode("810111890373"), { code: "810111890373" });
+  const p = mapProduct(record, "810111890373", at);
+  assert.equal(p.code, "0810111890373");
+  assert.equal(p.basis, "per100g");
+  assert.equal(p.servingLabel, "1 pack (103 g)");
+  // No silent correction: amounts are exactly what the record says.
+  assert.deepEqual(Object.fromEntries(Object.entries(p.nutrients).map(([k, v]) => [k, v.amount])),
+    { "1008": 360 / 103 * 100, "1003": 12, "1005": 60, "1004": 8, "1079": 1, "2000": 7 });
+  const table = previewValues(p);
+  assert.deepEqual(table.columns, ["Per 100 g", "Per serving (103 g)"]);
+  const row = (id: string) => table.rows.find((r) => r.id === id)!.values.map((v) => Number(v!.toFixed(4)));
+  assert.deepEqual(row("1008"), [349.5146, 360]);
+  assert.deepEqual(row("1003"), [12, 12.36]);
+  assert.deepEqual(row("1005"), [60, 61.8]);
+  // Calculations: 100 g, one 103 g pack, and half a pack by serving and by grams.
+  const food = productFood(p)!;
+  const calc = (measureId: string, quantity: string) => {
+    const r = calculateCustom([{ key: "a", fdcId: food.fdcId, measureId, quantity }], "1", [food]).result!;
+    return [r.totalGrams, ...r.nutrients.map((n) => Number(n.total!.toFixed(4)))];
+  };
+  assert.deepEqual(calc("g", "100"), [100, 349.5146, 12, 60, 8, 1, 7]);
+  assert.deepEqual(calc("off-serving", "1"), [103, 360, 12.36, 61.8, 8.24, 1.03, 7.21]);
+  assert.deepEqual(calc("off-serving", "0.5"), [51.5, 180, 6.18, 30.9, 4.12, 0.515, 3.605]);
+  assert.deepEqual(calc("g", "51.5"), calc("off-serving", "1/2"));
+  // Other bases: one column only.
+  assert.deepEqual(previewValues(mapProduct(offSolid(), "0012345678905", at)).columns, ["Per 100 g"]);
+  const perServing = mapProduct(offSolid({ nutrition_data_per: "serving", serving_quantity: 40, serving_quantity_unit: "g" }, { "energy-kcal_serving": 150 }), "0012345678905", at);
+  assert.deepEqual(previewValues(perServing).columns, ["Per serving (40 g)"]);
+  assert.deepEqual(previewValues(perServing).rows[0].values, [150]);
 });
 test("Open Food Facts lookup limiter stays under the published rate limit", () => {
   const limiter = createLookupLimiter({ maxPerMinute: 10, minIntervalMs: 3000 });

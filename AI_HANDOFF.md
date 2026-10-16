@@ -1,5 +1,30 @@
 # MoodMeal AI Handoff
 
+## Open Food Facts discrepancy investigation (Claude Code, 2026-10-16)
+
+Started at cbdc99a, equal to origin. Barcode 810111890373 (normalized by OFF to 0810111890373) is Momofuku Sesame Miso Noodles.
+
+**Cause:** the **source record is internally inconsistent**. Its v3.5 input sets hold two packaging sets with identical protein, carbs, fat, fiber, sugars and sodium (12/60/8/1/7 g/1.12 g): one is per 100 g, the other per 103 g serving. Only energy (349.51 vs 360 kcal) and added sugars were rescaled. The last editor was macrofactor.
+
+**MoodMeal's handling:**
+- The mapper reproduces the aggregated `_100g` values exactly.
+- "350 kcal" is rounding of 349.51.
+- One pack (103 g) calculates to 360 kcal, as on the label, but 12.36/61.8/8.24/1.03/7.21 g for the other nutrients, 3% high because of the source.
+- There was no mapping bug, and the app doesn't correct the record or handle this product specially.
+
+**General change:**
+- The preview table is renamed "Open Food Facts values".
+- `previewValues` adds a per-serving column when a gram serving exists, so per-serving package labels can be compared.
+- A note says values are shown as recorded and not corrected.
+
+**Follow-up:** automatic inconsistency detection needs v3.5 `nutrition.input_sets`. v3 doesn't return them, and v3.5 drops the legacy `nutriments`, so it needs a mapper migration first.
+
+The full comparison table is in `docs/OPEN-FOOD-FACTS.md`. This investigation made 4 live read requests.
+
+Validation:
+- 44 knowledge tests pass, including a new mixed-basis regression test with a synthetic record.
+- Typecheck, avatar tests, 14 USDA tests, 22 FatSecret tests, the build and the browser suite (new per-serving column check) pass.
+
 ## Open Food Facts barcode lookup in the Nutrition Calculator (Claude Code, 2026-10-15)
 
 Started at cf16a7d, equal to origin. Details and the licensing review are in `docs/OPEN-FOOD-FACTS.md`.

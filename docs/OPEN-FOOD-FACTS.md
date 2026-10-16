@@ -65,3 +65,43 @@ Added 2026-10-15. Code: `src/lib/openFoodFacts.ts`, `src/components/ProductLooku
 4. **Medical use:** keep OFF data away from the health-condition tools and treat it as informational only.
 5. **Proxy or caching server:** a server-side proxy would allow a real User-Agent, shared caching and better rate-limit handling. Not needed for the current static app.
 6. **Real-device testing:** check the lookup UI with iOS Safari and Android Chrome.
+
+## Investigation: mixed-basis source record (barcode 0810111890373, 2026-10-16)
+
+The product is Momofuku Sesame Miso Noodles, entered as 810111890373. Open Food Facts normalizes the code to 0810111890373 and returns a `different_normalized_product_code` warning; MoodMeal keeps the server's code. The package lists nutrition **per 1 pack (103 g)**: 360 kcal, 12 g protein, 60 g carbohydrates, 8 g fat, 1 g fiber, 7 g total sugars, 5 g added sugars, 1120 mg sodium.
+
+**Cause: the Open Food Facts record is internally inconsistent. MoodMeal's mapping is not the cause.**
+
+Evidence, from 4 read-only requests, with responses kept only in the local scratchpad:
+- The record declares `nutrition_data_per: "100g"` and a serving of `1 pack (103 g)`, with `serving_quantity` 103 g. Its last editor was `macrofactor`, an app import.
+- The v3.5 `nutrition.input_sets` show two "packaging" sets with the **same** protein, carbs, fat, fiber, sugars and sodium: 12 / 60 / 8 / 1 / 7 g / 1.12 g. One set is per 100 g; the other is per 103 g serving.
+  - Only energy (349.51 vs 360 kcal) and added sugars (4.85 vs 5 g) were rescaled between the two.
+  - So the per-100 g set copies the per-pack label values for most nutrients. Both can't be true: 60 g per 103 g is 58.3 g per 100 g.
+- The aggregated per-100 g set, and therefore the legacy `_100g` fields MoodMeal reads, comes from that per-100 g set. The legacy `_serving` fields are then derived by × 1.03 (12.4, 61.8, 8.24 …), so they don't match the entered per-serving values either.
+- Open Food Facts also flags `serving-quantity-over-product-quantity`: the 103 g serving is more than the 3.62 oz (102.6 g) package.
+
+**MoodMeal's handling:**
+- The mapper reproduces the aggregated values exactly.
+- "350 kcal" is display rounding of 349.51.
+- The calculator scales correctly: one 103 g pack gives 360 kcal (matching the label), but 12.36 / 61.8 / 8.24 / 1.03 / 7.21 g for the other nutrients (3% above the label).
+- MoodMeal does not correct the record and has no product-specific handling.
+
+| Nutrient | Package label, per pack (103 g) | OFF `_100g` (used by MoodMeal) | OFF `_serving` (derived) | OFF input set per 100 g | OFF input set per serving (103 g) | MoodMeal 100 g | MoodMeal 1 pack (103 g) | MoodMeal ½ pack (51.5 g) | Label ÷ 1.03 (implied per 100 g, from rounded label) |
+|---|---|---|---|---|---|---|---|---|---|
+| Calories | 360 kcal | 349.51 (shown 350) | 360 | 349.51 | 360 | 349.5 | 360 | 180 | 349.5 |
+| Protein | 12 g | 12 | 12.4 | 12 | 12 | 12 | 12.36 | 6.18 | 11.65 |
+| Carbohydrates | 60 g | 60 | 61.8 | 60 | 60 | 60 | 61.8 | 30.9 | 58.25 |
+| Fat | 8 g | 8 | 8.24 | 8 | 8 | 8 | 8.24 | 4.12 | 7.77 |
+| Fiber | 1 g | 1 | 1.03 | 1 | 1 | 1 | 1.03 | 0.515 | 0.97 |
+| Total sugars | 7 g | 7 | 7.21 | 7 | 7 | 7 | 7.21 | 3.605 | 6.80 |
+| Added sugars | 5 g | 4.85 | 5 | 4.85 | 5 | not mapped | — | — | 4.85 |
+| Sodium | 1120 mg | 1.12 g | 1.15 g | 1.12 g | 1.12 g | not mapped | — | — | 1.09 g |
+
+**Change made (general, not product-specific):**
+- The preview's table is now titled "Open Food Facts values" instead of "Label values", which wrongly implied they came from the package.
+- When a gram serving is recorded, the table adds a **Per serving (N g)** column scaled from the per-100 g values, so users can compare directly with a per-serving package label. For this record it shows 360 kcal, 12.36 g protein and 61.8 g carbs per pack, which makes the mismatch visible.
+- A note asks users to compare with their package and states that records are shown as recorded and not corrected.
+
+**Not done, and why:**
+- **Automatic consistency detection** would need the v3.5 `nutrition.input_sets`. The v3 endpoint doesn't return them, and v3.5 no longer returns the legacy `nutriments` the mapper uses. Detection therefore needs a mapper migration to the v3.5 schema, which is a separate, larger change.
+- **The source record was not edited.** MoodMeal never writes to Open Food Facts. The data can be corrected on openfoodfacts.org by a contributor.
