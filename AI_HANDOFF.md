@@ -4,7 +4,7 @@
 
 Started at 9c34a8a, equal to origin.
 
-**Physical-phone evidence (user-provided screenshots only, Android, via http://192.168.1.57:5173/nutrition-calculator):** the banana's selected measurement was cut off in the unit dropdown, while "= 118 g" was visible below. Touch, keyboard and screen-reader behaviour on the phone is **not** confirmed. Nothing physical is marked as passed.
+**Physical-phone verification (user-provided screenshots and confirmation, Android, 2026-10-19, via http://192.168.1.26:5173/nutrition-calculator):** confirmed. The banana dropdown shows "medium banana" and the full description with 118 g each; at quantity 2 the total is 236 g. Open Food Facts Sesame Miso Noodles Entry 2 at one 103 g serving shows 360 kcal and 60.0 g carbohydrates. The user confirmed that opening the dropdown, entering quantities and scrolling with the keyboard open work comfortably. Screen-reader behaviour was not checked.
 
 Changes:
 - `CalculatorMeasure` has a new `shortLabel` used in the unit dropdown: "medium banana", "cup", "tbsp", "cup brewed", "product serving", and so on. The explicit list is `UNIT_SHORT_LABELS`; otherwise the label is used up to its first comma or bracket.
