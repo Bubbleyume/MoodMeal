@@ -13,6 +13,7 @@ function display(value: NutritionValue | undefined, digits = 1) {
 export default function RecipeNutrition({estimate}:{estimate:RecipeNutritionEstimate | null | undefined}) {
   if (!estimate) return <p className="mt-3 text-xs text-slate-500">Nutrition totals: not calculated. Nutrient tags describe documented ingredients, not measured amounts per serving.</p>;
   const byId = (id:string) => estimate.values.find(n => n.id === id);
+  const inputWeight = estimate.ingredients.reduce((sum, i) => sum + (i.grams ?? 0), 0);
   return <section aria-label="Estimated nutrition per serving" className="mt-4 border-t border-slate-100 pt-4">
     <h2 className="section-title">Estimated nutrition</h2>
     <p className="mt-1 text-sm text-slate-600">Per serving · {estimate.servings} equal servings</p>
@@ -29,7 +30,7 @@ export default function RecipeNutrition({estimate}:{estimate:RecipeNutritionEsti
       <ul className="mt-2 space-y-2">
         {estimate.ingredients.map(i => <li key={i.fdcId}><strong>{i.name}: {i.grams ?? "Unknown"} g</strong><br />{i.portionDescription}. FDC {i.fdcId}; portion {i.portionId}.</li>)}
       </ul>
-      <p className="mt-3">383 g edible fruit for the recipe; 191.5 g per equal serving. Wooden skewers are equipment and excluded. Each nutrient is scaled from its amount per 100 g, summed across the fruit, then divided by two. Figures are rounded for display.</p>
+      <p className="mt-3">Listed ingredient input weight: {inputWeight.toFixed(1)} g. Each nutrient is scaled from USDA amounts per 100 g, summed across ingredients, then divided by {estimate.servings} equal {estimate.servings === 1 ? "serving" : "servings"}. {estimate.calculationNote} Figures are rounded for display.</p>
     </details>
     <details className="mt-3 text-sm text-slate-600">
       <summary className="min-h-[24px] cursor-pointer py-1 font-semibold text-brand-700">More nutrients per serving</summary>

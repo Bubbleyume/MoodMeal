@@ -72,9 +72,9 @@ APPROVALS += [
     approve('Sweet potato', '168482', '20261014T080936Z-897d0fc8b97240bcbee4b640b7552bb8.json',
             'Raw sweet potato; "1 sweet potato" standardized to the USDA 5 in long potato, 130 g edible weight.',
             'Raw input weight before toasting or pan-cooking', 'B3', [
-                conv(1, 'each', 'sliced lengthwise into 1/4-inch planks', [SB], '83167', 1, 'USDA 1 sweetpotato, 5 in long = 130 g edible (portion 83167).'),
+                conv(1, 'each', 'peeled, sliced lengthwise into 1/4-inch planks', [SB], '83167', 1, 'USDA 1 sweetpotato, 5 in long = 130 g edible flesh (portion 83167); user approved peeled flesh on 2026-10-19.'),
                 conv(1, 'each', 'diced', ['recipe-cozy-sweet-potato-hash'], '83167', 1, 'USDA 1 sweetpotato, 5 in long = 130 g edible (portion 83167).')],
-            {'skin': 'Record describes raw flesh. Whether the Toast is peeled or eaten skin-on is not yet decided. "1/2 roasted" in Rice, Egg & Greens Bowl remains on hold.'}),
+            {'skin': 'For Chamomile & Sweet Potato Toast, user approved peeled edible flesh on 2026-10-19. "1/2 roasted" in Rice, Egg & Greens Bowl remains on hold.'}),
     approve('Egg', '171287', '20261014T081937Z-45dd515823dc45ed972ba318ef2436ab.json',
             'Whole raw egg, large, edible portion without shell.', 'Raw input weight before cooking', 'B4', [
                 conv(2, 'each', '', ['recipe-cozy-sweet-potato-hash'], '88374', 2, 'USDA large egg 50 g (portion 88374) x 2.')],

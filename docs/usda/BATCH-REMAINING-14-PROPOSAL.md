@@ -1,6 +1,6 @@
 # Remaining 14 batch labels: approval proposal (2026-10-14)
 
-Status: **proposal only, awaiting user decisions.** Nothing here is approved. No runtime data, recipe text or nutrition totals changed. Honey (169640) and the Rainbow Fruit Skewers pilot (167762, 169124, 171711) are unchanged.
+Status: **user decisions recorded; Chamomile & Sweet Potato Toast estimate published on 2026-10-19.** The proposal table records which ingredient uses were approved and which remain held. Honey and the Rainbow Fruit Skewers pilot remain unchanged.
 
 Evidence:
 - The 21 candidate reports saved on 2026-10-14 (listed in NEXT-BATCH-REVIEW.md) were re-read offline. Their descriptions, portions and key nutrients still match the batch documents and the FoodData_Central_csv_2026-04-30 snapshot.
@@ -8,7 +8,7 @@ Evidence:
   - 171320 Spices, cinnamon, ground: `20261015T005749Z-f986ddfd…`
   - 174156 Beverages, tea, herb, brewed, chamomile: `20261015T005750Z-e2564d9c…`
   - 171706 Avocados, raw, California: `20261015T005752Z-7d7b5fbf…`
-- Cinnamon and chamomile key nutrients and portions match the CSV rows exactly. 171706 has not yet been compared with the CSV.
+- Cinnamon, chamomile and California avocado 171706 nutrients and portions match the CSV rows exactly.
 - All three reports are in the ignored `pending-review/` folder and in the private checksummed backup (27 files verified).
 
 Conventions applied to every proposal:
@@ -73,7 +73,7 @@ Every other recipe stays blocked after these approvals:
 
 No partial totals are proposed for any recipe.
 
-## User decisions (2026-10-14)
+## User decisions (2026-10-14 and 2026-10-19)
 
 The user approved every row marked **Approve**, with its recommended conventions. Held uses stay on hold, and Greek yogurt (B8) stays pending. Avocado (B12) was marked "Prefer", not "Approve", so it also stays pending. Its CSV comparison is now done: 171706 matches the CSV exactly (nutrients and portions).
 
@@ -104,6 +104,4 @@ Still on hold:
 
 Pending: Greek yogurt fat level and avocado record.
 
-**Chamomile & Sweet Potato Toast is now fully reviewed at the ingredient level, but no totals are calculated or shown.** Two decisions remain before calculating it:
-1. Whether the sweet potato is peeled. The record describes flesh; the 130 g is edible weight.
-2. Explicit approval to publish its estimate.
+**Additional user decisions on 2026-10-19:** the Toast sweet potato is peeled edible flesh, and the user approved publishing its estimate. The recipe now says to peel it before slicing. `src/data/usda/approved-ingredients.json` records this exact use and conversion. The estimate is calculated from 130 g raw peeled sweet potato, 32 g almond butter, 59 g banana, 237 g brewed tea (bag excluded), and 0.1625 g cinnamon. It serves one. Per-serving display: 364 kcal, 9.4 g protein, 46.3 g carbohydrate, 18.0 g fat, 8.8 g fiber, 14.1 g total sugars; added sugars remain Unknown. The raw sweet-potato weight is before toasting; cooking loss/yield is not measured. See `docs/usda/README.md` and AI_HANDOFF.md for the published estimate and caveats.

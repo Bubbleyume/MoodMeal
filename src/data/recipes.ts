@@ -132,14 +132,14 @@ export const RECIPES: Recipe[] = [
     prepTimeMinutes: 5,
     cookTimeMinutes: 12,
     ingredients: [
-      { name: "Sweet potato", quantity: "1, sliced lengthwise into 1/4-inch planks" },
+      { name: "Sweet potato", quantity: "1, peeled, sliced lengthwise into 1/4-inch planks" },
       { name: "Almond butter", quantity: "2 tbsp" },
       { name: "Banana", quantity: "1/2, sliced" },
       { name: "Chamomile tea bag", quantity: "1" },
       { name: "Ground cinnamon", quantity: "1/16 tsp" },
     ],
     instructions: [
-      "Toast the sweet potato slices in a toaster or toaster oven on high for 2–3 cycles, until fork-tender.",
+      "Peel the sweet potato and slice it lengthwise into 1/4-inch planks. Toast the slices in a toaster or toaster oven on high for 2–3 cycles, until fork-tender.",
       "Meanwhile, steep the chamomile tea bag in 1 cup (8 fl oz) hot water for 4–5 minutes, then remove the bag.",
       "Spread almond butter over each sweet potato \"toast\".",
       "Top with banana slices and 1/16 tsp ground cinnamon.",

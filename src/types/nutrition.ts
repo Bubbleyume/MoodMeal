@@ -22,8 +22,9 @@ export interface NutritionValue {
   contributions: { name: string; amount: number | null; sourceRowId: string | null }[];
 }
 export interface RecipeNutritionEstimate {
-  status: "approved-pilot-estimate";
+  status: "approved-pilot-estimate" | "approved-recipe-estimate";
   servings: number;
+  calculationNote: string;
   ingredients: NutritionInput[];
   values: NutritionValue[];
   sources: Provenance[];

@@ -1,5 +1,17 @@
 # MoodMeal AI Handoff
 
+## Chamomile & Sweet Potato Toast estimate approved (Codex, 2026-10-19)
+
+Started at 802d4ac, equal to origin. The user approved peeled sweet-potato flesh and publication of the recipe estimate.
+
+- The Toast ingredient is now specified as one 5-inch sweet potato, peeled and sliced into 1/4-inch planks. The approved USDA reference is 130 g raw edible flesh before toasting.
+- `approvedChamomileToastNutrition` exposes an estimate only when the recipe ID, ingredient lines, instructions, preparation, servings and exact recipe-scoped conversions match the approved version. All five source records and portion IDs are retained in approved USDA records and linked in the estimate provenance.
+- One serving uses 130 g sweet potato, 32 g almond butter, 59 g banana, 237 g brewed chamomile (bag removed), and 0.1625 g cinnamon. Total listed input weight is 458.1625 g, including the tea.
+- Displayed per serving: 364 kcal, 9.4 g protein, 46.3 g carbohydrate, 18.0 g fat, 8.8 g fiber and 14.1 g total sugars. Added sugars and other unavailable nutrient values remain Unknown. The calculation uses raw sweet-potato weight before toasting; cooking moisture loss and finished yield were not measured.
+- `RecipeNutrition` now describes the listed input weight and calculation generically, so the skewers-only wording does not appear on Toast.
+
+TypeScript validation and the production build pass; the build reports that the local `caniuse-lite` Browserslist data is outdated. Knowledge-test expectations were updated, but the test suite and browser tests were not run. Next USDA decisions: Greek yogurt fat level, avocado record, and held recipe uses. Only Rainbow Fruit Skewers and Chamomile & Sweet Potato Toast currently expose recipe estimates.
+
 ## Concise unit labels in the Nutrition Calculator (Claude Code, 2026-10-16)
 
 Started at 9c34a8a, equal to origin.

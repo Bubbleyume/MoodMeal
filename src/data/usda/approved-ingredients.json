@@ -569,13 +569,13 @@
         {
           "quantity": 1,
           "unit": "each",
-          "notes": "sliced lengthwise into 1/4-inch planks",
+          "notes": "peeled, sliced lengthwise into 1/4-inch planks",
           "recipeIds": [
             "recipe-chamomile-comfort-toast"
           ],
           "grams": 130.0,
           "basePortionId": "83167",
-          "derivation": "USDA 1 sweetpotato, 5 in long = 130 g edible (portion 83167)."
+          "derivation": "USDA 1 sweetpotato, 5 in long = 130 g edible flesh (portion 83167); user approved peeled flesh on 2026-10-19."
         },
         {
           "quantity": 1,
@@ -591,7 +591,7 @@
       ],
       "nutrientNotes": {
         "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars.",
-        "skin": "Record describes raw flesh. Whether the Toast is peeled or eaten skin-on is not yet decided. \"1/2 roasted\" in Rice, Egg & Greens Bowl remains on hold."
+        "skin": "For Chamomile & Sweet Potato Toast, user approved peeled edible flesh on 2026-10-19. \"1/2 roasted\" in Rice, Egg & Greens Bowl remains on hold."
       },
       "description": "Sweet potato, raw, unprepared (Includes foods for USDA's Food Distribution Program)",
       "dataType": "sr_legacy_food",

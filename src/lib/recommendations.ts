@@ -124,7 +124,7 @@ export function explainPick(
   estimate?: RecipeNutritionEstimate | null,
 ) {
   const amounts =
-    estimate?.status === "approved-pilot-estimate"
+    (estimate?.status === "approved-pilot-estimate" || estimate?.status === "approved-recipe-estimate")
       ? displayedNutrients(item, goals).flatMap((id) => {
           const usda = USDA_NUTRIENT_IDS[id];
           const value = estimate.values.find((v) => v.id === usda?.id);

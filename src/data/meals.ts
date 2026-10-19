@@ -87,7 +87,7 @@ export const MEALS: Meal[] = [
     gradient: "from-sunny-300 to-mint-200",
     description: "Roasted sweet potato \"toast\" with almond butter, paired with a warm cup of chamomile tea.",
     ingredients: [
-      { name: "Sweet potato", quantity: "1, sliced lengthwise" },
+      { name: "Sweet potato", quantity: "1, peeled, sliced lengthwise" },
       { name: "Almond butter", quantity: "2 tbsp" },
       { name: "Banana", quantity: "1/2, sliced" },
       { name: "Chamomile tea bag", quantity: "1" },

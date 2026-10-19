@@ -322,10 +322,10 @@ test("snack-only picks exclude cooking ingredients", () => {
   const prefs = { ...DEFAULT_PREFERENCES, recommendationType: "snack" as const };
   for (const food of FOODS.filter(f => /salmon|turkey|beef/.test(f.id))) assert.equal(eligible(food, prefs), false);
 });
-test("only approved raw-fruit pilot exposes USDA nutrition with preserved unknowns", () => {
+test("only exact user-approved recipes expose USDA nutrition with preserved unknowns", () => {
   const pilot = RECIPES.find(r => r.id === PILOT_RECIPE_ID)!;
   const estimate = pilot.nutritionEstimate!;
-  assert.equal(RECIPES.filter(r => r.nutritionEstimate).length, 1);
+  assert.equal(RECIPES.filter(r => r.nutritionEstimate).length, 2);
   assert.equal(estimate.servings, 2);
   assert.deepEqual(estimate.ingredients.map(i => [i.fdcId,i.grams,i.portionId]), [["167762",144,"81922"],["169124",165,"84287"],["171711",74,"89238"]]);
   const expected: Record<string,number> = {"1008":85.38,"1003":1.2017,"1005":21.7149,"1004":0.4371,"1079":3.483,"1162":85.36};
@@ -354,8 +354,8 @@ test("nutrition calculations propagate missing weights, units and values without
   assert.equal(calculateNutrition([base],defs,0)[0].perServing,null);
   assert.equal(calculateNutrition([],defs,2)[0].total,null);
 });
-test("approved small measurements parse and conditional recipes remain without totals", () => {
-  for(const id of ["recipe-warm-oatmeal-berries","recipe-chamomile-comfort-toast"]) {
+test("approved small measurements parse while unreviewed recipes remain without totals", () => {
+  for(const id of ["recipe-warm-oatmeal-berries"]) {
     const recipe=RECIPES.find(r => r.id===id)!;
     const cinnamon=recipe.structuredIngredients.find(i=>i.name==="Ground cinnamon")!;
     assert.equal(cinnamon.quantity,1/16); assert.equal(cinnamon.unit,"tsp");
@@ -372,7 +372,7 @@ const DEFS = Object.values(USDA_NUTRIENT_IDS).map(n => ({id:n.id,name:n.id,unit:
 const synthetic = (inputs: {name:string; grams:number|null; per100g:Record<string,number|null>}[], servings = 2): RecipeNutritionEstimate => {
   const ingredients = inputs.map(i => ({name:i.name,fdcId:"test",grams:i.grams,portionId:"test",portionDescription:"test",
     nutrients:Object.fromEntries(DEFS.map(d => [d.id,{amount:i.per100g[d.id] ?? null,unit:d.unit,sourceRowId:"row"}]))}));
-  return {status:"approved-pilot-estimate",servings,ingredients,values:calculateNutrition(ingredients,DEFS,servings),sources:[]};
+  return {status:"approved-pilot-estimate",servings,calculationNote:"Synthetic test estimate",ingredients,values:calculateNutrition(ingredients,DEFS,servings),sources:[]};
 };
 const meal = (id: string) => MEALS.find(m => m.id === id)!;
 const FORBIDDEN = /\b(treat|treats|cure|cures|heal|heals|prevent|prevents|fixes|reduces anxiety|improves? (your )?mood|the fruit)\b/i;
@@ -499,7 +499,7 @@ test("approved honey converts only its approved portions and publishes no new re
     const coverage = recipeReviewCoverage(r);
     assert(coverage.approved.includes("Honey") && coverage.unreviewed.length > 0, r.id);
   }
-  assert.equal(RECIPES.filter(r => r.nutritionEstimate).length, 1);
+  assert.equal(RECIPES.filter(r => r.nutritionEstimate).length, 2);
 });
 test("batch approvals B1-B14/C1-C2 apply only to their exact approved uses", () => {
   const approvedUses: Record<string, string> = {};
@@ -562,13 +562,23 @@ test("batch approvals B1-B14/C1-C2 apply only to their exact approved uses", () 
   }
   const tea = APPROVED_INGREDIENTS.find(r => r.fdcId === "174156")!;
   assert.equal(tea.nutrients["1079"].amount, 0);
-  // Chamomile Toast is fully reviewed but publishes nothing until totals are approved.
+  // Chamomile Toast is fully reviewed and publishes only the explicitly approved estimate.
   assert.deepEqual(recipeReviewCoverage(toast).unreviewed, []);
-  assert.equal(toast.nutritionEstimate, null);
-  assert.equal(toast.nutrientTotals, null);
+  const toastEstimate = toast.nutritionEstimate!;
+  assert.equal(toastEstimate.status, "approved-recipe-estimate");
+  assert.equal(toastEstimate.servings, 1);
+  assert.deepEqual(toastEstimate.ingredients.map(i => [i.fdcId, i.grams, i.portionId]), [
+    ["168482", 130, "83167"], ["168588", 32, "83375"], ["173944", 59, "93515"],
+    ["174156", 237, "93843"], ["171320", 0.1625, "88429"],
+  ]);
+  assert(Math.abs(toastEstimate.values.find(n => n.id === "1008")!.perServing! - 363.561375) < 1e-9);
+  assert(Math.abs(toastEstimate.values.find(n => n.id === "1005")!.perServing! - 46.25895875) < 1e-9);
+  assert.equal(toastEstimate.values.find(n => n.id === "1235")?.perServing, null);
+  assert.equal(toast.nutrientTotals?.find(n => n.nutrientId === "1235")?.amount, null);
+  assert(toastEstimate.sources.every(s => s.evidenceStatus === "source-supported" && s.reviewStatus === "reviewed"));
   for (const r of RECIPES.filter(r => r.id !== "recipe-chamomile-comfort-toast" && r.id !== PILOT_RECIPE_ID))
     assert(recipeReviewCoverage(r).unreviewed.length > 0, r.id);
-  assert.equal(RECIPES.filter(r => r.nutritionEstimate).length, 1);
+  assert.equal(RECIPES.filter(r => r.nutritionEstimate).length, 2);
 });
 test("ingredient artwork coverage matches recipe labels and existing files", () => {
   const labels = new Set([...RECIPES, ...MEALS].flatMap((r) => r.structuredIngredients.map((i) => i.name)));
@@ -739,8 +749,8 @@ test("nutrition calculator never changes catalog nutrition or approvals", () => 
   });
   assert(calculateCustom(rows, "1").result);
   assert.equal(snapshot(), before);
-  assert.equal(toast.nutritionEstimate, null);
-  assert.equal(RECIPES.filter((r) => r.nutritionEstimate).length, 1);
+  assert.equal(toast.nutritionEstimate?.status, "approved-recipe-estimate");
+  assert.equal(RECIPES.filter((r) => r.nutritionEstimate).length, 2);
 });
 test("grocery fractions display readably while stored precision is unchanged", () => {
   const show = (q: string) => readableQuantity(q).text;
@@ -938,7 +948,7 @@ test("Open Food Facts products join calculations without changing USDA foods; mi
   assert.equal(CALCULATOR_FOODS.length, 17);
   assert(CALCULATOR_FOODS.every((f) => f.source === "usda"));
   assert.equal(findFood(solid.fdcId), undefined);
-  assert.equal(RECIPES.filter((x) => x.nutritionEstimate).length, 1);
+  assert.equal(RECIPES.filter((x) => x.nutritionEstimate).length, 2);
 });
 test("OFF nutrition adapter: normalizes explicit bases and reports unexpected schema instead of skipping it", () => {
   // Spacing/case variants and string quantities are normalized; unknown nutrient keys and extra fields are tolerated.

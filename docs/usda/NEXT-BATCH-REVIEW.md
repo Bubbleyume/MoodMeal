@@ -282,3 +282,8 @@ No totals calculated, new approvals assigned or runtime records changed. Await u
 ## Remaining labels decided (2026-10-14)
 
 See `BATCH-REMAINING-14-PROPOSAL.md` for the approval table and user decisions. Approved records are in `src/data/usda/approved-ingredients.json`; Greek yogurt and avocado remain pending, and several uses remain on hold. No recipe totals were published.
+
+
+## Chamomile Toast estimate published (2026-10-19)
+
+The user approved peeled sweet-potato flesh and the recipe estimate. The Toast now explicitly says to peel the potato. Its five exact ingredient conversions are checked by `approvedChamomileToastNutrition`; the estimate appears only for the approved recipe wording and servings. Per serving: 364 kcal, 9.4 g protein, 46.3 g carbohydrate, 18.0 g fat, 8.8 g fiber, 14.1 g total sugars; added sugars and any other unavailable nutrient values remain Unknown. Input weights total 458.1625 g including 237 g brewed tea; 130 g raw sweet potato is before toasting, with no cooking yield adjustment. See `docs/usda/README.md`. Greek yogurt and avocado remain pending; other approved uses remain recipe-scoped and do not make their recipes eligible.
