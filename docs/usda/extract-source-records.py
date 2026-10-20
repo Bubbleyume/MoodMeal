@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'docs/usda/approved-source-records.json'
 SOURCE = Path('C:/Users/Shakh/Downloads/FoodData_Central_csv_2026-04-30')
-IDS = {'171320', '171706', '172688', '173904', '174156'}
+IDS = {'170187', '171320', '171706', '172688', '173904', '174156'}
 
 
 def rows(name):

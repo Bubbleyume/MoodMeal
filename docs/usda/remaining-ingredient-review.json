@@ -1319,14 +1319,14 @@
   {
     "ingredient": "Walnuts",
     "recipeUseCount": 2,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "partially approved for one recipe-scoped use; not approved catalog-wide",
     "review": {
       "ids": [
         "170187"
       ],
-      "status": "Review",
-      "state": "English walnut kernels assumed",
-      "note": "1 tbsp chopped = 117/16 = 7.3125 g. Quarter cup unqualified could be 25 g shelled halves or 29.25 g chopped; specify form in trail mix.",
+      "status": "Partially approved",
+      "state": "English walnut record; roasting and salt state are unspecified",
+      "note": "User approved 1 tbsp chopped (7.3125 g, derived from 117 g/cup chopped) for Warm Oatmeal with Berries only on 2026-10-20. The 1/4 cup in Dark Chocolate Trail Mix remains held: 25 g shelled halves vs 29.25 g chopped, with English-walnut identity and form unconfirmed.",
       "uses": [
         {
           "recipeId": "recipe-warm-oatmeal-berries",
@@ -1338,14 +1338,33 @@
         }
       ],
       "proposedDefaultFdcId": "170187",
-      "reviewStatus": "pending-human-approval",
-      "sourceVerificationStatus": "source-records-rechecked",
+      "reviewStatus": "partially-approved-use-scoped",
+      "sourceVerificationStatus": "api-csv-nutrients-matched-no-duplicate-ids",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-warm-oatmeal-berries",
+          "quantity": "1 tbsp, chopped",
+          "fdcId": "170187",
+          "portionId": "86201",
+          "grams": 7.3125,
+          "approvedDate": "2026-10-20",
+          "apiReport": "pending-review/20261020T140047Z-8c2ff267ca874e0c9763a4014f9041db.json"
+        }
+      ],
+      "heldUses": [
+        {
+          "recipeId": "recipe-dark-chocolate-trail-mix",
+          "quantity": "1/4 cup",
+          "reason": "Walnut form and English-walnut identity unconfirmed; 25 g shelled halves and 29.25 g chopped are distinct conventions."
+        }
+      ],
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
         {
           "fdcId": "170187",
           "description": "Nuts, walnuts, english",
           "dataType": "sr_legacy_food",
+          "apiReport": "pending-review/20261020T140047Z-8c2ff267ca874e0c9763a4014f9041db.json",
           "portionSource": "food_portion.csv",
           "portionIds": [
             "86201",
@@ -1357,7 +1376,7 @@
           ]
         }
       ],
-      "ambiguity": "1 tbsp chopped = 117/16 = 7.3125 g. Quarter cup unqualified could be 25 g shelled halves or 29.25 g chopped; specify form in trail mix."
+      "ambiguity": "Approval is limited to the chopped 1 tbsp Warm Oatmeal use. The USDA description does not specify roasting or salt. Dark Chocolate Trail Mix 1/4 cup remains held pending form and identity decisions."
     }
   },
   {

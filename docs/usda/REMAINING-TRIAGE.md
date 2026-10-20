@@ -32,7 +32,7 @@ Prior source-review classifications; only batch 02 was re-read against CSVs in t
 - Rolled oats (2 recipe uses): Exact Foundation rolled record lacks portion; SR regular/quick dry oats has 81 g/cup, half 40.5 g. Choose coherent record/portion or weigh exact rolled oats; never use cooked oatmeal.
 - Soy sauce (2 recipe uses): Regular shoyu 1 tbsp = 16 g, tsp = 5.3 g. Low-sodium is a distinct record with different portion values. Confirm product and sodium level.
 - Tahini (2 recipe uses): Confirm roasted tahini; native 1 tbsp = 15 g. Raw tahini is a separate record.
-- Walnuts (2 recipe uses): 1 tbsp chopped = 117/16 = 7.3125 g. Quarter cup unqualified could be 25 g shelled halves or 29.25 g chopped; specify form in trail mix.
+- Walnuts (2 recipe uses): **1 tbsp chopped (7.3125 g) approved 2026-10-20 for Warm Oatmeal with Berries only**, derived from 117 g/cup chopped (portion 86201 ÷ 16). The FDC record and recipe do not specify roasted or salted state. Dark Chocolate Trail Mix 1/4 cup remains held: 25 g shelled halves or 29.25 g chopped, and English-walnut identity/form need confirmation.
 - Apple (1 recipe uses): Size unspecified. Medium 182 g, small 149 g, large 223 g edible weights. Do not choose medium silently.
 - Baby spinach (1 recipe uses): Foundation baby-spinach record has no linked portion. Generic raw spinach offers 30 g/cup but is a different record. Weigh baby spinach rather than silently borrowing its portion.
 - Butter lettuce leaves (1 recipe uses): Four leaves: generic 20 g, medium 30 g or large 60 g. Wraps likely use larger leaves but recipe does not specify; weigh or define size.

@@ -2665,6 +2665,202 @@
       },
       "status": "ingredient-approved",
       "recipeTotalsPublished": false
+    },
+    {
+      "ingredient": "Walnuts",
+      "fdcId": "170187",
+      "identity": "English walnuts per USDA SR Legacy record; exact approval is for the chopped topping in Warm Oatmeal with Berries only.",
+      "preparation": "Chopped; roasting and salt state are unspecified in the recipe and USDA food description.",
+      "approvedBy": "User (project owner) approved the chopped 1 tbsp conversion for Warm Oatmeal with Berries only; Dark Chocolate Trail Mix remains held.",
+      "approvedDate": "2026-10-20",
+      "apiReport": "20261020T140047Z-8c2ff267ca874e0c9763a4014f9041db.json",
+      "conversions": [
+        {
+          "quantity": 1,
+          "unit": "tbsp",
+          "notes": "chopped",
+          "recipeIds": [
+            "recipe-warm-oatmeal-berries"
+          ],
+          "grams": 7.3125,
+          "basePortionId": "86201",
+          "derivation": "Derived: USDA 1 cup chopped = 117 g (portion 86201) divided by 16 tbsp per cup."
+        }
+      ],
+      "nutrientNotes": {
+        "1235": "USDA record has no added-sugars value. Kept null/Unknown, never zero or inferred from total sugars.",
+        "hold": "Dark Chocolate Trail Mix 1/4 cup remains unapproved; walnut form and English-walnut identity have not been confirmed."
+      },
+      "calculatorEligible": false,
+      "description": "Nuts, walnuts, english",
+      "dataType": "sr_legacy_food",
+      "publicationDate": "2019-04-01",
+      "snapshot": "FoodData_Central_csv_2026-04-30",
+      "sourceURL": "https://fdc.nal.usda.gov/food-details/170187/nutrients",
+      "portions": [
+        {
+          "id": "86201",
+          "fdc_id": "170187",
+          "seq_num": "1",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, chopped",
+          "gram_weight": "117.0",
+          "data_points": "12",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "86202",
+          "fdc_id": "170187",
+          "seq_num": "2",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, ground",
+          "gram_weight": "80.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "86203",
+          "fdc_id": "170187",
+          "seq_num": "3",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup, in shell, edible yield (7 nuts)",
+          "gram_weight": "28.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "86204",
+          "fdc_id": "170187",
+          "seq_num": "4",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup shelled (50 halves)",
+          "gram_weight": "100.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "86205",
+          "fdc_id": "170187",
+          "seq_num": "5",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "cup pieces or chips",
+          "gram_weight": "120.0",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        },
+        {
+          "id": "86206",
+          "fdc_id": "170187",
+          "seq_num": "6",
+          "amount": "1.0",
+          "measure_unit_id": "9999",
+          "portion_description": "",
+          "modifier": "oz (14 halves)",
+          "gram_weight": "28.35",
+          "data_points": "",
+          "footnote": "",
+          "min_year_acquired": ""
+        }
+      ],
+      "nutrients": {
+        "1008": {
+          "amount": 654.0,
+          "unit": "KCAL",
+          "sourceRowId": "1501869"
+        },
+        "1003": {
+          "amount": 15.23,
+          "unit": "G",
+          "sourceRowId": "1501908"
+        },
+        "1005": {
+          "amount": 13.71,
+          "unit": "G",
+          "sourceRowId": "1501868"
+        },
+        "1004": {
+          "amount": 65.21,
+          "unit": "G",
+          "sourceRowId": "1501955"
+        },
+        "1079": {
+          "amount": 6.7,
+          "unit": "G",
+          "sourceRowId": "1501915"
+        },
+        "2000": {
+          "amount": 2.61,
+          "unit": "G",
+          "sourceRowId": "1501890"
+        },
+        "1235": {
+          "amount": null,
+          "unit": "G",
+          "sourceRowId": null
+        },
+        "1087": {
+          "amount": 98.0,
+          "unit": "MG",
+          "sourceRowId": "1501847"
+        },
+        "1089": {
+          "amount": 2.91,
+          "unit": "MG",
+          "sourceRowId": "1501916"
+        },
+        "1090": {
+          "amount": 158.0,
+          "unit": "MG",
+          "sourceRowId": "1501917"
+        },
+        "1092": {
+          "amount": 441.0,
+          "unit": "MG",
+          "sourceRowId": "1501949"
+        },
+        "1093": {
+          "amount": 2.0,
+          "unit": "MG",
+          "sourceRowId": "1501919"
+        },
+        "1162": {
+          "amount": 1.3,
+          "unit": "MG",
+          "sourceRowId": "1501926"
+        },
+        "1175": {
+          "amount": 0.537,
+          "unit": "MG",
+          "sourceRowId": "1501948"
+        },
+        "1178": {
+          "amount": 0.0,
+          "unit": "UG",
+          "sourceRowId": "1501891"
+        },
+        "1177": {
+          "amount": 98.0,
+          "unit": "UG",
+          "sourceRowId": "1501929"
+        }
+      },
+      "status": "ingredient-approved",
+      "recipeTotalsPublished": false
     }
   ]
 }

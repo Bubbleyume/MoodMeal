@@ -217,7 +217,8 @@ test("every meal uses canonical recipe quantity and time", () => {
     assert(r);
     assert.equal(m.prepTimeMinutes, r.totalTime);
     assert.deepEqual(m.structuredIngredients, r.structuredIngredients);
-    assert(r.id === PILOT_RECIPE_ID ? r.nutrientTotals !== null : r.nutrientTotals === null);
+    const hasPublishedEstimate = r.id === PILOT_RECIPE_ID || r.id === "recipe-chamomile-comfort-toast";
+    assert(hasPublishedEstimate ? r.nutrientTotals !== null : r.nutrientTotals === null, `${r.id} nutrition totals publication gate`);
     assert(existsSync("public" + m.image));
   }
   for (const f of FOODS) assert(existsSync("public" + f.image));
@@ -523,6 +524,7 @@ test("batch approvals B1-B14/C1-C2 apply only to their exact approved uses", () 
     "recipe-green-tea-oat-bites | Rolled oats": "173904 81",
     "recipe-warm-oatmeal-berries | Rolled oats": "173904 40.5",
     "recipe-warm-oatmeal-berries | Ground cinnamon": "171320 0.1625",
+    "recipe-warm-oatmeal-berries | Walnuts": "170187 7.3125",
     "recipe-cozy-sweet-potato-hash | Sweet potato": "168482 130",
     "recipe-cozy-sweet-potato-hash | Egg": "171287 100",
     "recipe-gentle-avocado-toast | Egg": "173424 50",
@@ -550,6 +552,7 @@ test("batch approvals B1-B14/C1-C2 apply only to their exact approved uses", () 
     ["recipe-sunshine-pancakes", "Cinnamon"], ["recipe-gentle-avocado-toast", "Avocado"],
     ["recipe-salmon-quinoa-bowl", "Avocado"], ["recipe-berry-yogurt-parfait", "Greek yogurt"],
     ["recipe-immune-boost-smoothie", "Greek yogurt"],
+    ["recipe-dark-chocolate-trail-mix", "Walnuts"],
   ]) assert.equal(held(id, name), null, `${id} ${name}`);
   // A recipe-scoped conversion never applies without its recipe.
   const toast = RECIPES.find(r => r.id === "recipe-chamomile-comfort-toast")!;
@@ -626,14 +629,16 @@ test("ingredient image resolver never borrows artwork from another food", () => 
       assert.equal(ingredientImages(food.name)[0]?.original, food.image, food.name);
 });
 test("nutrition calculator offers only approved records, states and conversions", () => {
-  const approvedIds = new Set([...APPROVED_INGREDIENTS.map((r) => r.fdcId), ...PILOT_INGREDIENTS.map((i) => i.fdcId)]);
+  const approvedIds = new Set([...APPROVED_INGREDIENTS.filter((r) => r.calculatorEligible !== false).map((r) => r.fdcId), ...PILOT_INGREDIENTS.map((i) => i.fdcId)]);
   assert.deepEqual(new Set(CALCULATOR_FOODS.map((f) => f.fdcId)), approvedIds);
-  // 16 approval records share 15 FDC IDs ("Egg" B4 raw and "Eggs" B5 are both 171287);
-  // the pilot adds strawberries and blueberries (its pineapple 169124 is already approved).
-  assert.equal(APPROVED_INGREDIENTS.length, 16);
-  assert.equal(new Set(APPROVED_INGREDIENTS.map((r) => r.fdcId)).size, 15);
+  // The recipe-only walnut approval is not a general calculator food. The remaining
+  // 16 records share 15 FDC IDs ("Egg" B4 raw and "Eggs" B5 are both 171287).
+  // The pilot adds strawberries and blueberries (its pineapple 169124 is already approved).
+  assert.equal(APPROVED_INGREDIENTS.length, 17);
+  assert.equal(new Set(APPROVED_INGREDIENTS.map((r) => r.fdcId)).size, 16);
   assert.deepEqual(PILOT_INGREDIENTS.map((i) => i.fdcId).filter((id) => !APPROVED_INGREDIENTS.some((r) => r.fdcId === id)), ["167762", "171711"]);
   assert.equal(CALCULATOR_FOODS.length, 17);
+  assert.equal(findFood("170187"), undefined, "recipe-scoped walnut approval must not become calculator-wide");
   // Pending or unapproved candidates are not selectable (Greek yogurt, avocado, alternates).
   for (const id of ["2705422", "2705423", "2705424", "171705", "171706", "168483", "168875", "170401", "2346396"])
     assert.equal(findFood(id), undefined, id);
@@ -786,7 +791,7 @@ test("one US customary volume standard is used for grocery and USDA-derived conv
       assert(Math.abs(c.grams / c.quantity - expected) < 1e-9, `${record.ingredient} ${c.quantity} ${c.unit}`);
     }
   }
-  assert.equal(crossUnit, 4); // honey tsp from tbsp; pumpkin seeds (1 and 2 tbsp) and almonds tbsp from cup
+  assert.equal(crossUnit, 5); // honey tsp from tbsp; walnuts, pumpkin seeds (1 and 2 tbsp), and almonds tbsp from cup
   // Ingredient identity and notes still gate merging; units only convert within volume.
   assert.equal(aggregateGroceries([], [{ name: "Brown rice", quantity: "0.5 cup cooked" }, { name: "Brown rice", quantity: "0.5 cup" }]).length, 2);
   assert.equal(aggregateGroceries([], [{ name: "Honey", quantity: "1 tbsp" }, { name: "Honey", quantity: "21 g" }]).length, 2);

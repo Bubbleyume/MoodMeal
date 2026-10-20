@@ -147,6 +147,8 @@ function buildFoods(): CalculatorFood[] {
     return foods.get(fdcId)!;
   };
   for (const record of APPROVED_INGREDIENTS) {
+    // A recipe-specific approval does not grant general calculator use.
+    if (record.calculatorEligible === false) continue;
     const food = base(record.fdcId, record.description, record.nutrients as Record<string, UsdaNutrientValue>, record.ingredient);
     for (const c of record.conversions) {
       const key = `${record.fdcId}:${c.unit}`;

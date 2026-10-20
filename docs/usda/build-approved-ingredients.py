@@ -50,10 +50,15 @@ def conv(quantity, unit, notes, recipes, base, factor, derivation):
             'grams': None, 'basePortionId': base, 'factor': factor, 'derivation': derivation}
 
 
-def approve(ingredient, fdc, report, identity, preparation, decision, conversions, notes=None):
-    return {'ingredient': ingredient, 'fdcId': fdc, 'identity': identity, 'preparation': preparation,
-            'approvedBy': f'{B_DECISIONS} ({decision})', 'approvedDate': DATE, 'apiReport': report,
+def approve(ingredient, fdc, report, identity, preparation, decision, conversions, notes=None,
+           approved_date=DATE, approved_by=None, calculator_eligible=True):
+    approval = {'ingredient': ingredient, 'fdcId': fdc, 'identity': identity, 'preparation': preparation,
+            'approvedBy': approved_by or f'{B_DECISIONS} ({decision})',
+            'approvedDate': approved_date, 'apiReport': report,
             'conversions': conversions, 'nutrientNotes': {**NO_ADDED_SUGARS, **(notes or {})}}
+    if not calculator_eligible:
+        approval['calculatorEligible'] = False
+    return approval
 
 
 APPROVALS += [
@@ -123,6 +128,17 @@ APPROVALS += [
             'Brewed chamomile tea; the tea bag itself is removed and excluded, like wooden skewers.', 'Brewed beverage', 'C2', [
                 conv(1, 'each', '', [SB], '93843', 1, 'One bag steeped in 1 cup (8 fl oz) hot water: USDA 1 cup brewed = 237 g (portion 93843).')]),
 ]
+
+APPROVALS.append(approve('Walnuts', '170187', '20261020T140047Z-8c2ff267ca874e0c9763a4014f9041db.json',
+        'English walnuts per USDA SR Legacy record; exact approval is for the chopped topping in Warm Oatmeal with Berries only.',
+        'Chopped; roasting and salt state are unspecified in the recipe and USDA food description.',
+        'User approved the 1 tbsp chopped conversion for Warm Oatmeal with Berries only on 2026-10-20; Dark Chocolate Trail Mix remains held.',
+        [conv(1, 'tbsp', 'chopped', ['recipe-warm-oatmeal-berries'], '86201', 1/16,
+              'Derived: USDA 1 cup chopped = 117 g (portion 86201) divided by 16 tbsp per cup.')],
+        {'hold': 'Dark Chocolate Trail Mix 1/4 cup remains unapproved; walnut form and English-walnut identity have not been confirmed.'},
+        approved_date='2026-10-20',
+        approved_by='User (project owner) approved the chopped 1 tbsp conversion for Warm Oatmeal with Berries only; Dark Chocolate Trail Mix remains held.',
+        calculator_eligible=False))
 
 
 def build(approval):

@@ -59,7 +59,7 @@ Every other recipe stays blocked after these approvals:
 |---|---|
 | Green Tea Oat Bites | Matcha/green tea powder |
 | Gentle Avocado Toast | Chili-flake grams; fine-salt composition |
-| Warm Oatmeal | Milk or alternative, mixed berries, chopped walnuts |
+| Warm Oatmeal | Milk or alternative and mixed berries; the 1 tbsp chopped walnut use is now approved for this recipe only (7.3125 g). |
 | Sunshine Pancakes | Oat flour, topping berries, olive oil |
 | Berry Kefir Smoothie | Kefir, ice |
 | Tropical Fruit Smoothie | Coconut water, chia seeds, ice |

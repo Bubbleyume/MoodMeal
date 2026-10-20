@@ -1,4 +1,4539 @@
 {
+ "170187": {
+  "food": {
+   "fdc_id": "170187",
+   "data_type": "sr_legacy_food",
+   "description": "Nuts, walnuts, english",
+   "food_category_id": "12",
+   "publication_date": "2019-04-01"
+  },
+  "portions": [
+   {
+    "id": "86201",
+    "fdc_id": "170187",
+    "seq_num": "1",
+    "amount": "1.0",
+    "measure_unit_id": "9999",
+    "portion_description": "",
+    "modifier": "cup, chopped",
+    "gram_weight": "117.0",
+    "data_points": "12",
+    "footnote": "",
+    "min_year_acquired": ""
+   },
+   {
+    "id": "86202",
+    "fdc_id": "170187",
+    "seq_num": "2",
+    "amount": "1.0",
+    "measure_unit_id": "9999",
+    "portion_description": "",
+    "modifier": "cup, ground",
+    "gram_weight": "80.0",
+    "data_points": "",
+    "footnote": "",
+    "min_year_acquired": ""
+   },
+   {
+    "id": "86203",
+    "fdc_id": "170187",
+    "seq_num": "3",
+    "amount": "1.0",
+    "measure_unit_id": "9999",
+    "portion_description": "",
+    "modifier": "cup, in shell, edible yield (7 nuts)",
+    "gram_weight": "28.0",
+    "data_points": "",
+    "footnote": "",
+    "min_year_acquired": ""
+   },
+   {
+    "id": "86204",
+    "fdc_id": "170187",
+    "seq_num": "4",
+    "amount": "1.0",
+    "measure_unit_id": "9999",
+    "portion_description": "",
+    "modifier": "cup shelled (50 halves)",
+    "gram_weight": "100.0",
+    "data_points": "",
+    "footnote": "",
+    "min_year_acquired": ""
+   },
+   {
+    "id": "86205",
+    "fdc_id": "170187",
+    "seq_num": "5",
+    "amount": "1.0",
+    "measure_unit_id": "9999",
+    "portion_description": "",
+    "modifier": "cup pieces or chips",
+    "gram_weight": "120.0",
+    "data_points": "",
+    "footnote": "",
+    "min_year_acquired": ""
+   },
+   {
+    "id": "86206",
+    "fdc_id": "170187",
+    "seq_num": "6",
+    "amount": "1.0",
+    "measure_unit_id": "9999",
+    "portion_description": "",
+    "modifier": "oz (14 halves)",
+    "gram_weight": "28.35",
+    "data_points": "",
+    "footnote": "",
+    "min_year_acquired": ""
+   }
+  ],
+  "nutrients": {
+   "2047": {
+    "amount": null,
+    "unit": "KCAL",
+    "name": "Energy (Atwater General Factors)",
+    "sourceRow": null
+   },
+   "2048": {
+    "amount": null,
+    "unit": "KCAL",
+    "name": "Energy (Atwater Specific Factors)",
+    "sourceRow": null
+   },
+   "1001": {
+    "amount": null,
+    "unit": "G",
+    "name": "Solids",
+    "sourceRow": null
+   },
+   "1002": {
+    "amount": null,
+    "unit": "G",
+    "name": "Nitrogen",
+    "sourceRow": null
+   },
+   "1003": {
+    "amount": 15.23,
+    "unit": "G",
+    "name": "Protein",
+    "sourceRow": {
+     "id": "1501908",
+     "fdc_id": "170187",
+     "nutrient_id": "1003",
+     "amount": "15.23",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "14.4",
+     "max": "16.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1004": {
+    "amount": 65.21,
+    "unit": "G",
+    "name": "Total lipid (fat)",
+    "sourceRow": {
+     "id": "1501955",
+     "fdc_id": "170187",
+     "nutrient_id": "1004",
+     "amount": "65.21",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "63.5",
+     "max": "66.9",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1005": {
+    "amount": 13.71,
+    "unit": "G",
+    "name": "Carbohydrate, by difference",
+    "sourceRow": {
+     "id": "1501868",
+     "fdc_id": "170187",
+     "nutrient_id": "1005",
+     "amount": "13.71",
+     "data_points": "0",
+     "derivation_id": "49",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1006": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fiber, crude (DO NOT USE - Archived)",
+    "sourceRow": null
+   },
+   "1007": {
+    "amount": 1.78,
+    "unit": "G",
+    "name": "Ash",
+    "sourceRow": {
+     "id": "1501922",
+     "fdc_id": "170187",
+     "nutrient_id": "1007",
+     "amount": "1.78",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "1.71",
+     "max": "1.88",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1008": {
+    "amount": 654.0,
+    "unit": "KCAL",
+    "name": "Energy",
+    "sourceRow": {
+     "id": "1501869",
+     "fdc_id": "170187",
+     "nutrient_id": "1008",
+     "amount": "654.0",
+     "data_points": "0",
+     "derivation_id": "49",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1009": {
+    "amount": 0.06,
+    "unit": "G",
+    "name": "Starch",
+    "sourceRow": {
+     "id": "1501923",
+     "fdc_id": "170187",
+     "nutrient_id": "1009",
+     "amount": "0.06",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.01",
+     "max": "0.09",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1010": {
+    "amount": 2.43,
+    "unit": "G",
+    "name": "Sucrose",
+    "sourceRow": {
+     "id": "1501951",
+     "fdc_id": "170187",
+     "nutrient_id": "1010",
+     "amount": "2.43",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "2.2",
+     "max": "2.9",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1011": {
+    "amount": 0.08,
+    "unit": "G",
+    "name": "Glucose",
+    "sourceRow": {
+     "id": "1501952",
+     "fdc_id": "170187",
+     "nutrient_id": "1011",
+     "amount": "0.08",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.04",
+     "max": "0.15",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1012": {
+    "amount": 0.09,
+    "unit": "G",
+    "name": "Fructose",
+    "sourceRow": {
+     "id": "1501924",
+     "fdc_id": "170187",
+     "nutrient_id": "1012",
+     "amount": "0.09",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.04",
+     "max": "0.12",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1013": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "Lactose",
+    "sourceRow": {
+     "id": "1501925",
+     "fdc_id": "170187",
+     "nutrient_id": "1013",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1014": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "Maltose",
+    "sourceRow": {
+     "id": "1501953",
+     "fdc_id": "170187",
+     "nutrient_id": "1014",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1015": {
+    "amount": null,
+    "unit": "G",
+    "name": "Amylose",
+    "sourceRow": null
+   },
+   "1016": {
+    "amount": null,
+    "unit": "G",
+    "name": "Amylopectin",
+    "sourceRow": null
+   },
+   "1017": {
+    "amount": null,
+    "unit": "G",
+    "name": "Pectin",
+    "sourceRow": null
+   },
+   "1018": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "Alcohol, ethyl",
+    "sourceRow": {
+     "id": "1501884",
+     "fdc_id": "170187",
+     "nutrient_id": "1018",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1019": {
+    "amount": null,
+    "unit": "G",
+    "name": "Pentosan",
+    "sourceRow": null
+   },
+   "1020": {
+    "amount": null,
+    "unit": "G",
+    "name": "Pentoses",
+    "sourceRow": null
+   },
+   "1021": {
+    "amount": null,
+    "unit": "G",
+    "name": "Hemicellulose",
+    "sourceRow": null
+   },
+   "1022": {
+    "amount": null,
+    "unit": "G",
+    "name": "Cellulose",
+    "sourceRow": null
+   },
+   "1023": {
+    "amount": null,
+    "unit": "PH",
+    "name": "pH",
+    "sourceRow": null
+   },
+   "1024": {
+    "amount": null,
+    "unit": "SP_GR",
+    "name": "Specific Gravity",
+    "sourceRow": null
+   },
+   "1025": {
+    "amount": null,
+    "unit": "G",
+    "name": "Organic acids",
+    "sourceRow": null
+   },
+   "1026": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Acetic acid",
+    "sourceRow": null
+   },
+   "1027": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Aconitic acid",
+    "sourceRow": null
+   },
+   "1028": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Benzoic acid",
+    "sourceRow": null
+   },
+   "1029": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Chelidonic acid",
+    "sourceRow": null
+   },
+   "1030": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Chlorogenic acid",
+    "sourceRow": null
+   },
+   "1031": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Cinnamic acid",
+    "sourceRow": null
+   },
+   "1032": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Citric acid",
+    "sourceRow": null
+   },
+   "1033": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Fumaric acid",
+    "sourceRow": null
+   },
+   "1034": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Galacturonic acid",
+    "sourceRow": null
+   },
+   "1035": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Gallic acid",
+    "sourceRow": null
+   },
+   "1036": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Glycolic acid",
+    "sourceRow": null
+   },
+   "1037": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Isocitric acid",
+    "sourceRow": null
+   },
+   "1038": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Lactic acid",
+    "sourceRow": null
+   },
+   "1039": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Malic acid",
+    "sourceRow": null
+   },
+   "1040": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Oxaloacetic acid",
+    "sourceRow": null
+   },
+   "1041": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Oxalic acid",
+    "sourceRow": null
+   },
+   "1042": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Phytic acid",
+    "sourceRow": null
+   },
+   "1043": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Pyruvic acid",
+    "sourceRow": null
+   },
+   "1044": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Quinic acid",
+    "sourceRow": null
+   },
+   "1045": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Salicylic acid",
+    "sourceRow": null
+   },
+   "1046": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Succinic acid",
+    "sourceRow": null
+   },
+   "1047": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Tartaric acid",
+    "sourceRow": null
+   },
+   "1048": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Ursolic acid",
+    "sourceRow": null
+   },
+   "1049": {
+    "amount": null,
+    "unit": "G",
+    "name": "Solids, non-fat",
+    "sourceRow": null
+   },
+   "1050": {
+    "amount": null,
+    "unit": "G",
+    "name": "Carbohydrate, by summation",
+    "sourceRow": null
+   },
+   "1051": {
+    "amount": 4.07,
+    "unit": "G",
+    "name": "Water",
+    "sourceRow": {
+     "id": "1501954",
+     "fdc_id": "170187",
+     "nutrient_id": "1051",
+     "amount": "4.07",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "3.46",
+     "max": "4.51",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1052": {
+    "amount": null,
+    "unit": "G",
+    "name": "Adjusted Nitrogen",
+    "sourceRow": null
+   },
+   "1053": {
+    "amount": null,
+    "unit": "G",
+    "name": "Adjusted Protein",
+    "sourceRow": null
+   },
+   "1054": {
+    "amount": null,
+    "unit": "G",
+    "name": "Piperine",
+    "sourceRow": null
+   },
+   "1055": {
+    "amount": null,
+    "unit": "G",
+    "name": "Mannitol",
+    "sourceRow": null
+   },
+   "1056": {
+    "amount": null,
+    "unit": "G",
+    "name": "Sorbitol",
+    "sourceRow": null
+   },
+   "1057": {
+    "amount": 0.0,
+    "unit": "MG",
+    "name": "Caffeine",
+    "sourceRow": {
+     "id": "1501893",
+     "fdc_id": "170187",
+     "nutrient_id": "1057",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "68",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1058": {
+    "amount": 0.0,
+    "unit": "MG",
+    "name": "Theobromine",
+    "sourceRow": {
+     "id": "1501894",
+     "fdc_id": "170187",
+     "nutrient_id": "1058",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "68",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1059": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Nitrates",
+    "sourceRow": null
+   },
+   "1060": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Nitrites",
+    "sourceRow": null
+   },
+   "1061": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Nitrosamine,total",
+    "sourceRow": null
+   },
+   "1062": {
+    "amount": 2738.0,
+    "unit": "kJ",
+    "name": "Energy",
+    "sourceRow": {
+     "id": "1501881",
+     "fdc_id": "170187",
+     "nutrient_id": "1062",
+     "amount": "2738.0",
+     "data_points": "0",
+     "derivation_id": "49",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1063": {
+    "amount": null,
+    "unit": "G",
+    "name": "Sugars, Total",
+    "sourceRow": null
+   },
+   "1064": {
+    "amount": null,
+    "unit": "G",
+    "name": "Solids, soluble",
+    "sourceRow": null
+   },
+   "1065": {
+    "amount": null,
+    "unit": "G",
+    "name": "Glycogen",
+    "sourceRow": null
+   },
+   "1066": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fiber, neutral detergent (DO NOT USE - Archived)",
+    "sourceRow": null
+   },
+   "1067": {
+    "amount": null,
+    "unit": "G",
+    "name": "Reducing sugars",
+    "sourceRow": null
+   },
+   "1068": {
+    "amount": null,
+    "unit": "G",
+    "name": "Beta-glucans",
+    "sourceRow": null
+   },
+   "1069": {
+    "amount": null,
+    "unit": "G",
+    "name": "Oligosaccharides",
+    "sourceRow": null
+   },
+   "1070": {
+    "amount": null,
+    "unit": "G",
+    "name": "Nonstarch polysaccharides",
+    "sourceRow": null
+   },
+   "1071": {
+    "amount": null,
+    "unit": "G",
+    "name": "Resistant starch",
+    "sourceRow": null
+   },
+   "1072": {
+    "amount": null,
+    "unit": "G",
+    "name": "Carbohydrate, other",
+    "sourceRow": null
+   },
+   "1073": {
+    "amount": null,
+    "unit": "G",
+    "name": "Arabinose",
+    "sourceRow": null
+   },
+   "1074": {
+    "amount": null,
+    "unit": "G",
+    "name": "Xylose",
+    "sourceRow": null
+   },
+   "1075": {
+    "amount": null,
+    "unit": "G",
+    "name": "Galactose",
+    "sourceRow": null
+   },
+   "1076": {
+    "amount": null,
+    "unit": "G",
+    "name": "Raffinose",
+    "sourceRow": null
+   },
+   "1077": {
+    "amount": null,
+    "unit": "G",
+    "name": "Stachyose",
+    "sourceRow": null
+   },
+   "1078": {
+    "amount": null,
+    "unit": "G",
+    "name": "Xylitol",
+    "sourceRow": null
+   },
+   "1079": {
+    "amount": 6.7,
+    "unit": "G",
+    "name": "Fiber, total dietary",
+    "sourceRow": {
+     "id": "1501915",
+     "fdc_id": "170187",
+     "nutrient_id": "1079",
+     "amount": "6.7",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "4.7",
+     "max": "9.2",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1080": {
+    "amount": null,
+    "unit": "G",
+    "name": "Lignin",
+    "sourceRow": null
+   },
+   "1081": {
+    "amount": null,
+    "unit": "G",
+    "name": "Ribose",
+    "sourceRow": null
+   },
+   "1082": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fiber, soluble",
+    "sourceRow": null
+   },
+   "1083": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Theophylline",
+    "sourceRow": null
+   },
+   "1084": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fiber, insoluble",
+    "sourceRow": null
+   },
+   "1085": {
+    "amount": null,
+    "unit": "G",
+    "name": "Total fat (NLEA)",
+    "sourceRow": null
+   },
+   "1086": {
+    "amount": null,
+    "unit": "G",
+    "name": "Total sugar alcohols",
+    "sourceRow": null
+   },
+   "1087": {
+    "amount": 98.0,
+    "unit": "MG",
+    "name": "Calcium, Ca",
+    "sourceRow": {
+     "id": "1501847",
+     "fdc_id": "170187",
+     "nutrient_id": "1087",
+     "amount": "98.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "86.0",
+     "max": "110.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1088": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Chlorine, Cl",
+    "sourceRow": null
+   },
+   "1089": {
+    "amount": 2.91,
+    "unit": "MG",
+    "name": "Iron, Fe",
+    "sourceRow": {
+     "id": "1501916",
+     "fdc_id": "170187",
+     "nutrient_id": "1089",
+     "amount": "2.91",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "2.6",
+     "max": "3.2",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1090": {
+    "amount": 158.0,
+    "unit": "MG",
+    "name": "Magnesium, Mg",
+    "sourceRow": {
+     "id": "1501917",
+     "fdc_id": "170187",
+     "nutrient_id": "1090",
+     "amount": "158.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "154.0",
+     "max": "164.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1091": {
+    "amount": 346.0,
+    "unit": "MG",
+    "name": "Phosphorus, P",
+    "sourceRow": {
+     "id": "1501918",
+     "fdc_id": "170187",
+     "nutrient_id": "1091",
+     "amount": "346.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "340.0",
+     "max": "360.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1092": {
+    "amount": 441.0,
+    "unit": "MG",
+    "name": "Potassium, K",
+    "sourceRow": {
+     "id": "1501949",
+     "fdc_id": "170187",
+     "nutrient_id": "1092",
+     "amount": "441.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "415.0",
+     "max": "470.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1093": {
+    "amount": 2.0,
+    "unit": "MG",
+    "name": "Sodium, Na",
+    "sourceRow": {
+     "id": "1501919",
+     "fdc_id": "170187",
+     "nutrient_id": "1093",
+     "amount": "2.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "7.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1094": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Sulfur, S",
+    "sourceRow": null
+   },
+   "1095": {
+    "amount": 3.09,
+    "unit": "MG",
+    "name": "Zinc, Zn",
+    "sourceRow": {
+     "id": "1501950",
+     "fdc_id": "170187",
+     "nutrient_id": "1095",
+     "amount": "3.09",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "2.8",
+     "max": "3.4",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1096": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Chromium, Cr",
+    "sourceRow": null
+   },
+   "1097": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Cobalt, Co",
+    "sourceRow": null
+   },
+   "1098": {
+    "amount": 1.586,
+    "unit": "MG",
+    "name": "Copper, Cu",
+    "sourceRow": {
+     "id": "1501920",
+     "fdc_id": "170187",
+     "nutrient_id": "1098",
+     "amount": "1.586",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "1.5",
+     "max": "1.7",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1099": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Fluoride, F",
+    "sourceRow": null
+   },
+   "1100": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Iodine, I",
+    "sourceRow": null
+   },
+   "1101": {
+    "amount": 3.414,
+    "unit": "MG",
+    "name": "Manganese, Mn",
+    "sourceRow": {
+     "id": "1501921",
+     "fdc_id": "170187",
+     "nutrient_id": "1101",
+     "amount": "3.414",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "3.1",
+     "max": "3.9",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1102": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Molybdenum, Mo",
+    "sourceRow": null
+   },
+   "1103": {
+    "amount": 4.9,
+    "unit": "UG",
+    "name": "Selenium, Se",
+    "sourceRow": {
+     "id": "1501898",
+     "fdc_id": "170187",
+     "nutrient_id": "1103",
+     "amount": "4.9",
+     "data_points": "6",
+     "derivation_id": "1",
+     "min": "3.8",
+     "max": "6.3",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1104": {
+    "amount": 20.0,
+    "unit": "IU",
+    "name": "Vitamin A, IU",
+    "sourceRow": {
+     "id": "1501907",
+     "fdc_id": "170187",
+     "nutrient_id": "1104",
+     "amount": "20.0",
+     "data_points": "6",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "77.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1105": {
+    "amount": 0.0,
+    "unit": "UG",
+    "name": "Retinol",
+    "sourceRow": {
+     "id": "1501885",
+     "fdc_id": "170187",
+     "nutrient_id": "1105",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "68",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1106": {
+    "amount": 1.0,
+    "unit": "UG",
+    "name": "Vitamin A, RAE",
+    "sourceRow": {
+     "id": "1501904",
+     "fdc_id": "170187",
+     "nutrient_id": "1106",
+     "amount": "1.0",
+     "data_points": "6",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "4.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1107": {
+    "amount": 12.0,
+    "unit": "UG",
+    "name": "Carotene, beta",
+    "sourceRow": {
+     "id": "1501905",
+     "fdc_id": "170187",
+     "nutrient_id": "1107",
+     "amount": "12.0",
+     "data_points": "6",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "46.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1108": {
+    "amount": 0.0,
+    "unit": "UG",
+    "name": "Carotene, alpha",
+    "sourceRow": {
+     "id": "1501906",
+     "fdc_id": "170187",
+     "nutrient_id": "1108",
+     "amount": "0.0",
+     "data_points": "6",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1109": {
+    "amount": 0.7,
+    "unit": "MG",
+    "name": "Vitamin E (alpha-tocopherol)",
+    "sourceRow": {
+     "id": "1501850",
+     "fdc_id": "170187",
+     "nutrient_id": "1109",
+     "amount": "0.7",
+     "data_points": "13",
+     "derivation_id": "1",
+     "min": "0.14",
+     "max": "1.56",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1110": {
+    "amount": 0.0,
+    "unit": "IU",
+    "name": "Vitamin D (D2 + D3), International Units",
+    "sourceRow": {
+     "id": "1501882",
+     "fdc_id": "170187",
+     "nutrient_id": "1110",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "68",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1111": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Vitamin D2 (ergocalciferol)",
+    "sourceRow": null
+   },
+   "1112": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Vitamin D3 (cholecalciferol)",
+    "sourceRow": null
+   },
+   "1113": {
+    "amount": null,
+    "unit": "UG",
+    "name": "25-hydroxycholecalciferol",
+    "sourceRow": null
+   },
+   "1114": {
+    "amount": 0.0,
+    "unit": "UG",
+    "name": "Vitamin D (D2 + D3)",
+    "sourceRow": {
+     "id": "1501883",
+     "fdc_id": "170187",
+     "nutrient_id": "1114",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "68",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1115": {
+    "amount": null,
+    "unit": "UG",
+    "name": "25-hydroxyergocalciferol",
+    "sourceRow": null
+   },
+   "1116": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Phytoene",
+    "sourceRow": null
+   },
+   "1117": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Phytofluene",
+    "sourceRow": null
+   },
+   "1118": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Carotene, gamma",
+    "sourceRow": null
+   },
+   "1119": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Zeaxanthin",
+    "sourceRow": null
+   },
+   "1120": {
+    "amount": 0.0,
+    "unit": "UG",
+    "name": "Cryptoxanthin, beta",
+    "sourceRow": {
+     "id": "1501902",
+     "fdc_id": "170187",
+     "nutrient_id": "1120",
+     "amount": "0.0",
+     "data_points": "3",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1121": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Lutein",
+    "sourceRow": null
+   },
+   "1122": {
+    "amount": 0.0,
+    "unit": "UG",
+    "name": "Lycopene",
+    "sourceRow": {
+     "id": "1501903",
+     "fdc_id": "170187",
+     "nutrient_id": "1122",
+     "amount": "0.0",
+     "data_points": "3",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1123": {
+    "amount": 9.0,
+    "unit": "UG",
+    "name": "Lutein + zeaxanthin",
+    "sourceRow": {
+     "id": "1501897",
+     "fdc_id": "170187",
+     "nutrient_id": "1123",
+     "amount": "9.0",
+     "data_points": "3",
+     "derivation_id": "1",
+     "min": "8.0",
+     "max": "11.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1124": {
+    "amount": null,
+    "unit": "IU",
+    "name": "Vitamin E (label entry primarily)",
+    "sourceRow": null
+   },
+   "1125": {
+    "amount": 0.15,
+    "unit": "MG",
+    "name": "Tocopherol, beta",
+    "sourceRow": {
+     "id": "1501848",
+     "fdc_id": "170187",
+     "nutrient_id": "1125",
+     "amount": "0.15",
+     "data_points": "13",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.3",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1126": {
+    "amount": 20.83,
+    "unit": "MG",
+    "name": "Tocopherol, gamma",
+    "sourceRow": {
+     "id": "1501849",
+     "fdc_id": "170187",
+     "nutrient_id": "1126",
+     "amount": "20.83",
+     "data_points": "13",
+     "derivation_id": "1",
+     "min": "15.47",
+     "max": "27.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1127": {
+    "amount": 1.89,
+    "unit": "MG",
+    "name": "Tocopherol, delta",
+    "sourceRow": {
+     "id": "1501853",
+     "fdc_id": "170187",
+     "nutrient_id": "1127",
+     "amount": "1.89",
+     "data_points": "13",
+     "derivation_id": "1",
+     "min": "1.26",
+     "max": "2.8",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1128": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Tocotrienol, alpha",
+    "sourceRow": null
+   },
+   "1129": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Tocotrienol, beta",
+    "sourceRow": null
+   },
+   "1130": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Tocotrienol, gamma",
+    "sourceRow": null
+   },
+   "1131": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Tocotrienol, delta",
+    "sourceRow": null
+   },
+   "1132": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Aluminum, Al",
+    "sourceRow": null
+   },
+   "1133": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Antimony, Sb",
+    "sourceRow": null
+   },
+   "1134": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Arsenic, As",
+    "sourceRow": null
+   },
+   "1135": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Barium, Ba",
+    "sourceRow": null
+   },
+   "1136": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Beryllium, Be",
+    "sourceRow": null
+   },
+   "1137": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Boron, B",
+    "sourceRow": null
+   },
+   "1138": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Bromine, Br",
+    "sourceRow": null
+   },
+   "1139": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Cadmium, Cd",
+    "sourceRow": null
+   },
+   "1140": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Gold, Au",
+    "sourceRow": null
+   },
+   "1141": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Iron, heme",
+    "sourceRow": null
+   },
+   "1142": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Iron, non-heme",
+    "sourceRow": null
+   },
+   "1143": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Lead, Pb",
+    "sourceRow": null
+   },
+   "1144": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Lithium, Li",
+    "sourceRow": null
+   },
+   "1145": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Mercury, Hg",
+    "sourceRow": null
+   },
+   "1146": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Nickel, Ni",
+    "sourceRow": null
+   },
+   "1147": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Rubidium, Rb",
+    "sourceRow": null
+   },
+   "1148": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Fluoride - DO NOT USE; use 313",
+    "sourceRow": null
+   },
+   "1149": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Salt, NaCl",
+    "sourceRow": null
+   },
+   "1150": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Silicon, Si",
+    "sourceRow": null
+   },
+   "1151": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Silver, Ag",
+    "sourceRow": null
+   },
+   "1152": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Strontium, Sr",
+    "sourceRow": null
+   },
+   "1153": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Tin, Sn",
+    "sourceRow": null
+   },
+   "1154": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Titanium, Ti",
+    "sourceRow": null
+   },
+   "1155": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Vanadium, V",
+    "sourceRow": null
+   },
+   "1156": {
+    "amount": null,
+    "unit": "MCG_RE",
+    "name": "Vitamin A, RE",
+    "sourceRow": null
+   },
+   "1157": {
+    "amount": null,
+    "unit": "MCG_RE",
+    "name": "Carotene",
+    "sourceRow": null
+   },
+   "1158": {
+    "amount": null,
+    "unit": "MG_ATE",
+    "name": "Vitamin E",
+    "sourceRow": null
+   },
+   "1159": {
+    "amount": null,
+    "unit": "UG",
+    "name": "cis-beta-Carotene",
+    "sourceRow": null
+   },
+   "1160": {
+    "amount": null,
+    "unit": "UG",
+    "name": "cis-Lycopene",
+    "sourceRow": null
+   },
+   "1161": {
+    "amount": null,
+    "unit": "UG",
+    "name": "cis-Lutein/Zeaxanthin",
+    "sourceRow": null
+   },
+   "1162": {
+    "amount": 1.3,
+    "unit": "MG",
+    "name": "Vitamin C, total ascorbic acid",
+    "sourceRow": {
+     "id": "1501926",
+     "fdc_id": "170187",
+     "nutrient_id": "1162",
+     "amount": "1.3",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "1.0",
+     "max": "2.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1163": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Vitamin C, reduced ascorbic acid",
+    "sourceRow": null
+   },
+   "1164": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Vitamin C, dehydro ascorbic acid",
+    "sourceRow": null
+   },
+   "1165": {
+    "amount": 0.341,
+    "unit": "MG",
+    "name": "Thiamin",
+    "sourceRow": {
+     "id": "1501927",
+     "fdc_id": "170187",
+     "nutrient_id": "1165",
+     "amount": "0.341",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.31",
+     "max": "0.39",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1166": {
+    "amount": 0.15,
+    "unit": "MG",
+    "name": "Riboflavin",
+    "sourceRow": {
+     "id": "1501928",
+     "fdc_id": "170187",
+     "nutrient_id": "1166",
+     "amount": "0.15",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.14",
+     "max": "0.16",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1167": {
+    "amount": 1.125,
+    "unit": "MG",
+    "name": "Niacin",
+    "sourceRow": {
+     "id": "1501899",
+     "fdc_id": "170187",
+     "nutrient_id": "1167",
+     "amount": "1.125",
+     "data_points": "8",
+     "derivation_id": "1",
+     "min": "0.949",
+     "max": "1.44",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1168": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Niacin from tryptophan, determined",
+    "sourceRow": null
+   },
+   "1169": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Niacin equivalent N406 +N407",
+    "sourceRow": null
+   },
+   "1170": {
+    "amount": 0.57,
+    "unit": "MG",
+    "name": "Pantothenic acid",
+    "sourceRow": {
+     "id": "1501947",
+     "fdc_id": "170187",
+     "nutrient_id": "1170",
+     "amount": "0.57",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.54",
+     "max": "0.62",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1171": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Vitamin B-6, pyridoxine, alcohol form",
+    "sourceRow": null
+   },
+   "1172": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Vitamin B-6, pyridoxal, aldehyde form",
+    "sourceRow": null
+   },
+   "1173": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Vitamin B-6, pyridoxamine, amine form",
+    "sourceRow": null
+   },
+   "1174": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Vitamin B-6, N411 + N412 +N413",
+    "sourceRow": null
+   },
+   "1175": {
+    "amount": 0.537,
+    "unit": "MG",
+    "name": "Vitamin B-6",
+    "sourceRow": {
+     "id": "1501948",
+     "fdc_id": "170187",
+     "nutrient_id": "1175",
+     "amount": "0.537",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.43",
+     "max": "0.59",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1176": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Biotin",
+    "sourceRow": null
+   },
+   "1177": {
+    "amount": 98.0,
+    "unit": "UG",
+    "name": "Folate, total",
+    "sourceRow": {
+     "id": "1501929",
+     "fdc_id": "170187",
+     "nutrient_id": "1177",
+     "amount": "98.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "81.0",
+     "max": "113.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1178": {
+    "amount": 0.0,
+    "unit": "UG",
+    "name": "Vitamin B-12",
+    "sourceRow": {
+     "id": "1501891",
+     "fdc_id": "170187",
+     "nutrient_id": "1178",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "68",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1179": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Folate, free",
+    "sourceRow": null
+   },
+   "1180": {
+    "amount": 39.2,
+    "unit": "MG",
+    "name": "Choline, total",
+    "sourceRow": {
+     "id": "1501856",
+     "fdc_id": "170187",
+     "nutrient_id": "1180",
+     "amount": "39.2",
+     "data_points": "0",
+     "derivation_id": "",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1181": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Inositol",
+    "sourceRow": null
+   },
+   "1182": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Inositol phosphate",
+    "sourceRow": null
+   },
+   "1183": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Vitamin K (Menaquinone-4)",
+    "sourceRow": null
+   },
+   "1184": {
+    "amount": 0.0,
+    "unit": "UG",
+    "name": "Vitamin K (Dihydrophylloquinone)",
+    "sourceRow": {
+     "id": "1501900",
+     "fdc_id": "170187",
+     "nutrient_id": "1184",
+     "amount": "0.0",
+     "data_points": "8",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1185": {
+    "amount": 2.7,
+    "unit": "UG",
+    "name": "Vitamin K (phylloquinone)",
+    "sourceRow": {
+     "id": "1501901",
+     "fdc_id": "170187",
+     "nutrient_id": "1185",
+     "amount": "2.7",
+     "data_points": "8",
+     "derivation_id": "1",
+     "min": "1.0",
+     "max": "4.6",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1186": {
+    "amount": 0.0,
+    "unit": "UG",
+    "name": "Folic acid",
+    "sourceRow": {
+     "id": "1501956",
+     "fdc_id": "170187",
+     "nutrient_id": "1186",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "68",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1187": {
+    "amount": 98.0,
+    "unit": "UG",
+    "name": "Folate, food",
+    "sourceRow": {
+     "id": "1501870",
+     "fdc_id": "170187",
+     "nutrient_id": "1187",
+     "amount": "98.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "81.0",
+     "max": "113.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1188": {
+    "amount": null,
+    "unit": "UG",
+    "name": "5-methyl tetrahydrofolate (5-MTHF)",
+    "sourceRow": null
+   },
+   "1189": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Folate, not 5-MTHF",
+    "sourceRow": null
+   },
+   "1190": {
+    "amount": 98.0,
+    "unit": "UG",
+    "name": "Folate, DFE",
+    "sourceRow": {
+     "id": "1501857",
+     "fdc_id": "170187",
+     "nutrient_id": "1190",
+     "amount": "98.0",
+     "data_points": "0",
+     "derivation_id": "49",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1191": {
+    "amount": null,
+    "unit": "UG",
+    "name": "10-Formyl folic acid (10HCOFA)",
+    "sourceRow": null
+   },
+   "1192": {
+    "amount": null,
+    "unit": "UG",
+    "name": "5-Formyltetrahydrofolic acid (5-HCOH4",
+    "sourceRow": null
+   },
+   "1193": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Tetrahydrofolic acid (THF)",
+    "sourceRow": null
+   },
+   "1194": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Choline, free",
+    "sourceRow": null
+   },
+   "1195": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Choline, from phosphocholine",
+    "sourceRow": null
+   },
+   "1196": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Choline, from phosphotidyl choline",
+    "sourceRow": null
+   },
+   "1197": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Choline, from glycerophosphocholine",
+    "sourceRow": null
+   },
+   "1198": {
+    "amount": 0.3,
+    "unit": "MG",
+    "name": "Betaine",
+    "sourceRow": {
+     "id": "1501858",
+     "fdc_id": "170187",
+     "nutrient_id": "1198",
+     "amount": "0.3",
+     "data_points": "5",
+     "derivation_id": "1",
+     "min": "0.2",
+     "max": "0.3",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1199": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Choline, from sphingomyelin",
+    "sourceRow": null
+   },
+   "1200": {
+    "amount": null,
+    "unit": "MG",
+    "name": "p-Hydroxy benzoic acid",
+    "sourceRow": null
+   },
+   "1201": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Caffeic acid",
+    "sourceRow": null
+   },
+   "1202": {
+    "amount": null,
+    "unit": "MG",
+    "name": "p-Coumaric acid",
+    "sourceRow": null
+   },
+   "1203": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Ellagic acid",
+    "sourceRow": null
+   },
+   "1204": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Ferrulic acid",
+    "sourceRow": null
+   },
+   "1205": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Gentisic acid",
+    "sourceRow": null
+   },
+   "1206": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Tyrosol",
+    "sourceRow": null
+   },
+   "1207": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Vanillic acid",
+    "sourceRow": null
+   },
+   "1208": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Phenolic acids, total",
+    "sourceRow": null
+   },
+   "1209": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Polyphenols, total",
+    "sourceRow": null
+   },
+   "1210": {
+    "amount": 0.17,
+    "unit": "G",
+    "name": "Tryptophan",
+    "sourceRow": {
+     "id": "1501871",
+     "fdc_id": "170187",
+     "nutrient_id": "1210",
+     "amount": "0.17",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1211": {
+    "amount": 0.596,
+    "unit": "G",
+    "name": "Threonine",
+    "sourceRow": {
+     "id": "1501872",
+     "fdc_id": "170187",
+     "nutrient_id": "1211",
+     "amount": "0.596",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1212": {
+    "amount": 0.625,
+    "unit": "G",
+    "name": "Isoleucine",
+    "sourceRow": {
+     "id": "1501859",
+     "fdc_id": "170187",
+     "nutrient_id": "1212",
+     "amount": "0.625",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1213": {
+    "amount": 1.17,
+    "unit": "G",
+    "name": "Leucine",
+    "sourceRow": {
+     "id": "1501860",
+     "fdc_id": "170187",
+     "nutrient_id": "1213",
+     "amount": "1.17",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1214": {
+    "amount": 0.424,
+    "unit": "G",
+    "name": "Lysine",
+    "sourceRow": {
+     "id": "1501861",
+     "fdc_id": "170187",
+     "nutrient_id": "1214",
+     "amount": "0.424",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1215": {
+    "amount": 0.236,
+    "unit": "G",
+    "name": "Methionine",
+    "sourceRow": {
+     "id": "1501873",
+     "fdc_id": "170187",
+     "nutrient_id": "1215",
+     "amount": "0.236",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1216": {
+    "amount": 0.208,
+    "unit": "G",
+    "name": "Cystine",
+    "sourceRow": {
+     "id": "1501862",
+     "fdc_id": "170187",
+     "nutrient_id": "1216",
+     "amount": "0.208",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1217": {
+    "amount": 0.711,
+    "unit": "G",
+    "name": "Phenylalanine",
+    "sourceRow": {
+     "id": "1501874",
+     "fdc_id": "170187",
+     "nutrient_id": "1217",
+     "amount": "0.711",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1218": {
+    "amount": 0.406,
+    "unit": "G",
+    "name": "Tyrosine",
+    "sourceRow": {
+     "id": "1501875",
+     "fdc_id": "170187",
+     "nutrient_id": "1218",
+     "amount": "0.406",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1219": {
+    "amount": 0.753,
+    "unit": "G",
+    "name": "Valine",
+    "sourceRow": {
+     "id": "1501863",
+     "fdc_id": "170187",
+     "nutrient_id": "1219",
+     "amount": "0.753",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1220": {
+    "amount": 2.278,
+    "unit": "G",
+    "name": "Arginine",
+    "sourceRow": {
+     "id": "1501864",
+     "fdc_id": "170187",
+     "nutrient_id": "1220",
+     "amount": "2.278",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1221": {
+    "amount": 0.391,
+    "unit": "G",
+    "name": "Histidine",
+    "sourceRow": {
+     "id": "1501865",
+     "fdc_id": "170187",
+     "nutrient_id": "1221",
+     "amount": "0.391",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1222": {
+    "amount": 0.696,
+    "unit": "G",
+    "name": "Alanine",
+    "sourceRow": {
+     "id": "1501876",
+     "fdc_id": "170187",
+     "nutrient_id": "1222",
+     "amount": "0.696",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1223": {
+    "amount": 1.829,
+    "unit": "G",
+    "name": "Aspartic acid",
+    "sourceRow": {
+     "id": "1501866",
+     "fdc_id": "170187",
+     "nutrient_id": "1223",
+     "amount": "1.829",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1224": {
+    "amount": 2.816,
+    "unit": "G",
+    "name": "Glutamic acid",
+    "sourceRow": {
+     "id": "1501877",
+     "fdc_id": "170187",
+     "nutrient_id": "1224",
+     "amount": "2.816",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1225": {
+    "amount": 0.816,
+    "unit": "G",
+    "name": "Glycine",
+    "sourceRow": {
+     "id": "1501878",
+     "fdc_id": "170187",
+     "nutrient_id": "1225",
+     "amount": "0.816",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1226": {
+    "amount": 0.706,
+    "unit": "G",
+    "name": "Proline",
+    "sourceRow": {
+     "id": "1501879",
+     "fdc_id": "170187",
+     "nutrient_id": "1226",
+     "amount": "0.706",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1227": {
+    "amount": 0.934,
+    "unit": "G",
+    "name": "Serine",
+    "sourceRow": {
+     "id": "1501867",
+     "fdc_id": "170187",
+     "nutrient_id": "1227",
+     "amount": "0.934",
+     "data_points": "0",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1228": {
+    "amount": null,
+    "unit": "G",
+    "name": "Hydroxyproline",
+    "sourceRow": null
+   },
+   "1229": {
+    "amount": null,
+    "unit": "G",
+    "name": "Cysteine and methionine(sulfer containig AA)",
+    "sourceRow": null
+   },
+   "1230": {
+    "amount": null,
+    "unit": "G",
+    "name": "Phenylalanine and tyrosine (aromatic  AA)",
+    "sourceRow": null
+   },
+   "1231": {
+    "amount": null,
+    "unit": "G",
+    "name": "Asparagine",
+    "sourceRow": null
+   },
+   "1232": {
+    "amount": null,
+    "unit": "G",
+    "name": "Cysteine",
+    "sourceRow": null
+   },
+   "1233": {
+    "amount": null,
+    "unit": "G",
+    "name": "Glutamine",
+    "sourceRow": null
+   },
+   "1234": {
+    "amount": null,
+    "unit": "G",
+    "name": "Taurine",
+    "sourceRow": null
+   },
+   "1235": {
+    "amount": null,
+    "unit": "G",
+    "name": "Sugars, added",
+    "sourceRow": null
+   },
+   "1236": {
+    "amount": null,
+    "unit": "G",
+    "name": "Sugars, intrinsic",
+    "sourceRow": null
+   },
+   "1237": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Calcium, added",
+    "sourceRow": null
+   },
+   "1238": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Iron, added",
+    "sourceRow": null
+   },
+   "1239": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Calcium, intrinsic",
+    "sourceRow": null
+   },
+   "1240": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Iron, intrinsic",
+    "sourceRow": null
+   },
+   "1241": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Vitamin C, added",
+    "sourceRow": null
+   },
+   "1242": {
+    "amount": 0.0,
+    "unit": "MG",
+    "name": "Vitamin E, added",
+    "sourceRow": {
+     "id": "1501895",
+     "fdc_id": "170187",
+     "nutrient_id": "1242",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "68",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1243": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Thiamin, added",
+    "sourceRow": null
+   },
+   "1244": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Riboflavin, added",
+    "sourceRow": null
+   },
+   "1245": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Niacin, added",
+    "sourceRow": null
+   },
+   "1246": {
+    "amount": 0.0,
+    "unit": "UG",
+    "name": "Vitamin B-12, added",
+    "sourceRow": {
+     "id": "1501896",
+     "fdc_id": "170187",
+     "nutrient_id": "1246",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "68",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1247": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Vitamin C, intrinsic",
+    "sourceRow": null
+   },
+   "1248": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Vitamin E, intrinsic",
+    "sourceRow": null
+   },
+   "1249": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Thiamin, intrinsic",
+    "sourceRow": null
+   },
+   "1250": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Riboflavin, intrinsic",
+    "sourceRow": null
+   },
+   "1251": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Niacin, intrinsic",
+    "sourceRow": null
+   },
+   "1252": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Vitamin B-12, intrinsic",
+    "sourceRow": null
+   },
+   "1253": {
+    "amount": 0.0,
+    "unit": "MG",
+    "name": "Cholesterol",
+    "sourceRow": {
+     "id": "1501892",
+     "fdc_id": "170187",
+     "nutrient_id": "1253",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "68",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1254": {
+    "amount": null,
+    "unit": "G",
+    "name": "Glycerides",
+    "sourceRow": null
+   },
+   "1255": {
+    "amount": null,
+    "unit": "G",
+    "name": "Phospholipids",
+    "sourceRow": null
+   },
+   "1256": {
+    "amount": null,
+    "unit": "G",
+    "name": "Glycolipids",
+    "sourceRow": null
+   },
+   "1257": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fatty acids, total trans",
+    "sourceRow": null
+   },
+   "1258": {
+    "amount": 6.126,
+    "unit": "G",
+    "name": "Fatty acids, total saturated",
+    "sourceRow": {
+     "id": "1501880",
+     "fdc_id": "170187",
+     "nutrient_id": "1258",
+     "amount": "6.126",
+     "data_points": "0",
+     "derivation_id": "49",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1259": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "SFA 4:0",
+    "sourceRow": {
+     "id": "1501845",
+     "fdc_id": "170187",
+     "nutrient_id": "1259",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "68",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1260": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "SFA 6:0",
+    "sourceRow": {
+     "id": "1501846",
+     "fdc_id": "170187",
+     "nutrient_id": "1260",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "68",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1261": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "SFA 8:0",
+    "sourceRow": {
+     "id": "1501930",
+     "fdc_id": "170187",
+     "nutrient_id": "1261",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1262": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "SFA 10:0",
+    "sourceRow": {
+     "id": "1501957",
+     "fdc_id": "170187",
+     "nutrient_id": "1262",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1263": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "SFA 12:0",
+    "sourceRow": {
+     "id": "1501931",
+     "fdc_id": "170187",
+     "nutrient_id": "1263",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1264": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "SFA 14:0",
+    "sourceRow": {
+     "id": "1501932",
+     "fdc_id": "170187",
+     "nutrient_id": "1264",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1265": {
+    "amount": 4.404,
+    "unit": "G",
+    "name": "SFA 16:0",
+    "sourceRow": {
+     "id": "1501937",
+     "fdc_id": "170187",
+     "nutrient_id": "1265",
+     "amount": "4.404",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "4.115",
+     "max": "4.901",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1266": {
+    "amount": 1.659,
+    "unit": "G",
+    "name": "SFA 18:0",
+    "sourceRow": {
+     "id": "1501938",
+     "fdc_id": "170187",
+     "nutrient_id": "1266",
+     "amount": "1.659",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "1.581",
+     "max": "1.854",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1267": {
+    "amount": 0.063,
+    "unit": "G",
+    "name": "SFA 20:0",
+    "sourceRow": {
+     "id": "1501939",
+     "fdc_id": "170187",
+     "nutrient_id": "1267",
+     "amount": "0.063",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.061",
+     "max": "0.064",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1268": {
+    "amount": 8.799,
+    "unit": "G",
+    "name": "MUFA 18:1",
+    "sourceRow": {
+     "id": "1501940",
+     "fdc_id": "170187",
+     "nutrient_id": "1268",
+     "amount": "8.799",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "8.386",
+     "max": "9.27",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1269": {
+    "amount": 38.093,
+    "unit": "G",
+    "name": "PUFA 18:2",
+    "sourceRow": {
+     "id": "1501851",
+     "fdc_id": "170187",
+     "nutrient_id": "1269",
+     "amount": "38.093",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "37.217",
+     "max": "39.234",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1270": {
+    "amount": 9.08,
+    "unit": "G",
+    "name": "PUFA 18:3",
+    "sourceRow": {
+     "id": "1501852",
+     "fdc_id": "170187",
+     "nutrient_id": "1270",
+     "amount": "9.08",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "8.596",
+     "max": "9.981",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1271": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "PUFA 20:4",
+    "sourceRow": {
+     "id": "1501936",
+     "fdc_id": "170187",
+     "nutrient_id": "1271",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1272": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "PUFA 22:6 n-3 (DHA)",
+    "sourceRow": {
+     "id": "1501909",
+     "fdc_id": "170187",
+     "nutrient_id": "1272",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1273": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "SFA 22:0",
+    "sourceRow": {
+     "id": "1501910",
+     "fdc_id": "170187",
+     "nutrient_id": "1273",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1274": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "MUFA 14:1",
+    "sourceRow": {
+     "id": "1501911",
+     "fdc_id": "170187",
+     "nutrient_id": "1274",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1275": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "MUFA 16:1",
+    "sourceRow": {
+     "id": "1501912",
+     "fdc_id": "170187",
+     "nutrient_id": "1275",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1276": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "PUFA 18:4",
+    "sourceRow": {
+     "id": "1501886",
+     "fdc_id": "170187",
+     "nutrient_id": "1276",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "68",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1277": {
+    "amount": 0.134,
+    "unit": "G",
+    "name": "MUFA 20:1",
+    "sourceRow": {
+     "id": "1501941",
+     "fdc_id": "170187",
+     "nutrient_id": "1277",
+     "amount": "0.134",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.123",
+     "max": "0.183",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1278": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "PUFA 20:5 n-3 (EPA)",
+    "sourceRow": {
+     "id": "1501913",
+     "fdc_id": "170187",
+     "nutrient_id": "1278",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1279": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "MUFA 22:1",
+    "sourceRow": {
+     "id": "1501942",
+     "fdc_id": "170187",
+     "nutrient_id": "1279",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1280": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "PUFA 22:5 n-3 (DPA)",
+    "sourceRow": {
+     "id": "1501914",
+     "fdc_id": "170187",
+     "nutrient_id": "1280",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1281": {
+    "amount": null,
+    "unit": "G",
+    "name": "TFA 14:1 t",
+    "sourceRow": null
+   },
+   "1283": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Phytosterols",
+    "sourceRow": null
+   },
+   "1284": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Ergosterol",
+    "sourceRow": null
+   },
+   "1285": {
+    "amount": 0.0,
+    "unit": "MG",
+    "name": "Stigmasterol",
+    "sourceRow": {
+     "id": "1501887",
+     "fdc_id": "170187",
+     "nutrient_id": "1285",
+     "amount": "0.0",
+     "data_points": "4",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1286": {
+    "amount": 5.0,
+    "unit": "MG",
+    "name": "Campesterol",
+    "sourceRow": {
+     "id": "1501889",
+     "fdc_id": "170187",
+     "nutrient_id": "1286",
+     "amount": "5.0",
+     "data_points": "4",
+     "derivation_id": "1",
+     "min": "5.0",
+     "max": "5.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1287": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Brassicasterol",
+    "sourceRow": null
+   },
+   "1288": {
+    "amount": 87.0,
+    "unit": "MG",
+    "name": "Beta-sitosterol",
+    "sourceRow": {
+     "id": "1501888",
+     "fdc_id": "170187",
+     "nutrient_id": "1288",
+     "amount": "87.0",
+     "data_points": "4",
+     "derivation_id": "1",
+     "min": "82.0",
+     "max": "95.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1289": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Campestanol",
+    "sourceRow": null
+   },
+   "1290": {
+    "amount": null,
+    "unit": "G",
+    "name": "Unsaponifiable matter (lipids)",
+    "sourceRow": null
+   },
+   "1291": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fatty acids, other than 607-615, 617-621, 624-632, 652-654, 686-689)",
+    "sourceRow": null
+   },
+   "1292": {
+    "amount": 8.933,
+    "unit": "G",
+    "name": "Fatty acids, total monounsaturated",
+    "sourceRow": {
+     "id": "1501854",
+     "fdc_id": "170187",
+     "nutrient_id": "1292",
+     "amount": "8.933",
+     "data_points": "0",
+     "derivation_id": "49",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1293": {
+    "amount": 47.174,
+    "unit": "G",
+    "name": "Fatty acids, total polyunsaturated",
+    "sourceRow": {
+     "id": "1501855",
+     "fdc_id": "170187",
+     "nutrient_id": "1293",
+     "amount": "47.174",
+     "data_points": "0",
+     "derivation_id": "49",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1294": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Beta-sitostanol",
+    "sourceRow": null
+   },
+   "1295": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Delta-7-avenasterol",
+    "sourceRow": null
+   },
+   "1296": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Delta-5-avenasterol",
+    "sourceRow": null
+   },
+   "1297": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Alpha-spinasterol",
+    "sourceRow": null
+   },
+   "1298": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Phytosterols, other",
+    "sourceRow": null
+   },
+   "1299": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "SFA 15:0",
+    "sourceRow": {
+     "id": "1501943",
+     "fdc_id": "170187",
+     "nutrient_id": "1299",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1300": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "SFA 17:0",
+    "sourceRow": {
+     "id": "1501933",
+     "fdc_id": "170187",
+     "nutrient_id": "1300",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1301": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "SFA 24:0",
+    "sourceRow": {
+     "id": "1501934",
+     "fdc_id": "170187",
+     "nutrient_id": "1301",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1302": {
+    "amount": null,
+    "unit": "G",
+    "name": "Wax Esters(Total Wax)",
+    "sourceRow": null
+   },
+   "1303": {
+    "amount": null,
+    "unit": "G",
+    "name": "TFA 16:1 t",
+    "sourceRow": null
+   },
+   "1304": {
+    "amount": null,
+    "unit": "G",
+    "name": "TFA 18:1 t",
+    "sourceRow": null
+   },
+   "1305": {
+    "amount": null,
+    "unit": "G",
+    "name": "TFA 22:1 t",
+    "sourceRow": null
+   },
+   "1306": {
+    "amount": null,
+    "unit": "G",
+    "name": "TFA 18:2 t not further defined",
+    "sourceRow": null
+   },
+   "1307": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 18:2 i",
+    "sourceRow": null
+   },
+   "1308": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 18:2 t,c",
+    "sourceRow": null
+   },
+   "1309": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 18:2 c,t",
+    "sourceRow": null
+   },
+   "1310": {
+    "amount": null,
+    "unit": "G",
+    "name": "TFA 18:2 t,t",
+    "sourceRow": null
+   },
+   "1311": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 18:2 CLAs",
+    "sourceRow": null
+   },
+   "1312": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "MUFA 24:1 c",
+    "sourceRow": {
+     "id": "1501935",
+     "fdc_id": "170187",
+     "nutrient_id": "1312",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1313": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "PUFA 20:2 n-6 c,c",
+    "sourceRow": {
+     "id": "1501944",
+     "fdc_id": "170187",
+     "nutrient_id": "1313",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1314": {
+    "amount": null,
+    "unit": "G",
+    "name": "MUFA 16:1 c",
+    "sourceRow": null
+   },
+   "1315": {
+    "amount": null,
+    "unit": "G",
+    "name": "MUFA 18:1 c",
+    "sourceRow": null
+   },
+   "1316": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 18:2 n-6 c,c",
+    "sourceRow": null
+   },
+   "1317": {
+    "amount": null,
+    "unit": "G",
+    "name": "MUFA 22:1 c",
+    "sourceRow": null
+   },
+   "1318": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fatty acids, saturated, other",
+    "sourceRow": null
+   },
+   "1319": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fatty acids, monounsat., other",
+    "sourceRow": null
+   },
+   "1320": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fatty acids, polyunsat., other",
+    "sourceRow": null
+   },
+   "1321": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 18:3 n-6 c,c,c",
+    "sourceRow": null
+   },
+   "1322": {
+    "amount": null,
+    "unit": "G",
+    "name": "SFA 19:0",
+    "sourceRow": null
+   },
+   "1323": {
+    "amount": null,
+    "unit": "G",
+    "name": "MUFA 17:1",
+    "sourceRow": null
+   },
+   "1324": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 16:2",
+    "sourceRow": null
+   },
+   "1325": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "PUFA 20:3",
+    "sourceRow": {
+     "id": "1501945",
+     "fdc_id": "170187",
+     "nutrient_id": "1325",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1326": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fatty acids, total sat., NLEA",
+    "sourceRow": null
+   },
+   "1327": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fatty acids, total monounsat., NLEA",
+    "sourceRow": null
+   },
+   "1328": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fatty acids, total polyunsat., NLEA",
+    "sourceRow": null
+   },
+   "1329": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fatty acids, total trans-monoenoic",
+    "sourceRow": null
+   },
+   "1330": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fatty acids, total trans-dienoic",
+    "sourceRow": null
+   },
+   "1331": {
+    "amount": null,
+    "unit": "G",
+    "name": "Fatty acids, total trans-polyenoic",
+    "sourceRow": null
+   },
+   "1332": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "SFA 13:0",
+    "sourceRow": {
+     "id": "1501946",
+     "fdc_id": "170187",
+     "nutrient_id": "1332",
+     "amount": "0.0",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1333": {
+    "amount": null,
+    "unit": "G",
+    "name": "MUFA 15:1",
+    "sourceRow": null
+   },
+   "1334": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 22:2",
+    "sourceRow": null
+   },
+   "1335": {
+    "amount": null,
+    "unit": "G",
+    "name": "SFA 11:0",
+    "sourceRow": null
+   },
+   "1336": {
+    "amount": null,
+    "unit": "UMOL_TE",
+    "name": "ORAC, Hydrophyllic",
+    "sourceRow": null
+   },
+   "1337": {
+    "amount": null,
+    "unit": "UMOL_TE",
+    "name": "ORAC, Lipophillic",
+    "sourceRow": null
+   },
+   "1338": {
+    "amount": null,
+    "unit": "UMOL_TE",
+    "name": "ORAC, Total",
+    "sourceRow": null
+   },
+   "1339": {
+    "amount": null,
+    "unit": "MG_GAE",
+    "name": "Total Phenolics",
+    "sourceRow": null
+   },
+   "1340": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Daidzein",
+    "sourceRow": null
+   },
+   "1341": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Genistein",
+    "sourceRow": null
+   },
+   "1342": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Glycitein",
+    "sourceRow": null
+   },
+   "1343": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Isoflavones",
+    "sourceRow": null
+   },
+   "1344": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Biochanin A",
+    "sourceRow": null
+   },
+   "1345": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Formononetin",
+    "sourceRow": null
+   },
+   "1346": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Coumestrol",
+    "sourceRow": null
+   },
+   "1347": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Flavonoids, total",
+    "sourceRow": null
+   },
+   "1348": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Anthocyanidins",
+    "sourceRow": null
+   },
+   "1349": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Cyanidin",
+    "sourceRow": null
+   },
+   "1350": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Proanthocyanidin (dimer-A linkage)",
+    "sourceRow": null
+   },
+   "1351": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Proanthocyanidin monomers",
+    "sourceRow": null
+   },
+   "1352": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Proanthocyanidin dimers",
+    "sourceRow": null
+   },
+   "1353": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Proanthocyanidin trimers",
+    "sourceRow": null
+   },
+   "1354": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Proanthocyanidin 4-6mers",
+    "sourceRow": null
+   },
+   "1355": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Proanthocyanidin 7-10mers",
+    "sourceRow": null
+   },
+   "1356": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Proanthocyanidin polymers (>10mers)",
+    "sourceRow": null
+   },
+   "1357": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Delphinidin",
+    "sourceRow": null
+   },
+   "1358": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Malvidin",
+    "sourceRow": null
+   },
+   "1359": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Pelargonidin",
+    "sourceRow": null
+   },
+   "1360": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Peonidin",
+    "sourceRow": null
+   },
+   "1361": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Petunidin",
+    "sourceRow": null
+   },
+   "1362": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Flavans, total",
+    "sourceRow": null
+   },
+   "1363": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Catechins, total",
+    "sourceRow": null
+   },
+   "1364": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Catechin",
+    "sourceRow": null
+   },
+   "1365": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Epigallocatechin",
+    "sourceRow": null
+   },
+   "1366": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Epicatechin",
+    "sourceRow": null
+   },
+   "1367": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Epicatechin-3-gallate",
+    "sourceRow": null
+   },
+   "1368": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Epigallocatechin-3-gallate",
+    "sourceRow": null
+   },
+   "1369": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Procyanidins, total",
+    "sourceRow": null
+   },
+   "1370": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Theaflavins",
+    "sourceRow": null
+   },
+   "1371": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Thearubigins",
+    "sourceRow": null
+   },
+   "1372": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Flavanones, total",
+    "sourceRow": null
+   },
+   "1373": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Eriodictyol",
+    "sourceRow": null
+   },
+   "1374": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Hesperetin",
+    "sourceRow": null
+   },
+   "1375": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Isosakuranetin",
+    "sourceRow": null
+   },
+   "1376": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Liquiritigenin",
+    "sourceRow": null
+   },
+   "1377": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Naringenin",
+    "sourceRow": null
+   },
+   "1378": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Flavones, total",
+    "sourceRow": null
+   },
+   "1379": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Apigenin",
+    "sourceRow": null
+   },
+   "1380": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Chrysoeriol",
+    "sourceRow": null
+   },
+   "1381": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Diosmetin",
+    "sourceRow": null
+   },
+   "1382": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Luteolin",
+    "sourceRow": null
+   },
+   "1383": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Nobiletin",
+    "sourceRow": null
+   },
+   "1384": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Sinensetin",
+    "sourceRow": null
+   },
+   "1385": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Tangeretin",
+    "sourceRow": null
+   },
+   "1386": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Flavonols, total",
+    "sourceRow": null
+   },
+   "1387": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Isorhamnetin",
+    "sourceRow": null
+   },
+   "1388": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Kaempferol",
+    "sourceRow": null
+   },
+   "1389": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Limocitrin",
+    "sourceRow": null
+   },
+   "1390": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Myricetin",
+    "sourceRow": null
+   },
+   "1391": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Quercetin",
+    "sourceRow": null
+   },
+   "1392": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Theogallin",
+    "sourceRow": null
+   },
+   "1393": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Theaflavin -3,3' -digallate",
+    "sourceRow": null
+   },
+   "1394": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Theaflavin -3' -gallate",
+    "sourceRow": null
+   },
+   "1395": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Theaflavin -3 -gallate",
+    "sourceRow": null
+   },
+   "1396": {
+    "amount": null,
+    "unit": "MG",
+    "name": "(+) -Gallo catechin",
+    "sourceRow": null
+   },
+   "1397": {
+    "amount": null,
+    "unit": "MG",
+    "name": "(+)-Catechin 3-gallate",
+    "sourceRow": null
+   },
+   "1398": {
+    "amount": null,
+    "unit": "MG",
+    "name": "(+)-Gallocatechin 3-gallate",
+    "sourceRow": null
+   },
+   "1399": {
+    "amount": null,
+    "unit": "G",
+    "name": "Mannose",
+    "sourceRow": null
+   },
+   "1400": {
+    "amount": null,
+    "unit": "G",
+    "name": "Triose",
+    "sourceRow": null
+   },
+   "1401": {
+    "amount": null,
+    "unit": "G",
+    "name": "Tetrose",
+    "sourceRow": null
+   },
+   "1402": {
+    "amount": null,
+    "unit": "G",
+    "name": "Other Saccharides",
+    "sourceRow": null
+   },
+   "1403": {
+    "amount": null,
+    "unit": "G",
+    "name": "Inulin",
+    "sourceRow": null
+   },
+   "1404": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 18:3 n-3 c,c,c (ALA)",
+    "sourceRow": null
+   },
+   "1405": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 20:3 n-3",
+    "sourceRow": null
+   },
+   "1406": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 20:3 n-6",
+    "sourceRow": null
+   },
+   "1407": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 20:4 n-3",
+    "sourceRow": null
+   },
+   "1408": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 20:4 n-6",
+    "sourceRow": null
+   },
+   "1409": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 18:3i",
+    "sourceRow": null
+   },
+   "1410": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 21:5",
+    "sourceRow": null
+   },
+   "1411": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 22:4",
+    "sourceRow": null
+   },
+   "1412": {
+    "amount": null,
+    "unit": "G",
+    "name": "MUFA 18:1-11 t (18:1t n-7)",
+    "sourceRow": null
+   },
+   "1413": {
+    "amount": null,
+    "unit": "G",
+    "name": "MUFA 18:1-11 c (18:1c n-7)",
+    "sourceRow": null
+   },
+   "1414": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 20:3 n-9",
+    "sourceRow": null
+   },
+   "2000": {
+    "amount": 2.61,
+    "unit": "G",
+    "name": "Total Sugars",
+    "sourceRow": {
+     "id": "1501890",
+     "fdc_id": "170187",
+     "nutrient_id": "2000",
+     "amount": "2.61",
+     "data_points": "7",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "2003": {
+    "amount": null,
+    "unit": "G",
+    "name": "SFA 5:0",
+    "sourceRow": null
+   },
+   "2004": {
+    "amount": null,
+    "unit": "G",
+    "name": "SFA 7:0",
+    "sourceRow": null
+   },
+   "2005": {
+    "amount": null,
+    "unit": "G",
+    "name": "SFA 9:0",
+    "sourceRow": null
+   },
+   "2006": {
+    "amount": null,
+    "unit": "G",
+    "name": "SFA 21:0",
+    "sourceRow": null
+   },
+   "2007": {
+    "amount": null,
+    "unit": "G",
+    "name": "SFA 23:0",
+    "sourceRow": null
+   },
+   "2008": {
+    "amount": null,
+    "unit": "G",
+    "name": "MUFA 12:1",
+    "sourceRow": null
+   },
+   "2009": {
+    "amount": null,
+    "unit": "G",
+    "name": "MUFA 14:1 c",
+    "sourceRow": null
+   },
+   "2010": {
+    "amount": null,
+    "unit": "G",
+    "name": "MUFA 17:1 c",
+    "sourceRow": null
+   },
+   "2011": {
+    "amount": null,
+    "unit": "G",
+    "name": "TFA 17:1 t",
+    "sourceRow": null
+   },
+   "2012": {
+    "amount": null,
+    "unit": "G",
+    "name": "MUFA 20:1 c",
+    "sourceRow": null
+   },
+   "2013": {
+    "amount": null,
+    "unit": "G",
+    "name": "TFA 20:1 t",
+    "sourceRow": null
+   },
+   "2014": {
+    "amount": null,
+    "unit": "G",
+    "name": "MUFA 22:1 n-9",
+    "sourceRow": null
+   },
+   "2015": {
+    "amount": null,
+    "unit": "G",
+    "name": "MUFA 22:1 n-11",
+    "sourceRow": null
+   },
+   "2016": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 18:2 c",
+    "sourceRow": null
+   },
+   "2017": {
+    "amount": null,
+    "unit": "G",
+    "name": "TFA 18:2 t",
+    "sourceRow": null
+   },
+   "2018": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 18:3 c",
+    "sourceRow": null
+   },
+   "2019": {
+    "amount": null,
+    "unit": "G",
+    "name": "TFA 18:3 t",
+    "sourceRow": null
+   },
+   "2020": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 20:3 c",
+    "sourceRow": null
+   },
+   "2021": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 22:3",
+    "sourceRow": null
+   },
+   "2022": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 20:4c",
+    "sourceRow": null
+   },
+   "2023": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 20:5c",
+    "sourceRow": null
+   },
+   "2024": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 22:5 c",
+    "sourceRow": null
+   },
+   "2025": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 22:6 c",
+    "sourceRow": null
+   },
+   "2026": {
+    "amount": null,
+    "unit": "G",
+    "name": "PUFA 20:2 c",
+    "sourceRow": null
+   },
+   "2027": {
+    "amount": null,
+    "unit": "G",
+    "name": "Proximate",
+    "sourceRow": null
+   },
+   "2028": {
+    "amount": null,
+    "unit": "UG",
+    "name": "trans-beta-Carotene",
+    "sourceRow": null
+   },
+   "2029": {
+    "amount": null,
+    "unit": "UG",
+    "name": "trans-Lycopene",
+    "sourceRow": null
+   },
+   "2032": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Cryptoxanthin, alpha",
+    "sourceRow": null
+   },
+   "2033": {
+    "amount": null,
+    "unit": "G",
+    "name": "Total dietary fiber (AOAC 2011.25)",
+    "sourceRow": null
+   },
+   "2034": {
+    "amount": null,
+    "unit": "G",
+    "name": "Insoluble dietary fiber (IDF)",
+    "sourceRow": null
+   },
+   "2035": {
+    "amount": null,
+    "unit": "G",
+    "name": "Soluble dietary fiber (SDFP+SDFS)",
+    "sourceRow": null
+   },
+   "2036": {
+    "amount": null,
+    "unit": "G",
+    "name": "Soluble dietary fiber (SDFP)",
+    "sourceRow": null
+   },
+   "2037": {
+    "amount": null,
+    "unit": "G",
+    "name": "Soluble dietary fiber (SDFS)",
+    "sourceRow": null
+   },
+   "2038": {
+    "amount": null,
+    "unit": "G",
+    "name": "High Molecular Weight Dietary Fiber (HMWDF)",
+    "sourceRow": null
+   },
+   "2039": {
+    "amount": null,
+    "unit": "G",
+    "name": "Carbohydrates",
+    "sourceRow": null
+   },
+   "2040": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Other carotenoids",
+    "sourceRow": null
+   },
+   "2041": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Tocopherols and tocotrienols",
+    "sourceRow": null
+   },
+   "2042": {
+    "amount": null,
+    "unit": "G",
+    "name": "Amino acids",
+    "sourceRow": null
+   },
+   "2043": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Minerals",
+    "sourceRow": null
+   },
+   "2044": {
+    "amount": null,
+    "unit": "G",
+    "name": "Lipids",
+    "sourceRow": null
+   },
+   "2045": {
+    "amount": null,
+    "unit": "G",
+    "name": "Proximates",
+    "sourceRow": null
+   },
+   "2046": {
+    "amount": null,
+    "unit": "G",
+    "name": "Vitamins and Other Components",
+    "sourceRow": null
+   },
+   "2055": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Total Tocopherols",
+    "sourceRow": null
+   },
+   "2054": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Total Tocotrienols",
+    "sourceRow": null
+   },
+   "2053": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Stigmastadiene",
+    "sourceRow": null
+   },
+   "2052": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Delta-7-Stigmastenol",
+    "sourceRow": null
+   },
+   "2049": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Daidzin",
+    "sourceRow": null
+   },
+   "2050": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Genistin",
+    "sourceRow": null
+   },
+   "2051": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Glycitin",
+    "sourceRow": null
+   },
+   "2057": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Ergothioneine",
+    "sourceRow": null
+   },
+   "2058": {
+    "amount": null,
+    "unit": "G",
+    "name": "Beta-glucan",
+    "sourceRow": null
+   },
+   "2059": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Vitamin D4",
+    "sourceRow": null
+   },
+   "2060": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Ergosta-7-enol",
+    "sourceRow": null
+   },
+   "2061": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Ergosta-7,22-dienol",
+    "sourceRow": null
+   },
+   "2062": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Ergosta-5,7-dienol",
+    "sourceRow": null
+   },
+   "2063": {
+    "amount": null,
+    "unit": "G",
+    "name": "Verbascose",
+    "sourceRow": null
+   },
+   "2064": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Oligosaccharides",
+    "sourceRow": null
+   },
+   "2065": {
+    "amount": null,
+    "unit": "G",
+    "name": "Low Molecular Weight Dietary Fiber (LMWDF)",
+    "sourceRow": null
+   },
+   "2068": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Vitamin E",
+    "sourceRow": null
+   },
+   "2067": {
+    "amount": null,
+    "unit": "UG",
+    "name": "Vitamin A",
+    "sourceRow": null
+   },
+   "2069": {
+    "amount": null,
+    "unit": "MG",
+    "name": "Glutathione",
+    "sourceRow": null
+   }
+  }
+ },
  "171320": {
   "food": {
    "fdc_id": "171320",
