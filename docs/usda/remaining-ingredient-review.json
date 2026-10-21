@@ -69,12 +69,12 @@
   {
     "ingredient": "Banana",
     "recipeUseCount": 4,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "ingredient-approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "173944"
       ],
-      "status": "Review",
+      "status": "Approved",
       "state": "Raw peeled input",
       "note": "Size unspecified. Medium reference = 118 g, half = 59 g if adopted. Pancakes cook the raw input; smoothies use it raw.",
       "uses": [
@@ -96,7 +96,7 @@
         }
       ],
       "proposedDefaultFdcId": "173944",
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "approved-for-listed-recipe-uses",
       "sourceVerificationStatus": "source-records-rechecked",
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
@@ -117,18 +117,56 @@
           ]
         }
       ],
-      "ambiguity": "Size unspecified. Medium reference = 118 g, half = 59 g if adopted. Pancakes cook the raw input; smoothies use it raw."
+      "ambiguity": "Size unspecified. Medium reference = 118 g, half = 59 g if adopted. Pancakes cook the raw input; smoothies use it raw.",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-chamomile-comfort-toast",
+          "quantity": "0.5 each, sliced",
+          "fdcId": "173944",
+          "portionId": "93515",
+          "grams": 59.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-calming-kefir-smoothie",
+          "quantity": "0.5 each",
+          "fdcId": "173944",
+          "portionId": "93515",
+          "grams": 59.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-tropical-energy-smoothie",
+          "quantity": "0.5 each",
+          "fdcId": "173944",
+          "portionId": "93515",
+          "grams": 59.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-sunshine-pancakes",
+          "quantity": "1 each, mashed",
+          "fdcId": "173944",
+          "portionId": "93515",
+          "grams": 118.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ]
     }
   },
   {
     "ingredient": "Almonds",
     "recipeUseCount": 3,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "partially approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "170567"
       ],
-      "status": "Review",
+      "status": "Partially approved",
       "state": "Raw kernels assumed",
       "note": "Confirm raw/roasted and salted state. Whole, sliced, slivered and ground cup weights differ; chopped tbsp is not an exact listed portion. 1/4 cup whole would be 35.75 g only if whole is intended.",
       "uses": [
@@ -146,7 +184,7 @@
         }
       ],
       "proposedDefaultFdcId": "170567",
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "partially-approved-use-scoped",
       "sourceVerificationStatus": "source-records-rechecked",
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
@@ -165,19 +203,39 @@
           ]
         }
       ],
-      "ambiguity": "Confirm raw/roasted and salted state. Whole, sliced, slivered and ground cup weights differ; chopped tbsp is not an exact listed portion. 1/4 cup whole would be 35.75 g only if whole is intended."
+      "ambiguity": "Confirm raw/roasted and salted state. Whole, sliced, slivered and ground cup weights differ; chopped tbsp is not an exact listed portion. 1/4 cup whole would be 35.75 g only if whole is intended.",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-dark-chocolate-trail-mix",
+          "quantity": "0.25 cup",
+          "fdcId": "170567",
+          "portionId": "86863",
+          "grams": 35.75,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-loaded-popcorn-mix",
+          "quantity": "2 tbsp",
+          "fdcId": "170567",
+          "portionId": "86863",
+          "grams": 17.875,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ]
     }
   },
   {
     "ingredient": "Brown rice",
     "recipeUseCount": 3,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "ingredient-approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "169704",
         "168875"
       ],
-      "status": "Review",
+      "status": "Approved",
       "state": "Cooked",
       "note": "Recipe explicitly measures cooked rice. Long-grain 3/4 cup = 151.5 g; medium-grain = 146.25 g. Choose grain type; never use a dry-rice record with cooked cups.",
       "uses": [
@@ -195,7 +253,7 @@
         }
       ],
       "proposedDefaultFdcId": "169704",
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "approved-for-listed-recipe-uses",
       "sourceVerificationStatus": "source-records-rechecked",
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
@@ -218,19 +276,48 @@
           ]
         }
       ],
-      "ambiguity": "Recipe explicitly measures cooked rice. Long-grain 3/4 cup = 151.5 g; medium-grain = 146.25 g. Choose grain type; never use a dry-rice record with cooked cups."
+      "ambiguity": "Recipe explicitly measures cooked rice. Long-grain 3/4 cup = 151.5 g; medium-grain = 146.25 g. Choose grain type; never use a dry-rice record with cooked cups.",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-energizing-power-bowl",
+          "quantity": "0.75 cup, cooked",
+          "fdcId": "169704",
+          "portionId": "85378",
+          "grams": 151.5,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-iron-rich-stir-fry",
+          "quantity": "0.75 cup, cooked",
+          "fdcId": "169704",
+          "portionId": "85378",
+          "grams": 151.5,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-brown-rice-veggie-bowl",
+          "quantity": "0.75 cup, cooked",
+          "fdcId": "169704",
+          "portionId": "85378",
+          "grams": 151.5,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ]
     }
   },
   {
     "ingredient": "Egg",
     "recipeUseCount": 3,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "partially approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "171287",
         "173424"
       ],
-      "status": "Review",
+      "status": "Partially approved",
       "state": "Raw input; hard-boiled for toast",
       "note": "Choose size; large raw egg = 50 g edible without shell. Pancake/hash use raw ingredient weights before cooking; toast uses hard-boiled record (large 50 g). Power bowl cooking method remains unspecified.",
       "uses": [
@@ -248,7 +335,7 @@
         }
       ],
       "proposedDefaultFdcId": null,
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "partially-approved-use-scoped",
       "sourceVerificationStatus": "source-records-rechecked",
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
@@ -278,18 +365,38 @@
           ]
         }
       ],
-      "ambiguity": "Choose size; large raw egg = 50 g edible without shell. Pancake/hash use raw ingredient weights before cooking; toast uses hard-boiled record (large 50 g). Power bowl cooking method remains unspecified."
+      "ambiguity": "Choose size; large raw egg = 50 g edible without shell. Pancake/hash use raw ingredient weights before cooking; toast uses hard-boiled record (large 50 g). Power bowl cooking method remains unspecified.",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-cozy-sweet-potato-hash",
+          "quantity": "2 each",
+          "fdcId": "171287",
+          "portionId": "88374",
+          "grams": 100.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-gentle-avocado-toast",
+          "quantity": "1 each",
+          "fdcId": "173424",
+          "portionId": "92500",
+          "grams": 50.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ]
     }
   },
   {
     "ingredient": "Pineapple",
     "recipeUseCount": 3,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "partially approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "169124"
       ],
-      "status": "Review",
+      "status": "Partially approved",
       "state": "Raw edible flesh",
       "note": "1 cup chunks = 165 g, half = 82.5 g. Confirm diced/cubed treated as chunks; packing can differ. Exclude core/skin; do not substitute canned syrup fruit.",
       "uses": [
@@ -307,7 +414,7 @@
         }
       ],
       "proposedDefaultFdcId": "169124",
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "partially-approved-use-scoped",
       "sourceVerificationStatus": "source-records-rechecked",
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
@@ -325,20 +432,40 @@
           ]
         }
       ],
-      "ambiguity": "1 cup chunks = 165 g, half = 82.5 g. Confirm diced/cubed treated as chunks; packing can differ. Exclude core/skin; do not substitute canned syrup fruit."
+      "ambiguity": "1 cup chunks = 165 g, half = 82.5 g. Confirm diced/cubed treated as chunks; packing can differ. Exclude core/skin; do not substitute canned syrup fruit.",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-tropical-energy-smoothie",
+          "quantity": "1 cup",
+          "fdcId": "169124",
+          "portionId": "84287",
+          "grams": 165.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-rainbow-fruit-skewers",
+          "quantity": "1 cup, cubed",
+          "fdcId": "169124",
+          "portionId": "84287",
+          "grams": 165,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "USDA pilot record src/data/usdaPilot.ts; exact approved recipe scope"
+        }
+      ]
     }
   },
   {
     "ingredient": "Pumpkin seeds",
     "recipeUseCount": 3,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "ingredient-approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "170556"
       ],
-      "status": "Review",
-      "state": "Dried shelled kernels assumed",
-      "note": "Confirm kernels, raw/dried vs roasted and salt. Conditional 1 tbsp = 8.0625 g and 2 tbsp = 16.125 g from 129 g/cup. No shells.",
+      "status": "Approved",
+      "state": "Hulled pumpkin seed kernels (pepitas), dried, unroasted, unsalted; no shells",
+      "note": "B10 was approved by the user on 2026-10-14 for the exact three listed recipe uses: 2 tbsp = 16.125 g in Brown Rice Veggie Bowl and Magnesium-Rich Grounding Bowl; 1 tbsp = 8.0625 g in Crunchy Veggie Snack Plate. Derived from USDA portion 86847 (129 g/cup). Approval does not generalize to roasted, salted, or in-shell seeds.",
       "uses": [
         {
           "recipeId": "recipe-brown-rice-veggie-bowl",
@@ -354,8 +481,37 @@
         }
       ],
       "proposedDefaultFdcId": "170556",
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "approved-for-listed-recipe-uses",
       "sourceVerificationStatus": "source-records-rechecked",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-brown-rice-veggie-bowl",
+          "quantity": "2 tbsp",
+          "fdcId": "170556",
+          "portionId": "86847",
+          "grams": 16.125,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-magnesium-boost-bowl",
+          "quantity": "2 tbsp",
+          "fdcId": "170556",
+          "portionId": "86847",
+          "grams": 16.125,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-crunchy-veggie-snack-plate",
+          "quantity": "1 tbsp",
+          "fdcId": "170556",
+          "portionId": "86847",
+          "grams": 8.0625,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ],
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
         {
@@ -369,7 +525,7 @@
           ]
         }
       ],
-      "ambiguity": "Confirm kernels, raw/dried vs roasted and salt. Conditional 1 tbsp = 8.0625 g and 2 tbsp = 16.125 g from 129 g/cup. No shells."
+      "ambiguity": "Approved only for dried, hulled, unroasted, unsalted kernels at the exact quantities and recipe IDs listed. Other seed preparations and quantities are not covered."
     }
   },
   {
@@ -434,13 +590,13 @@
   {
     "ingredient": "Sweet potato",
     "recipeUseCount": 3,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "partially approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "168482",
         "168483"
       ],
-      "status": "Review",
+      "status": "Partially approved",
       "state": "Raw input in toast/hash; roasted wording in power bowl",
       "note": "Need size, skin treatment and point of measurement. Raw reference potato 130 g; cooked medium flesh 114 g. Half roasted is ambiguous because instructions start by roasting it. Do not apply cooked values to raw grams.",
       "uses": [
@@ -458,7 +614,7 @@
         }
       ],
       "proposedDefaultFdcId": null,
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "partially-approved-use-scoped",
       "sourceVerificationStatus": "source-records-rechecked",
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
@@ -485,19 +641,39 @@
           ]
         }
       ],
-      "ambiguity": "Need size, skin treatment and point of measurement. Raw reference potato 130 g; cooked medium flesh 114 g. Half roasted is ambiguous because instructions start by roasting it. Do not apply cooked values to raw grams."
+      "ambiguity": "Need size, skin treatment and point of measurement. Raw reference potato 130 g; cooked medium flesh 114 g. Half roasted is ambiguous because instructions start by roasting it. Do not apply cooked values to raw grams.",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-chamomile-comfort-toast",
+          "quantity": "1 each, peeled, sliced lengthwise into 1/4-inch planks",
+          "fdcId": "168482",
+          "portionId": "83167",
+          "grams": 130.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-cozy-sweet-potato-hash",
+          "quantity": "1 each, diced",
+          "fdcId": "168482",
+          "portionId": "83167",
+          "grams": 130.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ]
     }
   },
   {
     "ingredient": "Swiss chard",
     "recipeUseCount": 3,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "partially approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "169991",
         "170401"
       ],
-      "status": "Hold",
+      "status": "Partially approved",
       "state": "Raw vs sauteed measurement unresolved",
       "note": "Steak recipe 2 cups chopped raw can use 72 g. Bowl recipes specify sauteed cups but then instruct sauteing. Boiled/drained 175 g/cup is not sauteed. Specify raw weighed inputs plus oil or a validated cooked sauteed record and weight.",
       "uses": [
@@ -515,7 +691,7 @@
         }
       ],
       "proposedDefaultFdcId": null,
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "partially-approved-use-scoped",
       "sourceVerificationStatus": "source-records-rechecked",
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
@@ -539,18 +715,29 @@
           ]
         }
       ],
-      "ambiguity": "Steak recipe 2 cups chopped raw can use 72 g. Bowl recipes specify sauteed cups but then instruct sauteing. Boiled/drained 175 g/cup is not sauteed. Specify raw weighed inputs plus oil or a validated cooked sauteed record and weight."
+      "ambiguity": "Steak recipe 2 cups chopped raw can use 72 g. Bowl recipes specify sauteed cups but then instruct sauteing. Boiled/drained 175 g/cup is not sauteed. Specify raw weighed inputs plus oil or a validated cooked sauteed record and weight.",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-steak-and-greens",
+          "quantity": "2 cup, chopped",
+          "fdcId": "169991",
+          "portionId": "85834",
+          "grams": 72.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ]
     }
   },
   {
     "ingredient": "Almond butter",
     "recipeUseCount": 2,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "ingredient-approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "168588"
       ],
-      "status": "Review",
+      "status": "Approved",
       "state": "Ready-to-eat",
       "note": "Confirm plain unsalted. 2 tbsp = 32 g; 1/2 cup = 125 g using separate native portions. Do not replace the cup with 8 tbsp: USDA measures are not exactly additive.",
       "uses": [
@@ -564,7 +751,7 @@
         }
       ],
       "proposedDefaultFdcId": "168588",
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "approved-for-listed-recipe-uses",
       "sourceVerificationStatus": "source-records-rechecked",
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
@@ -579,7 +766,27 @@
           ]
         }
       ],
-      "ambiguity": "Confirm plain unsalted. 2 tbsp = 32 g; 1/2 cup = 125 g using separate native portions. Do not replace the cup with 8 tbsp: USDA measures are not exactly additive."
+      "ambiguity": "Confirm plain unsalted. 2 tbsp = 32 g; 1/2 cup = 125 g using separate native portions. Do not replace the cup with 8 tbsp: USDA measures are not exactly additive.",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-chamomile-comfort-toast",
+          "quantity": "2 tbsp",
+          "fdcId": "168588",
+          "portionId": "83375",
+          "grams": 32.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-green-tea-oat-bites",
+          "quantity": "0.5 cup",
+          "fdcId": "168588",
+          "portionId": "83376",
+          "grams": 125.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ]
     }
   },
   {
@@ -1177,13 +1384,13 @@
   {
     "ingredient": "Rolled oats",
     "recipeUseCount": 2,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "ingredient-approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "2346396",
         "173904"
       ],
-      "status": "Review",
+      "status": "Approved",
       "state": "Dry rolled oats",
       "note": "Exact Foundation rolled record lacks portion; SR regular/quick dry oats has 81 g/cup, half 40.5 g. Choose coherent record/portion or weigh exact rolled oats; never use cooked oatmeal.",
       "uses": [
@@ -1197,7 +1404,7 @@
         }
       ],
       "proposedDefaultFdcId": "2346396",
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "approved-for-listed-recipe-uses",
       "sourceVerificationStatus": "source-records-rechecked",
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
@@ -1219,7 +1426,27 @@
           ]
         }
       ],
-      "ambiguity": "Exact Foundation rolled record lacks portion; SR regular/quick dry oats has 81 g/cup, half 40.5 g. Choose coherent record/portion or weigh exact rolled oats; never use cooked oatmeal."
+      "ambiguity": "Exact Foundation rolled record lacks portion; SR regular/quick dry oats has 81 g/cup, half 40.5 g. Choose coherent record/portion or weigh exact rolled oats; never use cooked oatmeal.",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-warm-oatmeal-berries",
+          "quantity": "0.5 cup",
+          "fdcId": "173904",
+          "portionId": "93454",
+          "grams": 40.5,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-green-tea-oat-bites",
+          "quantity": "1 cup",
+          "fdcId": "173904",
+          "portionId": "93454",
+          "grams": 81.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ]
     }
   },
   {
@@ -1319,7 +1546,7 @@
   {
     "ingredient": "Walnuts",
     "recipeUseCount": 2,
-    "integrationStatus": "partially approved for one recipe-scoped use; not approved catalog-wide",
+    "integrationStatus": "partially approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "170187"
@@ -1348,7 +1575,8 @@
           "portionId": "86201",
           "grams": 7.3125,
           "approvedDate": "2026-10-20",
-          "apiReport": "pending-review/20261020T140047Z-8c2ff267ca874e0c9763a4014f9041db.json"
+          "apiReport": "pending-review/20261020T140047Z-8c2ff267ca874e0c9763a4014f9041db.json",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
         }
       ],
       "heldUses": [
@@ -1563,12 +1791,12 @@
   {
     "ingredient": "Chamomile tea bag",
     "recipeUseCount": 1,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "ingredient-approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "174156"
       ],
-      "status": "Hold",
+      "status": "Approved",
       "state": "Brewed beverage, not bag",
       "note": "Tea bag is removed, not eaten. Record describes brewed tea; recipe must state water/finished volume. 1 cup brewed = 237 g if selected.",
       "uses": [
@@ -1578,7 +1806,7 @@
         }
       ],
       "proposedDefaultFdcId": null,
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "approved-for-listed-recipe-uses",
       "sourceVerificationStatus": "source-records-rechecked",
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
@@ -1594,7 +1822,18 @@
           ]
         }
       ],
-      "ambiguity": "Tea bag is removed, not eaten. Record describes brewed tea; recipe must state water/finished volume. 1 cup brewed = 237 g if selected."
+      "ambiguity": "Tea bag is removed, not eaten. Record describes brewed tea; recipe must state water/finished volume. 1 cup brewed = 237 g if selected.",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-chamomile-comfort-toast",
+          "quantity": "1 each",
+          "fdcId": "174156",
+          "portionId": "93843",
+          "grams": 237.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ]
     }
   },
   {
@@ -1752,13 +1991,13 @@
   {
     "ingredient": "Eggs",
     "recipeUseCount": 1,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "ingredient-approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "171287",
         "173424"
       ],
-      "status": "Review",
+      "status": "Approved",
       "state": "Raw input; hard-boiled for toast",
       "note": "Choose size; large raw egg = 50 g edible without shell. Pancake/hash use raw ingredient weights before cooking; toast uses hard-boiled record (large 50 g). Power bowl cooking method remains unspecified.",
       "uses": [
@@ -1768,7 +2007,7 @@
         }
       ],
       "proposedDefaultFdcId": null,
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "approved-for-listed-recipe-uses",
       "sourceVerificationStatus": "source-records-rechecked",
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
@@ -1798,7 +2037,18 @@
           ]
         }
       ],
-      "ambiguity": "Choose size; large raw egg = 50 g edible without shell. Pancake/hash use raw ingredient weights before cooking; toast uses hard-boiled record (large 50 g). Power bowl cooking method remains unspecified."
+      "ambiguity": "Choose size; large raw egg = 50 g edible without shell. Pancake/hash use raw ingredient weights before cooking; toast uses hard-boiled record (large 50 g). Power bowl cooking method remains unspecified.",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-sunshine-pancakes",
+          "quantity": "2 each",
+          "fdcId": "171287",
+          "portionId": "88374",
+          "grams": 100.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ]
     }
   },
   {
@@ -2471,9 +2721,9 @@
       "ids": [
         "170150"
       ],
-      "status": "Review",
+      "status": "Hold",
       "state": "Whole dried seeds assumed",
-      "note": "Confirm hulled/unhulled, roasted state. 1 tsp = 3 g derived from 9 g/tbsp if whole dried is selected.",
+      "note": "Keep pending under the user's standing recommendation instruction. FDC 170150 is only a candidate for whole dried sesame; the recipe does not identify hulled/unhulled or roasted/raw form. The conditional 1 tsp = 3 g conversion is not approved and must not be used until the form and weight basis are verified.",
       "uses": [
         {
           "recipeId": "recipe-energizing-power-bowl",
@@ -2496,7 +2746,7 @@
           ]
         }
       ],
-      "ambiguity": "Confirm hulled/unhulled, roasted state. 1 tsp = 3 g derived from 9 g/tbsp if whole dried is selected."
+      "ambiguity": "Held: identify hulled/unhulled and roasted/raw form before selecting FDC 170150 or its conditional 1 tsp = 3 g conversion. No seed mapping is approved for Energizing Power Bowl."
     }
   },
   {
@@ -2628,14 +2878,14 @@
   {
     "ingredient": "Whole-grain bread",
     "recipeUseCount": 1,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "ingredient-approved for listed recipe uses; not approved catalog-wide",
     "review": {
       "ids": [
         "172688"
       ],
-      "status": "Review",
+      "status": "Approved",
       "state": "As-purchased, then toasted",
-      "note": "Whole-wheat is a candidate, not all whole-grain bread. Select loaf/product and slice mass; generic slice 32 g. Avoid toasted-per-100g values with untoasted slice weight.",
+      "note": "B14 user approval applies only to Gentle Avocado Toast after renaming the recipe ingredient to Whole-wheat bread: FDC 172688, USDA portion 91108, 1 untoasted reference slice = 32 g, then toasted. Do not generalize to all whole-grain bread or other uses.",
       "uses": [
         {
           "recipeId": "recipe-gentle-avocado-toast",
@@ -2643,8 +2893,19 @@
         }
       ],
       "proposedDefaultFdcId": "172688",
-      "reviewStatus": "pending-human-approval",
+      "reviewStatus": "approved-for-listed-recipe-uses",
       "sourceVerificationStatus": "source-records-rechecked",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-gentle-avocado-toast",
+          "quantity": "1 slice",
+          "fdcId": "172688",
+          "portionId": "91108",
+          "grams": 32.0,
+          "approvedDate": "2026-10-14",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ],
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [
         {
@@ -2658,7 +2919,7 @@
           ]
         }
       ],
-      "ambiguity": "Whole-wheat is a candidate, not all whole-grain bread. Select loaf/product and slice mass; generic slice 32 g. Avoid toasted-per-100g values with untoasted slice weight."
+      "ambiguity": "Approval is limited to the renamed Whole-wheat bread use in Gentle Avocado Toast: 1 untoasted reference slice = 32 g, then toasted. Do not generalize to other whole-grain bread identities or uses; avoid toasted-per-100g values with untoasted slice weight."
     }
   },
   {
