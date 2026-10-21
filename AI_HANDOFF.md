@@ -461,8 +461,8 @@ Do not reverse these without explicit instruction.
 ## Current Git State
 
 - Repo: `moodmeal/`; remote `origin` is `https://github.com/Bubbleyume/MoodMeal.git`.
-- Active branch: `knowledge-system-foundation`. The previous local commit `d3db2c3` was pushed and verified against origin before current launch-readiness edits.
-- The current working tree contains launch-cleanup changes in `README.md`, `docs/AVATARS.md`, `package.json`, `src/pages/ProfilePage.tsx`, and this handoff. Preserve the existing untracked user-provided `AGENTS.md` and ignored USDA evidence.
+- Active branch: `knowledge-system-foundation`; latest launch-cleanup commit `9da11d3` was pushed and verified against origin.
+- The only untracked working-tree file is the user-provided `AGENTS.md`; preserve it and ignored USDA evidence.
 - Do not modify `master` or avatar branches during this work.
 
 ## Recent Changes
@@ -483,6 +483,10 @@ Do not reverse these without explicit instruction.
 - Build succeeds but reports outdated Browserslist data. Physical-device and assistive-technology checks remain incomplete; prior browser checks use emulation.
 - The app stores profile, mood history, preferences, and other user-entered data in localStorage. Public launch still needs an accurate privacy notice, support contact, deployment/rollback plan, and review of the health-related screens and claims for the target audience/jurisdiction.
 - `AVATAR_MVP.md` is a historical checkpoint; use `docs/AVATARS.md` for the current avatar system.
+
+## Launch cleanup checkpoint (2026-10-21)
+
+README and avatar documentation now describe the current painted food artwork and modular avatar system. The invalid package-note reference to missing `VENDORING.md` was removed. Profile no longer presents a nonfunctional daily reminder toggle; the legacy `notificationsEnabled` storage field is retained but has no reminder behavior. TypeScript, avatar tests, 47 knowledge tests, production build and browser suite pass. The browser run reported no console/page errors. Build still warns that Browserslist data is outdated. The app has not yet been deployed to a public host; host, launch audience, jurisdiction and support contact are outstanding decisions.
 
 ## Current Development Priority
 
