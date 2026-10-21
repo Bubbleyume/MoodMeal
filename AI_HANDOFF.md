@@ -460,51 +460,42 @@ Do not reverse these without explicit instruction.
 
 ## Current Git State
 
-- **Repo:** `moodmeal/`, remote `origin` = `https://github.com/Bubbleyume/MoodMeal.git`
-- **Branch:** `avatar-redesign-phase-2` (up to date with origin). Other branches: `master` and `avatar-redesign-phase-1`.
-- **Latest commit:** `7edaaf7` (2026-10-05) "Add wellness glossary, health preferences, tracking and reminders"
-- `origin/master` is still at `7d49790` "Checkpoint: polished MVP before avatar redesign".
-- ⚠️ **A large amount of work is uncommitted:** 46 modified files (about +1100/−590 lines) and many untracked files and folders, including `src/types/library.ts`, `src/lib/catalog.ts`, `libraryReview.ts`, `resourceImport.ts`, `interactions.ts`, `grocery.ts`, `preferences.ts`, the Library, Preferences and Education pages, `public/assets/foods/`, `public/assets/meals/`, `public/assets/avatars/layers-v1/`, `modular-v1/` and `docs/AVATARS.md`. **GitHub does not yet reflect the knowledge-system refactor, the modular avatars or the food art.**
+- Repo: `moodmeal/`; remote `origin` is `https://github.com/Bubbleyume/MoodMeal.git`.
+- Active branch: `knowledge-system-foundation`. The previous local commit `d3db2c3` was pushed and verified against origin before current launch-readiness edits.
+- The current working tree contains launch-cleanup changes in `README.md`, `docs/AVATARS.md`, `package.json`, `src/pages/ProfilePage.tsx`, and this handoff. Preserve the existing untracked user-provided `AGENTS.md` and ignored USDA evidence.
+- Do not modify `master` or avatar branches during this work.
 
 ## Recent Changes
 
-1. (Uncommitted) Knowledge-system refactor: library schema, provenance, review workflow, support goals, explainable recommendations, structured recipes, grocery aggregation, food preferences, history insights and resource import.
-2. (Uncommitted) Food and meal emojis replaced with painted WebP illustrations.
-3. (Uncommitted) Modular avatar customization (Soft and Bold Frame) and the October hair revisions (`-r2` assets).
-4. (Uncommitted) Wellness screen refocused on education, with medical-style tools moved under "Personal tools".
-5. `7edaaf7`: wellness glossary, health preferences, measurement tracking and reminders.
-6. `0cff412`: three preset avatars and a refreshed opening screen.
+- Knowledge-system foundation, recipe-scoped USDA approvals, ingredient artwork integration, modular avatars and mobile Nutrition Calculator improvements are present on `knowledge-system-foundation`.
+- Only Rainbow Fruit Skewers and Chamomile & Sweet Potato Toast currently publish recipe nutrition estimates. Other recipe totals stay unavailable until every ingredient has an exact approved mapping.
+- The USDA review ledger was reconciled against runtime approvals; partial uses remain explicitly scoped. Sesame seeds remain held pending the recipe's seed form and a verified weight.
+- Profile's nonfunctional daily check-in reminder switch was removed; no reminder is scheduled by the app.
 
 ## Known Issues
 
-- **Uncommitted work at risk.** Commit it before starting new features.
-- `.gitignore` excludes `work/` and `node_modules/{fflate,pdfjs-dist,@napi-rs}`, so a fresh clone may lack the runtime deps `fflate` and `pdfjs-dist`. Check this before pushing.
-- `nutrientTotals` is `null` for every recipe (`src/lib/catalog.ts`), so recipes have no verified nutrition totals yet.
+- Only two recipes have complete published USDA estimates. Many recipe ingredient identities, states, or weights remain unresolved; see `docs/usda/remaining-ingredient-review.json` and the nutrition information checklist in the current handoff.
+- Dietary preference filtering is keyword-based rather than driven by reviewed per-item tags.
 - Seeded knowledge provenance is mostly NIH/ODS fact sheets. There is no `reviewedBy` workflow with real reviewers, and library review state lives only in localStorage.
-- `src/data/foods.ts` and `meals.ts` still contain `emoji` fields. Grocery rows now use painted ingredient/food thumbnails (2026-10-14); `ImagePlaceholder` is no longer imported by any screen.
-- Profile has a "Daily mood check-in reminder (placeholder)" toggle (`src/pages/ProfilePage.tsx:95`).
-- The mood → goal mapping is hard-coded in `goalsForMood` (only worried, nervous and angry at intensity 8+ add `wind-down`), and some mappings are questionable (e.g. `excited → hydration`).
-- Docs are stale or inconsistent. `README.md` and `AVATAR_MVP.md` describe older SVG and 3-preset avatar systems. `docs/AVATARS.md` says "Girl/Boy" while the UI uses Soft/Bold Frame. `package.json` `notes` has mojibake and references a missing `VENDORING.md`.
-- `npm run build` has hit Node spawn `EPERM` in some sandboxes. The docs describe an equivalent manual esbuild + Tailwind path.
-- react-router-dom, lucide-react, Recharts and @types/react are still first-party stand-ins.
-- Medicine reminders, health tracking and health notes still exist (deprioritized, not removed).
+- `src/data/foods.ts` and `meals.ts` retain emoji metadata although the screens use local illustrations. `ImagePlaceholder` remains as a fallback component.
+- Mood-to-support-goal mapping is hard-coded and needs a content review.
+- The UI uses first-party router, icon, chart, and React type-shim stand-ins. They are documented in README; replacement is optional for the MVP but needs a deliberate migration if desired.
+- Build succeeds but reports outdated Browserslist data. Physical-device and assistive-technology checks remain incomplete; prior browser checks use emulation.
+- The app stores profile, mood history, preferences, and other user-entered data in localStorage. Public launch still needs an accurate privacy notice, support contact, deployment/rollback plan, and review of the health-related screens and claims for the target audience/jurisdiction.
+- `AVATAR_MVP.md` is a historical checkpoint; use `docs/AVATARS.md` for the current avatar system.
 
 ## Current Development Priority
 
-**Stabilize and commit the knowledge-system foundation.** Get the current uncommitted work committed and pushed to GitHub (on the current branch or a new feature branch), with docs updated, before starting new features. Then finish the remaining gaps in the foundation, such as verified nutrient totals and review tooling. AI features stay paused until that foundation is stable.
+Prepare a controlled MVP release without broadening nutrition claims. Keep every recipe total gated by complete, recipe-specific USDA verification. Resolve launch destination, audience, privacy/support details, and the remaining full-catalog ingredient questions with the user before public launch.
 
 ## Next Tasks
 
-1. Review and commit the uncommitted work in logical commits (knowledge system, food art, modular avatars, wellness refocus). Confirm `.gitignore` doesn't drop required runtime deps, then push.
-2. Update `README.md`, `AVATAR_MVP.md` and `docs/AVATARS.md` so they match the current system (Soft/Bold Frame, support goals, library workflow).
-3. Add verified `nutrientTotals` for recipes, with provenance.
-4. Finish replacing emojis and placeholders (the leftover `emoji` fields in the data and the now-unused `ImagePlaceholder` component; Grocery items are done).
-5. Move the mood → support-goal mapping into reviewable data and revisit questionable mappings.
-6. Add "Sources / Learn why" drawers consistently on Food, Meal, Recipe and Result screens.
-7. Expand Wellness education content for all 11 target categories (Food & Mood Basics, Steady Energy, Focus, Sleep & Wind-Down, Calm, Cooking as Self-Care, Gut & Digestion, Sensitivities & Special Diets, Balanced Nutrition, Hydration, Glossary).
-8. Strengthen the library review workflow (reviewer identity, export/import of reviewed library, tests).
-9. Merge `avatar-redesign-phase-2` to `master` once it is stable.
-10. Later: begin AI features that retrieve from the reviewed library ("Why did you recommend this?", substitutions, serving-size changes) and cite library records.
+1. Finish and verify launch-cleanup changes, then commit and push the release checkpoint.
+2. Decide launch target/hosting, audience, support contact, and jurisdiction; review local data handling and health-related content for that scope.
+3. Perform real-device and screen-reader checks, then decide whether any remaining accessibility or UX issues block launch.
+4. Reconcile the release docs and confirm a clean clone reproduces typecheck, tests, and build.
+5. Continue recipe-scoped USDA review; do not publish totals until each recipe is complete.
+6. Keep AI recommendations and any server sync outside MVP launch scope unless explicitly approved and designed.
 
 ## Files Most Relevant to Current Work
 

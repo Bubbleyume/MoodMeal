@@ -116,129 +116,16 @@ gives food suggestions.
   against ingredient/food names — good enough to make the Profile setting
   actually affect recommendations today, but not a substitute for real
   per-item tagging.
-- Food/meal/recipe "photos" are gradient-and-emoji placeholders
-  (`src/components/ImagePlaceholder.tsx`) since no image hosting/CDN was
-  reachable from this environment and inventing external image URLs that
-  might 404 was explicitly out of scope. Swap that one component for an
-  `<img>` once you have real photography.
-- The user avatar (see below) is a hand-authored vector illustration system
-  rather than artist-painted artwork, for the same "no image hosting
-  reachable, and no image-generation tool in this environment" reason.
+- Catalog foods and meals use local painted WebP illustrations, and recipe
+  ingredient artwork is mapped through a centralized resolver. Missing art
+  falls back to a neutral placeholder. Dietary preference filtering remains
+  keyword-based and should be replaced with reviewed per-item tags before it
+  is treated as comprehensive.
 
-## Avatar system (Avatar Redesign Phases 1–2)
+## Avatar system
 
-MoodMeal has exactly two visual identities: the official logo
-(`BrandLogo.tsx`/`BRANDING.logo`, used sparingly — app icon, a small brand
-mark on Welcome/loading/About) and each user's own personalized avatar.
-There is no separate mascot character. One user creates one avatar; that
-same avatar represents them everywhere MoodMeal shows a face, across all 12
-moods — only the expression changes, never the identity.
-
-### Identity: three choices
-
-`AvatarConfig` is exactly `{ baseStyle, skinTone, hairStyle }`, chosen in
-the Creator in that order — **Style → Skin Tone → Hairstyle**:
-
-| Field       | Options                                                                  |
-| ----------- | ------------------------------------------------------------------------ |
-| `baseStyle` | Feminine, Masculine, Androgynous (body, outfit, and pose)                |
-| `skinTone`  | Fair, Light, Medium, Tan, Deep, Rich                                     |
-| `hairStyle` | Long Wavy, Straight, Braids, Short Curly, Short Straight, Buzz Cut, Bald |
-
-All three are independent, giving 3 × 6 × 7 = 126 combinations. Hair color
-isn't stored; the renderer uses one fixed natural tone.
-
-### Files
-
-```
-src/types/avatar.ts           AvatarConfig (identity) and ExpressionSpec
-                              (per-mood, never identity-bearing)
-src/data/avatarOptions.ts     option lists (id + label + swatch hex) and
-                              DEFAULT_AVATAR_CONFIG
-src/data/avatarMigration.ts   normalizeAvatarConfig — converts any older
-                              stored avatar into the current shape
-src/data/avatarExpressions.ts EmotionId -> ExpressionSpec
-src/hooks/useAvatar.ts        localStorage persistence ("moodmeal:avatar");
-                              normalizes every read and self-heals the
-                              stored copy once
-src/components/avatar/
-  Avatar.tsx                  the ONE character renderer (inline SVG)
-  AvatarCreator.tsx           Style → Skin Tone → Hairstyle UI
-  AvatarRadioGroup.tsx        accessible radiogroup used by every picker
-  AvatarPreview.tsx           a framed <Avatar> for cards/headers
-```
-
-`Avatar.tsx` is the only place that knows how an avatar is drawn — skin
-palettes, body, outfit, hair, and expression layers all live there. The
-earlier split between an asset-resolution module (`avatarAssets.ts`, which
-mapped ids to planned `/assets/avatars/<layer>/*.svg` files that never
-existed) and a separate vector renderer was retired in Phase 1.
-`public/assets/avatars/` (empty placeholder folders plus its README, now
-marked unused) and `docs/preset-character-reference.png` are left on disk
-until the Phase 2 art is signed off.
-
-### Art system (Avatar Redesign Phase 2)
-
-The characters are one illustration family drawn as layered inline SVG:
-flat fills, a darker same-hue outline on every shape, and hand-placed
-shadow and highlight shapes lit from the top left. No gradients or filters
-are used, so a screen full of avatars stays cheap and needs no unique SVG
-ids. Every character wears the same white MoodMeal tee, blue jeans, and
-white sneakers in one relaxed standing pose, about four heads tall.
-
-- **Base style** is a small set of proportions (`STYLE_SHAPE`): shoulder
-  and waist width, neck width, a slightly softer or squarer jaw, and brow
-  weight. The face, pose, and outfit are shared, so the three styles read
-  as subtle presentation differences rather than stereotypes.
-- **Skin tone** picks a hand-tuned palette (`SKIN_PALETTES`) with its own
-  shadow, highlight, outline, lip, cheek, and brow colors, rather than one
-  computed overlay. Light tones keep their warmth, and deep tones keep
-  visible form and readable brows and mouths. Facial features are
-  identical across tones.
-- **Hairstyles** each have a back layer (behind the head and body) and a
-  front layer (over the scalp and shoulders), drawn against the shared
-  head anchors so they sit on the scalp for every base style. Buzz Cut and
-  Short Straight share a close-cropped cap; Buzz Cut adds scattered
-  texture marks, and Short Straight adds a fuller swept top.
-
-`variant="full"` (default) draws the whole figure (`viewBox="0 0 200 310"`).
-`variant="bust"` zooms to head and shoulders (`38 12 124 136.4`, the same
-aspect ratio as before) so faces and hair stay readable in the 32–56px
-contexts: mood tiles, the result hero, expression buttons, and Profile
-thumbnails. `AvatarPreview` frames the full figure in a portrait stage
-shaped like the figure, and the bust in a circle.
-
-To review the art, render every combination with
-`renderToStaticMarkup(<Avatar … />)` into a contact sheet. Each `<svg>`
-carries `data-base-style`, `data-skin-tone`, and `data-hair-style`.
-
-### Legacy avatar migration
-
-`normalizeAvatarConfig` runs on every read and accepts:
-
-- **Phase 1** `{ baseStyle, skinTone, hairStyle }`: kept as-is.
-- **Seven-preset model** (`presetId`): mapped to the base style and
-  hairstyle that preset was drawn with — `feminine`, `braids` → Feminine
-  (Long Wavy / Braids); `masculine`, `classic` → Masculine (Short
-  Straight); `seated` → Masculine (Short Curly); `androgynous` →
-  Androgynous (Short Straight); `bold` → Androgynous (Buzz Cut).
-- **Three-model** (`baseModel`) and **Phase 2C** (`frame: "soft" | "bold"`,
-  `pose`) avatars: `baseModel` is used directly, and `frame: "bold"` maps
-  to Masculine (anything else to Feminine). The stored hairstyle is kept.
-- **Phase 2B** hairstyle ids (`buzz`, `curly`, `coily-afro`, `locs`, `bun`,
-  …) map to the nearest current style, and the `porcelain` skin tone maps
-  to Fair.
-
-Retired fields (hair color, face shape, eye/eyebrow styles, facial hair,
-clothing, accessories, frame, pose, presetId, baseModel) are dropped.
-Invalid values fall back to the defaults. A stored value that isn't an
-object is treated as "no avatar yet".
-
-### Accessibility
-
-Each Creator step is a `role="radiogroup"`, labelled by its visible
-heading, with one `role="radio"`/`aria-checked` button per option and a
-roving tabindex: Tab enters or leaves the group in one stop, arrow keys
-move the selection (wrapping), Home/End jump to the first or last option,
-and Space/Enter select. A checked option shows a checkmark as well as a
-ring, so selection never relies on color alone.
+Onboarding and Profile offer Soft Frame and Bold Frame appearance choices,
+with six skin tones, seven hairstyles per frame, hair and eye colors, and
+mood expressions. Each frame remembers its own appearance. Older saved
+avatars remain supported. See [docs/AVATARS.md](docs/AVATARS.md) for the
+current storage, artwork, accessibility, and validation details.

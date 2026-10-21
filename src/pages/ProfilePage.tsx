@@ -9,7 +9,7 @@ import { useAvatar } from "../hooks/useAvatar";
 import { clearAllMoodMealData } from "../lib/storage";
 import { getAvatarLabel } from "../data/modularAvatars";
 import { DEFAULT_AVATAR_CONFIG } from "../data/avatarOptions";
-import { Bell, Trash2 } from "../components/icons";
+import { Trash2 } from "../components/icons";
 import type { DietaryPreference } from "../types";
 
 const DIETARY_OPTIONS: { value: DietaryPreference; label: string }[] = [
@@ -84,32 +84,6 @@ export default function ProfilePage() {
 
         <div className="card mt-4"><h2 className="section-title">Food preferences</h2><p className="my-3 text-sm text-slate-500">Diet, allergies, favorites, cooking time and budget.</p><Button onClick={()=>navigate('/preferences')}>Edit food preferences</Button></div>
         <div className="card mt-4"><h2 className="section-title">Internal library</h2><p className="my-3 text-sm text-slate-500">Import research, write original explanations and review sources locally.</p><Button variant="secondary" onClick={()=>navigate('/library')}>Open content workspace</Button></div>
-
-        <div className="card mt-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-sunny-100 text-amber-500">
-              <Bell size={18} />
-            </span>
-            <div>
-              <p className="text-sm font-semibold text-slate-800">Notifications</p>
-              <p className="text-xs text-slate-500">Daily mood check-in reminder (placeholder)</p>
-            </div>
-          </div>
-          <button
-            onClick={() => updateProfile({ notificationsEnabled: !profile.notificationsEnabled })}
-            aria-pressed={profile.notificationsEnabled}
-            aria-label="Daily mood check-in reminder"
-            className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${
-              profile.notificationsEnabled ? "bg-brand-600" : "bg-slate-200"
-            }`}
-          >
-            <span
-              className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-transform ${
-                profile.notificationsEnabled ? "translate-x-6" : "translate-x-1"
-              }`}
-            />
-          </button>
-        </div>
 
         <div className="card mt-4">
           <div className="flex items-center gap-2">

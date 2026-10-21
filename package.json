@@ -26,7 +26,7 @@
     "typescript": "*"
   },
   "notes": {
-    "environment": "Dependencies in node_modules were vendored locally because this sandbox blocks all package-registry network access. See VENDORING.md. Once you have normal npm access, run `npm install` against the package.json below (react-router-dom, lucide-react, recharts included) to replace the first-party fallbacks \u00e2\u20ac\u201d see README.md 'Swapping in the real packages' section.",
+    "environment": "This MVP uses first-party router, icon, chart, and React type-shim implementations in place of react-router-dom, lucide-react, recharts, and @types/react. See the Tech stack section in README.md. Replacing these stand-ins requires a deliberate migration and full validation; do not assume they are declared as installed dependencies.",
     "wantedDependencies": {
       "react-router-dom": "^6.26.0",
       "lucide-react": "^0.441.0",
