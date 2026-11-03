@@ -1232,7 +1232,7 @@
       ],
       "status": "Hold",
       "state": "Fresh/raw unless specified",
-      "note": "No single exact food. Specify fruits and proportions; listed IDs are component examples, not interchangeable matches. Frozen/sweetened mixes need separate records.",
+    "note": "No single exact food mix is established. USDA API candidates are FDC 2709271 Berries, NFS (Survey/FNDDS; no declared preparation state) and FDC 2709272 Berries, frozen (Survey/FNDDS); both list 150 g per cup, but neither identifies the fruit components. Keep held until the exact fruits, preparation, and measured grams are supplied. Frozen/sweetened products need a matching record.",
       "uses": [
         {
           "recipeId": "recipe-warm-oatmeal-berries",
@@ -1275,9 +1275,58 @@
             "81927",
             "81928"
           ]
+      },
+      {
+        "fdcId": "2709271",
+        "description": "Berries, NFS",
+        "dataType": "survey_fndds_food",
+        "portionSource": "FDC API",
+        "portionIds": [
+          "306293",
+          "306294"
+        ],
+        "portionDetails": [
+          {
+            "id": "306293",
+            "description": "1 cup",
+            "grams": 150
+          },
+          {
+            "id": "306294",
+            "description": "Quantity not specified",
+            "grams": 75
+          }
+        ],
+        "apiEvidence": "docs/usda/pending-review/20261101T211024Z-c4870b321f844a4696fd4ca12360477c.json",
+        "comparisonStatus": "API detail reviewed; not compared with local CSV snapshot; candidate only"
+      },
+      {
+        "fdcId": "2709272",
+        "description": "Berries, frozen",
+        "dataType": "survey_fndds_food",
+        "portionSource": "FDC API",
+        "portionIds": [
+          "306296",
+          "306295"
+        ],
+        "portionDetails": [
+          {
+            "id": "306295",
+            "description": "1 cup",
+            "grams": 150
+          },
+          {
+            "id": "306296",
+            "description": "Quantity not specified",
+            "grams": 75
+          }
+        ],
+        "apiEvidence": "docs/usda/pending-review/20261101T211024Z-ca594625bd67499f875621f28b3f6f28.json",
+        "comparisonStatus": "API detail reviewed; not compared with local CSV snapshot; candidate only"
         }
       ],
-      "ambiguity": "No single exact food. Specify fruits and proportions; listed IDs are component examples, not interchangeable matches. Frozen/sweetened mixes need separate records."
+    "apiSearchEvidence": "docs/usda/pending-review/20261101T211016Z-a566ae241a2a45918158acc7ccd561b8.json",
+    "ambiguity": "FDC 2709271 is non-specific about berry identity and preparation; FDC 2709272 only establishes frozen berries, not the component mix. Both list a 150 g cup (75 g per half-cup by the listed household portion), but this is not a measured recipe weight and does not identify the berries. Neither candidate has duplicate nutrient IDs in the fetched API response; neither was compared with the local CSV snapshot or approved. Obtain exact berry types, fresh/frozen state, any sweetening, and measured grams for each component before reconsidering this recipe use."
     }
   },
   {
@@ -2500,28 +2549,41 @@
     }
   },
   {
-    "ingredient": "Milk or milk alternative",
+    "ingredient": "Milk, 2%",
     "recipeUseCount": 1,
-    "integrationStatus": "review-only; not approved for catalog",
+    "integrationStatus": "approved for Warm Oatmeal use only; not approved catalog-wide",
     "review": {
       "ids": [
         "171267",
         "171265",
         "174832"
       ],
-      "status": "Hold",
-      "state": "Fluid ingredient",
-      "note": "Choose dairy 2 percent/whole or a particular plant milk. Dairy candidates 244 g/cup; almond candidate 262 g/cup. Fortification and sweetening must match actual choice.",
+      "status": "Approved",
+      "state": "Plain 2% fluid dairy milk; standard fortified generic reference",
+      "note": "User approved FDC 171267 and USDA portion 88320 (1 cup = 244 g) for Warm Oatmeal with Berries only on 2026-11-01. This convention assumes the generic record's added vitamins A and D; a different product formulation may not match. Added sugars are absent and remain null/Unknown. No recipe total is published while mixed berries and other recipe completeness checks remain unresolved.",
       "uses": [
         {
           "recipeId": "recipe-warm-oatmeal-berries",
           "quantity": "1 cup"
         }
       ],
-      "proposedDefaultFdcId": null,
-      "reviewStatus": "pending-human-approval",
-      "sourceVerificationStatus": "source-records-rechecked",
+      "proposedDefaultFdcId": "171267",
+      "reviewStatus": "approved-for-listed-recipe-uses",
+      "sourceVerificationStatus": "csv-api-nutrients-portions-matched-no-duplicate-selected-ids",
+      "apiReport": "pending-review/20261101T204935Z-ab86d72383ec4220a81c1153d8a3c781.json",
       "nutrientBasis": "per 100 g edible portion",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-warm-oatmeal-berries",
+          "quantity": "1 cup",
+          "fdcId": "171267",
+          "portionId": "88320",
+          "grams": 244.0,
+          "approvedDate": "2026-11-01",
+          "apiReport": "pending-review/20261101T204935Z-ab86d72383ec4220a81c1153d8a3c781.json",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ],
       "candidateRecords": [
         {
           "fdcId": "171267",
@@ -2556,7 +2618,7 @@
           ]
         }
       ],
-      "ambiguity": "Choose dairy 2 percent/whole or a particular plant milk. Dairy candidates 244 g/cup; almond candidate 262 g/cup. Fortification and sweetening must match actual choice."
+      "ambiguity": "The user-approved mapping is limited to 1 cup in Warm Oatmeal with Berries and assumes the standard USDA vitamin A/D-fortified generic milk. Confirm the actual product if that assumption is not valid. Mixed berries still require exact fruit types and measured gram weights; do not calculate or publish a recipe total until every required ingredient is verified."
     }
   },
   {

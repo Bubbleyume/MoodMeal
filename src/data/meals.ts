@@ -31,7 +31,7 @@ export const MEALS: Meal[] = [
     description: "Slow-digesting oats topped with antioxidant-rich berries for a comforting start.",
     ingredients: [
       { name: "Steel-cut oats", quantity: "1/2 cup" },
-      { name: "Milk or milk alternative", quantity: "1 cup" },
+      { name: "Milk, 2%", quantity: "1 cup" },
       { name: "Mixed berries", quantity: "1/2 cup" },
       { name: "Walnuts", quantity: "1 tbsp, chopped" },
       { name: "Honey", quantity: "1 tsp" },

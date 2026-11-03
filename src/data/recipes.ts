@@ -44,7 +44,7 @@ export const RECIPES: Recipe[] = [
     cookTimeMinutes: 10,
     ingredients: [
       { name: "Rolled oats", quantity: "1/2 cup" },
-      { name: "Milk or milk alternative", quantity: "1 cup" },
+      { name: "Milk, 2%", quantity: "1 cup" },
       { name: "Mixed berries", quantity: "1/2 cup" },
       { name: "Walnuts", quantity: "1 tbsp, chopped" },
       { name: "Honey", quantity: "1 tsp" },

@@ -20,6 +20,7 @@ User decisions H1–H3, 2026-10-14. Stored in `src/data/usda/approved-ingredient
 |---|---|---|---|
 | Honey (generic) | 169640 | 1 tsp = 7 g (derived from portion 85265, 21 g/tbsp ÷ 3); 1/4 cup = 84.75 g (derived from portion 85264, 339 g/cup ÷ 4) | Added sugars (1235) absent in USDA: null/Unknown, never zero. Other quantities, units, notes or honey types are unreviewed. |
 | Walnuts — Warm Oatmeal with Berries only | 170187 | 1 tbsp chopped = 7.3125 g (derived from portion 86201, 117 g/cup chopped ÷ 16) | Approved 2026-10-20 for this exact recipe use and excluded from the general-purpose calculator. USDA record does not specify roast or salt state. Dark Chocolate Trail Mix 1/4 cup remains held; halves and chopped have different weights. |
+| Milk, 2% — Warm Oatmeal with Berries only | 171267 | 1 cup = 244 g (portion 88320) | Approved 2026-11-01 for this recipe use only; assumes USDA's standard vitamin A/D-fortified generic record. Excluded from the general-purpose calculator. Added sugars absent in USDA: null/Unknown. Mixed berries remain unresolved, so no oatmeal total is published. |
 
 **Batch approvals B1-B14/C1-C2 (2026-10-14):** banana 173944, almond butter 168588, sweet potato 168482, raw egg 171287, hard-boiled egg 173424, long-grain cooked brown rice 169704, rolled oats 173904, fresh pineapple 169124, pumpkin-seed kernels 170556, raw Swiss chard 169991, raw almonds 170567, whole-wheat bread 172688, ground cinnamon 171320 and brewed chamomile 174156 are approved only for the exact uses listed in `BATCH-REMAINING-14-PROPOSAL.md`. Each conversion carries its quantity, unit, notes and recipe IDs. Greek yogurt and avocado are pending. Only the fully reviewed Chamomile & Sweet Potato Toast currently uses these approvals in a published estimate.
 
@@ -33,7 +34,7 @@ Honey appears in Warm Oatmeal, Calming Kefir Smoothie, Green Tea Energy Bites, I
 
 | Recipe | Approved measurement | Remaining restriction |
 |---|---|---|
-| Warm Oatmeal | 1/16 tsp ground cinnamon; 1 tbsp chopped walnuts (7.3125 g) | No complete recipe nutrition approved; walnut approval is recipe-scoped and roast/salt state is unspecified |
+| Warm Oatmeal | 1/16 tsp ground cinnamon; 1 tbsp chopped walnuts (7.3125 g); 1 cup 2% milk (244 g) | No complete recipe nutrition approved; milk and walnut approvals are recipe-scoped; berries remain unresolved; walnut roast/salt state is unspecified |
 | Chamomile Comfort Toast | All five ingredient uses reviewed; see above | Estimate shown; added sugars Unknown |
 | Avocado Toast | 1/16 tsp fine table salt | No complete recipe nutrition approved |
 | Avocado Toast | 1/16 tsp crushed chili flakes | Gram weight and nutrient contribution null until a suitable record or measured weight is reviewed |
@@ -51,7 +52,7 @@ Honey appears in Warm Oatmeal, Calming Kefir Smoothie, Green Tea Energy Bites, I
 
 `remaining-ingredient-review.json` retains the remaining 61 labels with candidate IDs, preparation states, source portion IDs, ambiguities and recipe uses, sorted by frequency. It is documentation only and is not imported by the app. Pineapple's approval applies only to the pilot quantity, not every use. Existing notes describe pre-approval review findings; the decisions above supersede any earlier pinch wording.
 
-Prioritize shared ingredients such as honey, banana and almond butter. Confirm size, salt/fat level and exact household portion before approving weights. Milk alternatives, meat cuts, chocolate, kefir and materially different food identities remain unresolved. Crushed chili flakes and sea salt retain the conditions above. No other recipe nutrition is published.
+Prioritize shared ingredients such as honey, banana and almond butter. Confirm size, salt/fat level and exact household portion before approving weights. Other milk alternatives, meat cuts, chocolate, kefir and materially different food identities remain unresolved. Crushed chili flakes and sea salt retain the conditions above. No additional recipe nutrition is published.
 
 ## Nutrition Calculator (custom recipes)
 

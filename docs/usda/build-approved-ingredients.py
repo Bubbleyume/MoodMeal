@@ -140,6 +140,17 @@ APPROVALS.append(approve('Walnuts', '170187', '20261020T140047Z-8c2ff267ca874e0c
         approved_by='User (project owner) approved the chopped 1 tbsp conversion for Warm Oatmeal with Berries only; Dark Chocolate Trail Mix remains held.',
         calculator_eligible=False))
 
+APPROVALS.append(approve('Milk, 2%', '171267', '20261101T204935Z-ab86d72383ec4220a81c1153d8a3c781.json',
+        'Plain fluid 2% dairy milk, using the USDA generic record fortified with vitamins A and D.',
+        'Fluid as purchased; input added before simmering oats.',
+        'User approved 1 cup for Warm Oatmeal with Berries only on 2026-11-01; standard vitamin A/D fortification is the stated USDA-record convention.',
+        [conv(1, 'cup', '', ['recipe-warm-oatmeal-berries'], '88320', 1,
+              'USDA 1 cup = 244 g (portion 88320); user-approved exact Warm Oatmeal use on 2026-11-01.')],
+        {'hold': 'No other recipe or general calculator use is approved. If the milk used is not fortified with vitamins A and D, this generic USDA record may not match it.'},
+        approved_date='2026-11-01',
+        approved_by='User (project owner) approved plain 2% milk, FDC 171267, 1 cup = 244 g for Warm Oatmeal with Berries only on 2026-11-01.',
+        calculator_eligible=False))
+
 
 def build(approval):
     fdc = approval['fdcId']

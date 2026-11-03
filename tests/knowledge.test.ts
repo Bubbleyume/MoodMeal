@@ -502,6 +502,26 @@ test("approved honey converts only its approved portions and publishes no new re
   }
   assert.equal(RECIPES.filter(r => r.nutritionEstimate).length, 2);
 });
+test("2% milk approval is limited to Warm Oatmeal and does not publish its incomplete total", () => {
+  const milk = APPROVED_INGREDIENTS.find(i => i.ingredient === "Milk, 2%")!;
+  assert.equal(milk.fdcId, "171267");
+  assert.equal(milk.calculatorEligible, false);
+  assert.equal(milk.recipeTotalsPublished, false);
+  assert.equal(milk.nutrients["1008"].amount, 50);
+  assert.equal(milk.nutrients["1235"].amount, null);
+  assert(Object.values(milk.nutrients).every(n => n.amount === null || n.sourceRowId));
+  const recipe = RECIPES.find(r => r.id === "recipe-warm-oatmeal-berries")!;
+  const line = recipe.structuredIngredients.find(i => i.name === "Milk, 2%")!;
+  assert.equal(approvedIngredientInput(line, recipe.id)?.grams, 244);
+  assert.equal(approvedIngredientInput(line), null);
+  assert.equal(approvedIngredientInput({ ...line, quantity: 2 }, recipe.id), null);
+  assert.equal(recipe.nutritionEstimate, null);
+  assert.equal(recipe.nutrientTotals, null);
+  const coverage = recipeReviewCoverage(recipe);
+  assert(coverage.approved.includes("Milk, 2%"));
+  assert(coverage.unreviewed.includes("Mixed berries"));
+  assert.equal(RECIPES.filter(r => r.nutritionEstimate).length, 2);
+});
 test("batch approvals B1-B14/C1-C2 apply only to their exact approved uses", () => {
   const approvedUses: Record<string, string> = {};
   for (const r of RECIPES)
@@ -523,6 +543,7 @@ test("batch approvals B1-B14/C1-C2 apply only to their exact approved uses", () 
     "recipe-green-tea-oat-bites | Almond butter": "168588 125",
     "recipe-green-tea-oat-bites | Rolled oats": "173904 81",
     "recipe-warm-oatmeal-berries | Rolled oats": "173904 40.5",
+    "recipe-warm-oatmeal-berries | Milk, 2%": "171267 244",
     "recipe-warm-oatmeal-berries | Ground cinnamon": "171320 0.1625",
     "recipe-warm-oatmeal-berries | Walnuts": "170187 7.3125",
     "recipe-cozy-sweet-potato-hash | Sweet potato": "168482 130",
@@ -631,14 +652,15 @@ test("ingredient image resolver never borrows artwork from another food", () => 
 test("nutrition calculator offers only approved records, states and conversions", () => {
   const approvedIds = new Set([...APPROVED_INGREDIENTS.filter((r) => r.calculatorEligible !== false).map((r) => r.fdcId), ...PILOT_INGREDIENTS.map((i) => i.fdcId)]);
   assert.deepEqual(new Set(CALCULATOR_FOODS.map((f) => f.fdcId)), approvedIds);
-  // The recipe-only walnut approval is not a general calculator food. The remaining
-  // 16 records share 15 FDC IDs ("Egg" B4 raw and "Eggs" B5 are both 171287).
+  // Recipe-only walnut and milk approvals are not general calculator foods. The remaining
+  // 16 general-purpose records share 15 FDC IDs ("Egg" B4 raw and "Eggs" B5 are both 171287).
   // The pilot adds strawberries and blueberries (its pineapple 169124 is already approved).
-  assert.equal(APPROVED_INGREDIENTS.length, 17);
-  assert.equal(new Set(APPROVED_INGREDIENTS.map((r) => r.fdcId)).size, 16);
+  assert.equal(APPROVED_INGREDIENTS.length, 18);
+  assert.equal(new Set(APPROVED_INGREDIENTS.map((r) => r.fdcId)).size, 17);
   assert.deepEqual(PILOT_INGREDIENTS.map((i) => i.fdcId).filter((id) => !APPROVED_INGREDIENTS.some((r) => r.fdcId === id)), ["167762", "171711"]);
   assert.equal(CALCULATOR_FOODS.length, 17);
   assert.equal(findFood("170187"), undefined, "recipe-scoped walnut approval must not become calculator-wide");
+  assert.equal(findFood("171267"), undefined, "recipe-scoped milk approval must not become calculator-wide");
   // Pending or unapproved candidates are not selectable (Greek yogurt, avocado, alternates).
   for (const id of ["2705422", "2705423", "2705424", "171705", "171706", "168483", "168875", "170401", "2346396"])
     assert.equal(findFood(id), undefined, id);

@@ -26428,5 +26428,363 @@
     "sourceRow": null
    }
   }
+ },
+ "171267": {
+  "food": {
+   "fdc_id": "171267",
+   "data_type": "sr_legacy_food",
+   "description": "Milk, reduced fat, fluid, 2% milkfat, with added vitamin A and vitamin D",
+   "food_category_id": "1",
+   "publication_date": "2019-04-01"
+  },
+  "portions": [
+   {
+    "id": "88320",
+    "fdc_id": "171267",
+    "seq_num": "1",
+    "amount": "1.0",
+    "measure_unit_id": "9999",
+    "portion_description": "",
+    "modifier": "cup",
+    "gram_weight": "244.0",
+    "data_points": "",
+    "footnote": "",
+    "min_year_acquired": ""
+   },
+   {
+    "id": "88321",
+    "fdc_id": "171267",
+    "seq_num": "2",
+    "amount": "1.0",
+    "measure_unit_id": "9999",
+    "portion_description": "",
+    "modifier": "fl oz",
+    "gram_weight": "30.5",
+    "data_points": "",
+    "footnote": "",
+    "min_year_acquired": ""
+   },
+   {
+    "id": "88322",
+    "fdc_id": "171267",
+    "seq_num": "3",
+    "amount": "1.0",
+    "measure_unit_id": "9999",
+    "portion_description": "",
+    "modifier": "quart",
+    "gram_weight": "976.0",
+    "data_points": "",
+    "footnote": "",
+    "min_year_acquired": ""
+   }
+  ],
+  "nutrients": {
+   "1008": {
+    "amount": 50.0,
+    "unit": "KCAL",
+    "name": "Energy",
+    "sourceRow": {
+     "id": "1595921",
+     "fdc_id": "171267",
+     "nutrient_id": "1008",
+     "amount": "50.0",
+     "data_points": "0",
+     "derivation_id": "49",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1003": {
+    "amount": 3.3,
+    "unit": "G",
+    "name": "Protein",
+    "sourceRow": {
+     "id": "1595856",
+     "fdc_id": "171267",
+     "nutrient_id": "1003",
+     "amount": "3.3",
+     "data_points": "13",
+     "derivation_id": "1",
+     "min": "3.18",
+     "max": "3.61",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1005": {
+    "amount": 4.8,
+    "unit": "G",
+    "name": "Carbohydrate, by difference",
+    "sourceRow": {
+     "id": "1595920",
+     "fdc_id": "171267",
+     "nutrient_id": "1005",
+     "amount": "4.8",
+     "data_points": "0",
+     "derivation_id": "49",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1004": {
+    "amount": 1.98,
+    "unit": "G",
+    "name": "Total lipid (fat)",
+    "sourceRow": {
+     "id": "1595969",
+     "fdc_id": "171267",
+     "nutrient_id": "1004",
+     "amount": "1.98",
+     "data_points": "14",
+     "derivation_id": "43",
+     "min": "1.9",
+     "max": "2.06",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1079": {
+    "amount": 0.0,
+    "unit": "G",
+    "name": "Fiber, total dietary",
+    "sourceRow": {
+     "id": "1595892",
+     "fdc_id": "171267",
+     "nutrient_id": "1079",
+     "amount": "0.0",
+     "data_points": "0",
+     "derivation_id": "",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "2000": {
+    "amount": 5.06,
+    "unit": "G",
+    "name": "Total Sugars",
+    "sourceRow": {
+     "id": "1595943",
+     "fdc_id": "171267",
+     "nutrient_id": "2000",
+     "amount": "5.06",
+     "data_points": "13",
+     "derivation_id": "1",
+     "min": "4.61",
+     "max": "5.69",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1235": {
+    "amount": null,
+    "unit": "G",
+    "name": "Sugars, added",
+    "sourceRow": null
+   },
+   "1087": {
+    "amount": 120.0,
+    "unit": "MG",
+    "name": "Calcium, Ca",
+    "sourceRow": {
+     "id": "1595964",
+     "fdc_id": "171267",
+     "nutrient_id": "1087",
+     "amount": "120.0",
+     "data_points": "4",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1089": {
+    "amount": 0.02,
+    "unit": "MG",
+    "name": "Iron, Fe",
+    "sourceRow": {
+     "id": "1595971",
+     "fdc_id": "171267",
+     "nutrient_id": "1089",
+     "amount": "0.02",
+     "data_points": "4",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1090": {
+    "amount": 11.0,
+    "unit": "MG",
+    "name": "Magnesium, Mg",
+    "sourceRow": {
+     "id": "1595972",
+     "fdc_id": "171267",
+     "nutrient_id": "1090",
+     "amount": "11.0",
+     "data_points": "31",
+     "derivation_id": "1",
+     "min": "10.0",
+     "max": "13.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1092": {
+    "amount": 140.0,
+    "unit": "MG",
+    "name": "Potassium, K",
+    "sourceRow": {
+     "id": "1595965",
+     "fdc_id": "171267",
+     "nutrient_id": "1092",
+     "amount": "140.0",
+     "data_points": "31",
+     "derivation_id": "1",
+     "min": "103.0",
+     "max": "172.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1093": {
+    "amount": 47.0,
+    "unit": "MG",
+    "name": "Sodium, Na",
+    "sourceRow": {
+     "id": "1595974",
+     "fdc_id": "171267",
+     "nutrient_id": "1093",
+     "amount": "47.0",
+     "data_points": "31",
+     "derivation_id": "1",
+     "min": "36.0",
+     "max": "69.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1162": {
+    "amount": 0.2,
+    "unit": "MG",
+    "name": "Vitamin C, total ascorbic acid",
+    "sourceRow": {
+     "id": "1595858",
+     "fdc_id": "171267",
+     "nutrient_id": "1162",
+     "amount": "0.2",
+     "data_points": "5",
+     "derivation_id": "1",
+     "min": "0.0",
+     "max": "0.9",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1175": {
+    "amount": 0.038,
+    "unit": "MG",
+    "name": "Vitamin B-6",
+    "sourceRow": {
+     "id": "1595855",
+     "fdc_id": "171267",
+     "nutrient_id": "1175",
+     "amount": "0.038",
+     "data_points": "13",
+     "derivation_id": "1",
+     "min": "0.029",
+     "max": "0.045",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1178": {
+    "amount": 0.53,
+    "unit": "UG",
+    "name": "Vitamin B-12",
+    "sourceRow": {
+     "id": "1595977",
+     "fdc_id": "171267",
+     "nutrient_id": "1178",
+     "amount": "0.53",
+     "data_points": "4",
+     "derivation_id": "1",
+     "min": "",
+     "max": "",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   },
+   "1177": {
+    "amount": 5.0,
+    "unit": "UG",
+    "name": "Folate, total",
+    "sourceRow": {
+     "id": "1595953",
+     "fdc_id": "171267",
+     "nutrient_id": "1177",
+     "amount": "5.0",
+     "data_points": "12",
+     "derivation_id": "1",
+     "min": "4.0",
+     "max": "5.0",
+     "median": "",
+     "loq": "",
+     "footnote": "",
+     "min_year_acquired": "",
+     "percent_daily_value": ""
+    }
+   }
+  }
  }
 }
