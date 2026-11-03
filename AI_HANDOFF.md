@@ -1,5 +1,22 @@
 # MoodMeal AI Handoff
 
+## Milk checkpoint and ledger reconciliation (Claude Code, 2026-11-03)
+
+- The owner confirmed Codex's 2% milk approval. Codex's ten files were committed unchanged as 07ecbf6 ("Approve 2% milk for Warm Oatmeal only"), after typecheck, 48 knowledge tests, avatar tests, the docs/usda tests and the build passed. `docs/RECIPE-SOURCE-CROSSWALK.md` and `AGENTS.md` remain untracked.
+- The owner approved reconciling `docs/usda/remaining-ingredient-review.json` with runtime data and the recipe catalog. This adds no approval and no recipe total.
+  - Added "Ground cinnamon" (FDC 171320). It records the existing 2026-10-14 C1 runtime approval: 1/16 tsp = 0.1625 g, Chamomile Toast and Warm Oatmeal only.
+  - Sunshine Pancakes "Cinnamon, 1/2 tsp" is a separate Hold entry.
+  - Gentle Avocado Toast labels now match the recipe: Whole-wheat bread (approval unchanged); Crushed chili flakes, 1/16 tsp (Hold); Fine table salt, 1/16 tsp (Review, gram weight unreviewed, sodium never defaulted to zero).
+  - The other untracked unapproved uses are now tracked as Review entries, with no FDC ID and no candidate:
+    - Olive oil (7 recipes), Garlic (3) and Cooked quinoa (2, separate from the Magnesium Boost Bowl "Quinoa" candidate).
+    - Spinach, Carrots, Paprika and Air-popped popcorn.
+    - Strawberries and Blueberries. The Skewers pilot records are not extended.
+  - Edits were targeted, so all other entries are byte-identical.
+- Found by a development-only research engine (`tools/research/`, `scripts/export-catalog.mjs`, `docs/research/`; still uncommitted, with additive script and ignore lines in `package.json`/`.gitignore`).
+  - Its consistency checks now report no findings apart from the expected Skewers pineapple pilot note.
+  - Details and pending knowledge-review stages are in `docs/research/README.md` and `docs/research/TASK-3-DECISIONS.md`.
+- Next: owner decision on knowledge stage B (separate AI-assisted from owner-reviewed provenance) and the stage C threshold. Task 4 (hold-resolution packets) is still on hold.
+
 ## Warm Oatmeal milk mapping approved (Codex, 2026-11-01)
 
 - The user approved plain 2% dairy milk for `recipe-warm-oatmeal-berries` only: FDC 171267, “Milk, reduced fat, fluid, 2% milkfat, with added vitamin A and vitamin D”; USDA portion 88320 is 244 g per cup. This approval adopts the standard fortified generic record; if the milk actually used differs in fortification/formulation, do not reuse this mapping without review.

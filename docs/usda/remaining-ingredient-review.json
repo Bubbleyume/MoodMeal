@@ -1932,7 +1932,7 @@
     }
   },
   {
-    "ingredient": "Chili flakes",
+    "ingredient": "Crushed chili flakes",
     "recipeUseCount": 1,
     "integrationStatus": "review-only; not approved for catalog",
     "review": {
@@ -1945,7 +1945,7 @@
       "uses": [
         {
           "recipeId": "recipe-gentle-avocado-toast",
-          "quantity": "pinch"
+          "quantity": "1/16 tsp"
         }
       ],
       "proposedDefaultFdcId": null,
@@ -2700,7 +2700,7 @@
     }
   },
   {
-    "ingredient": "Salt",
+    "ingredient": "Fine table salt",
     "recipeUseCount": 1,
     "integrationStatus": "review-only; not approved for catalog",
     "review": {
@@ -2709,11 +2709,11 @@
       ],
       "status": "Review",
       "state": "Dry salt",
-      "note": "Table salt is only a proxy for sea salt; crystal size differs. Pinch is unmeasured; use weighed grams. Do not default to zero sodium.",
+      "note": "Gentle Avocado Toast now specifies 1/16 tsp fine table salt (relabelled from \"Salt, pinch\" on 2026-11-03). The earlier sea-salt proxy caution no longer applies to this wording, but the 1/16 tsp gram weight has not been reviewed against a USDA portion, so the use stays in review. Do not default to zero sodium.",
       "uses": [
         {
           "recipeId": "recipe-gentle-avocado-toast",
-          "quantity": "pinch"
+          "quantity": "1/16 tsp"
         }
       ],
       "proposedDefaultFdcId": "173468",
@@ -2734,7 +2734,7 @@
           ]
         }
       ],
-      "ambiguity": "Table salt is only a proxy for sea salt; crystal size differs. Pinch is unmeasured; use weighed grams. Do not default to zero sodium."
+      "ambiguity": "Gentle Avocado Toast now specifies 1/16 tsp fine table salt (relabelled from \"Salt, pinch\" on 2026-11-03). The earlier sea-salt proxy caution no longer applies to this wording, but the 1/16 tsp gram weight has not been reviewed against a USDA portion, so the use stays in review. Do not default to zero sodium."
     }
   },
   {
@@ -2938,7 +2938,7 @@
     }
   },
   {
-    "ingredient": "Whole-grain bread",
+    "ingredient": "Whole-wheat bread",
     "recipeUseCount": 1,
     "integrationStatus": "ingredient-approved for listed recipe uses; not approved catalog-wide",
     "review": {
@@ -3075,6 +3075,335 @@
       "nutrientBasis": "per 100 g edible portion",
       "candidateRecords": [],
       "ambiguity": "Not edible. Exclude from nutrition and ingredient matching; optionally retain separately as equipment. Do not assign a food ID."
+    }
+  },
+  {
+    "ingredient": "Ground cinnamon",
+    "recipeUseCount": 2,
+    "integrationStatus": "ingredient-approved for listed recipe uses; not approved catalog-wide",
+    "review": {
+      "ids": [
+        "171320"
+      ],
+      "status": "Approved",
+      "state": "Dry ground spice",
+      "note": "User approved FDC 171320 (C1, 2026-10-14) for 1/16 tsp ground cinnamon in Chamomile & Sweet Potato Toast and Warm Oatmeal with Berries only: 0.1625 g, derived from USDA portion 88429 (1 tsp = 2.6 g) / 16. Sunshine Pancakes \"Cinnamon, 1/2 tsp\" is held and not covered. Added sugars stay null/Unknown. Ledger entry added 2026-11-03; the runtime approval predates it.",
+      "uses": [
+        {
+          "recipeId": "recipe-chamomile-comfort-toast",
+          "quantity": "1/16 tsp"
+        },
+        {
+          "recipeId": "recipe-warm-oatmeal-berries",
+          "quantity": "1/16 tsp"
+        }
+      ],
+      "proposedDefaultFdcId": "171320",
+      "reviewStatus": "approved-for-listed-recipe-uses",
+      "sourceVerificationStatus": "source-records-rechecked",
+      "apiReport": "pending-review/20261015T005749Z-f986ddfd4a1543b8b82452e0ceb41585.json",
+      "approvedUses": [
+        {
+          "recipeId": "recipe-chamomile-comfort-toast",
+          "quantity": "1/16 tsp",
+          "fdcId": "171320",
+          "portionId": "88429",
+          "grams": 0.1625,
+          "approvedDate": "2026-10-14",
+          "apiReport": "pending-review/20261015T005749Z-f986ddfd4a1543b8b82452e0ceb41585.json",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        },
+        {
+          "recipeId": "recipe-warm-oatmeal-berries",
+          "quantity": "1/16 tsp",
+          "fdcId": "171320",
+          "portionId": "88429",
+          "grams": 0.1625,
+          "approvedDate": "2026-10-14",
+          "apiReport": "pending-review/20261015T005749Z-f986ddfd4a1543b8b82452e0ceb41585.json",
+          "approvalReference": "runtime record src/data/usda/approved-ingredients.json"
+        }
+      ],
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [
+        {
+          "fdcId": "171320",
+          "description": "Spices, cinnamon, ground",
+          "dataType": "sr_legacy_food",
+          "portionSource": "food_portion.csv",
+          "portionIds": [
+            "88429",
+            "88430"
+          ]
+        }
+      ],
+      "ambiguity": "Approval covers only the two 1/16 tsp uses. Do not extend it to the Sunshine Pancakes use or other cinnamon uses without review."
+    }
+  },
+  {
+    "ingredient": "Cinnamon",
+    "recipeUseCount": 1,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [],
+      "status": "Hold",
+      "state": "Unspecified",
+      "note": "Added 2026-11-03 from the research-engine catalog-coverage check: this unapproved recipe use was not tracked in the structured ledger. No USDA record has been selected or reviewed; tracking only, no approval implied. Held: not covered by the Ground cinnamon approval (FDC 171320, 1/16 tsp uses only). Cinnamon type and ground form are unconfirmed; 1/2 tsp would be 1.3 g only if FDC 171320 and portion 88429 are confirmed.",
+      "uses": [
+        {
+          "recipeId": "recipe-sunshine-pancakes",
+          "quantity": "1/2 tsp"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "held-not-covered-by-approval",
+      "sourceVerificationStatus": "not-started",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [],
+      "ambiguity": "Held: not covered by the Ground cinnamon approval (FDC 171320, 1/16 tsp uses only). Cinnamon type and ground form are unconfirmed; 1/2 tsp would be 1.3 g only if FDC 171320 and portion 88429 are confirmed."
+    }
+  },
+  {
+    "ingredient": "Olive oil",
+    "recipeUseCount": 7,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [],
+      "status": "Review",
+      "state": "Unspecified",
+      "note": "Added 2026-11-03 from the research-engine catalog-coverage check: this unapproved recipe use was not tracked in the structured ledger. No USDA record has been selected or reviewed; tracking only, no approval implied. Earlier markdown reviews named unlisted olive oil as a blocker. Oil grade and USDA record are unselected.",
+      "uses": [
+        {
+          "recipeId": "recipe-salmon-quinoa-bowl",
+          "quantity": "1 tbsp"
+        },
+        {
+          "recipeId": "recipe-cozy-sweet-potato-hash",
+          "quantity": "1 tbsp"
+        },
+        {
+          "recipeId": "recipe-cooling-cucumber-salad",
+          "quantity": "1 tsp"
+        },
+        {
+          "recipeId": "recipe-steak-and-greens",
+          "quantity": "1 tbsp"
+        },
+        {
+          "recipeId": "recipe-brown-rice-veggie-bowl",
+          "quantity": "1 tsp"
+        },
+        {
+          "recipeId": "recipe-sunshine-pancakes",
+          "quantity": "1 tsp"
+        },
+        {
+          "recipeId": "recipe-magnesium-boost-bowl",
+          "quantity": "1 tsp"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "untracked-use-added-for-review",
+      "sourceVerificationStatus": "not-started",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [],
+      "ambiguity": "Earlier markdown reviews named unlisted olive oil as a blocker. Oil grade and USDA record are unselected."
+    }
+  },
+  {
+    "ingredient": "Garlic",
+    "recipeUseCount": 3,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [],
+      "status": "Review",
+      "state": "Unspecified",
+      "note": "Added 2026-11-03 from the research-engine catalog-coverage check: this unapproved recipe use was not tracked in the structured ledger. No USDA record has been selected or reviewed; tracking only, no approval implied. Clove size and weight are unmeasured.",
+      "uses": [
+        {
+          "recipeId": "recipe-iron-rich-stir-fry",
+          "quantity": "2 cloves, minced"
+        },
+        {
+          "recipeId": "recipe-steak-and-greens",
+          "quantity": "1 clove, minced"
+        },
+        {
+          "recipeId": "recipe-ginger-citrus-soup",
+          "quantity": "2 cloves, minced"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "untracked-use-added-for-review",
+      "sourceVerificationStatus": "not-started",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [],
+      "ambiguity": "Clove size and weight are unmeasured."
+    }
+  },
+  {
+    "ingredient": "Cooked quinoa",
+    "recipeUseCount": 2,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [],
+      "status": "Review",
+      "state": "Unspecified",
+      "note": "Added 2026-11-03 from the research-engine catalog-coverage check: this unapproved recipe use was not tracked in the structured ledger. No USDA record has been selected or reviewed; tracking only, no approval implied. Separate from the \"Quinoa\" candidate for Magnesium Boost Bowl; do not extend that candidate or its conversion to these uses without review.",
+      "uses": [
+        {
+          "recipeId": "recipe-salmon-quinoa-bowl",
+          "quantity": "3/4 cup"
+        },
+        {
+          "recipeId": "recipe-quinoa-fruit-salad",
+          "quantity": "1 cup, cooled"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "untracked-use-added-for-review",
+      "sourceVerificationStatus": "not-started",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [],
+      "ambiguity": "Separate from the \"Quinoa\" candidate for Magnesium Boost Bowl; do not extend that candidate or its conversion to these uses without review."
+    }
+  },
+  {
+    "ingredient": "Spinach",
+    "recipeUseCount": 1,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [],
+      "status": "Review",
+      "state": "Unspecified",
+      "note": "Added 2026-11-03 from the research-engine catalog-coverage check: this unapproved recipe use was not tracked in the structured ledger. No USDA record has been selected or reviewed; tracking only, no approval implied. Distinct from the \"Baby spinach\" entry; spinach type and raw or cooked measurement are unresolved.",
+      "uses": [
+        {
+          "recipeId": "recipe-iron-rich-stir-fry",
+          "quantity": "2 cups"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "untracked-use-added-for-review",
+      "sourceVerificationStatus": "not-started",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [],
+      "ambiguity": "Distinct from the \"Baby spinach\" entry; spinach type and raw or cooked measurement are unresolved."
+    }
+  },
+  {
+    "ingredient": "Carrots",
+    "recipeUseCount": 1,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [],
+      "status": "Review",
+      "state": "Unspecified",
+      "note": "Added 2026-11-03 from the research-engine catalog-coverage check: this unapproved recipe use was not tracked in the structured ledger. No USDA record has been selected or reviewed; tracking only, no approval implied. Distinct from the \"Rainbow carrots\" entry; raw sliced cup weight is unmeasured.",
+      "uses": [
+        {
+          "recipeId": "recipe-ginger-citrus-soup",
+          "quantity": "1 cup, sliced"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "untracked-use-added-for-review",
+      "sourceVerificationStatus": "not-started",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [],
+      "ambiguity": "Distinct from the \"Rainbow carrots\" entry; raw sliced cup weight is unmeasured."
+    }
+  },
+  {
+    "ingredient": "Paprika",
+    "recipeUseCount": 1,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [],
+      "status": "Review",
+      "state": "Unspecified",
+      "note": "Added 2026-11-03 from the research-engine catalog-coverage check: this unapproved recipe use was not tracked in the structured ledger. No USDA record has been selected or reviewed; tracking only, no approval implied. Sweet, hot or smoked paprika is unspecified.",
+      "uses": [
+        {
+          "recipeId": "recipe-cozy-sweet-potato-hash",
+          "quantity": "1/2 tsp"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "untracked-use-added-for-review",
+      "sourceVerificationStatus": "not-started",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [],
+      "ambiguity": "Sweet, hot or smoked paprika is unspecified."
+    }
+  },
+  {
+    "ingredient": "Strawberries",
+    "recipeUseCount": 1,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [],
+      "status": "Review",
+      "state": "Unspecified",
+      "note": "Added 2026-11-03 from the research-engine catalog-coverage check: this unapproved recipe use was not tracked in the structured ledger. No USDA record has been selected or reviewed; tracking only, no approval implied. The Rainbow Fruit Skewers pilot record (FDC 167762) is scoped to that recipe only and is not extended here.",
+      "uses": [
+        {
+          "recipeId": "recipe-quinoa-fruit-salad",
+          "quantity": "1/2 cup, sliced"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "untracked-use-added-for-review",
+      "sourceVerificationStatus": "not-started",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [],
+      "ambiguity": "The Rainbow Fruit Skewers pilot record (FDC 167762) is scoped to that recipe only and is not extended here."
+    }
+  },
+  {
+    "ingredient": "Blueberries",
+    "recipeUseCount": 1,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [],
+      "status": "Review",
+      "state": "Unspecified",
+      "note": "Added 2026-11-03 from the research-engine catalog-coverage check: this unapproved recipe use was not tracked in the structured ledger. No USDA record has been selected or reviewed; tracking only, no approval implied. The Rainbow Fruit Skewers pilot record (FDC 171711) is scoped to that recipe only; fresh or frozen state is unspecified.",
+      "uses": [
+        {
+          "recipeId": "recipe-calming-kefir-smoothie",
+          "quantity": "1/2 cup"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "untracked-use-added-for-review",
+      "sourceVerificationStatus": "not-started",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [],
+      "ambiguity": "The Rainbow Fruit Skewers pilot record (FDC 171711) is scoped to that recipe only; fresh or frozen state is unspecified."
+    }
+  },
+  {
+    "ingredient": "Air-popped popcorn",
+    "recipeUseCount": 1,
+    "integrationStatus": "review-only; not approved for catalog",
+    "review": {
+      "ids": [],
+      "status": "Review",
+      "state": "Unspecified",
+      "note": "Added 2026-11-03 from the research-engine catalog-coverage check: this unapproved recipe use was not tracked in the structured ledger. No USDA record has been selected or reviewed; tracking only, no approval implied. Cup weight is unmeasured; the USDA record must be air-popped and without added oil or salt.",
+      "uses": [
+        {
+          "recipeId": "recipe-loaded-popcorn-mix",
+          "quantity": "2 cups"
+        }
+      ],
+      "proposedDefaultFdcId": null,
+      "reviewStatus": "untracked-use-added-for-review",
+      "sourceVerificationStatus": "not-started",
+      "nutrientBasis": "per 100 g edible portion",
+      "candidateRecords": [],
+      "ambiguity": "Cup weight is unmeasured; the USDA record must be air-popped and without added oil or salt."
     }
   }
 ]
