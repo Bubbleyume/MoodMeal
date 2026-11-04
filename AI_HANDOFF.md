@@ -1,5 +1,21 @@
 # MoodMeal AI Handoff
 
+## Knowledge stage D batch 4: water and omega-3 rules; all food tags owner-reviewed (Claude Code, 2026-11-04)
+
+Started at 8f7dee0 (batch 3), equal to origin. The owner approved every recommendation in `docs/research/STAGE-D-BATCH-4.md`.
+
+- **Water rule (MoodMeal's own; no FDA Daily Value):** the USDA record is at least 90% water by weight (FDC 1051). Confirmed for:
+  - chamomile tea (174156) and green tea (brewed, 171917);
+  - cucumber (168409), coconut water (174831) and watermelon (167765, 91.45%).
+- **Omega-3 rule (MoodMeal's own):** at least 0.16 g of ALA + EPA + DPA + DHA per reference amount, which is 10% of the 1.6 g ALA Adequate Intake. ALA comes from 1404, or from 1270 when 1404 is absent. Confirmed for salmon (0.86–2.22 g across 4 records), walnuts (2.72 g) and chia (5.35 g).
+  - FDA's rules on omega-3 content claims were not reviewed.
+- **Matcha:** "Matcha or green tea powder" no longer maps to the brewed Green Tea food. Green Tea Energy Bites lose water and Hydration.
+- All 70 published food tags now have owner-approved USDA evidence. `foodTagReviews.ts` has 88 entries, and its evidence type allows rule-based measures with a null `percentDV`. Meal tags: 110.
+- Validation: 50 knowledge tests, typecheck, avatar tests, the build, the browser suite (no browser errors) and 48 research tests pass.
+- The owner approved committing and pushing batch 4 on 2026-11-04. The research tooling, packets, `.gitignore` and `package.json` lines are excluded.
+  - Later work: PDCAAS values for the held plant protein tags; checking meal quantities for inherited tags; mood-to-goal rules; glossary entries.
+  - Task 4 is still on hold.
+
 ## Knowledge stage D batch 3: AI-reviewed food tags confirmed by the owner (Claude Code, 2026-11-04)
 
 Started at bc1e20d (batch 2), equal to origin. The owner approved every recommendation in `docs/research/STAGE-D-BATCH-3.md`.

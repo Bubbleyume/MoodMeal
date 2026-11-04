@@ -23,7 +23,7 @@ import { RECIPES } from "../src/data/recipes";
 import { EMOTIONS } from "../src/data/emotions";
 import { DEFAULT_PREFERENCES, eligible } from "../src/lib/preferences";
 import { aggregateGroceries } from "../src/lib/grocery";
-import { parseIngredient, ingredientLine } from "../src/lib/catalog";
+import { parseIngredient, ingredientLine, foodIdForIngredient } from "../src/lib/catalog";
 import {
   extractCandidates,
   transition,
@@ -243,10 +243,10 @@ test("new sources are not published by default and every source states its revie
   }
   assert.equal(RECIPES.filter((r) => r.nutritionEstimate).length, 2);
 });
-test("owner-reviewed food tags (stage D batches 1-3) match FOOD_FACTS and carry USDA evidence", () => {
+test("owner-reviewed food tags (stage D batches 1-4) match FOOD_FACTS and carry USDA evidence", () => {
   const key = (r: { foodId: string; nutrientId: string }) => `${r.foodId}:${r.nutrientId}`;
-  assert.equal(FOOD_TAG_REVIEWS.length, 80);
-  assert.equal(new Set(FOOD_TAG_REVIEWS.map(key)).size, 80);
+  assert.equal(FOOD_TAG_REVIEWS.length, 88);
+  assert.equal(new Set(FOOD_TAG_REVIEWS.map(key)).size, 88);
   assert.equal(FOOD_TAG_REVIEWS.filter((r) => r.batch === 1).length, 23);
   const withdrawn = FOOD_TAG_REVIEWS.filter((r) => r.action === "withdrawn");
   assert.deepEqual(withdrawn.map(key).sort(), [
@@ -259,9 +259,9 @@ test("owner-reviewed food tags (stage D batches 1-3) match FOOD_FACTS and carry 
     assert.equal(tagged, r.decision === "published", key(r));
     assert(r.evidence.length > 0, key(r));
     // Published tags and withdrawn tags follow the bar on every record; held tags are owner holds (see note).
-    if (r.action !== "held")
+    if (r.action !== "held" && r.batch !== 4)
       for (const e of r.evidence)
-        assert.equal(e.percentDV >= 10, r.decision === "published", `${key(r)} ${e.fdcId} ${e.percentDV}`);
+        assert.equal((e.percentDV ?? 0) >= 10, r.decision === "published", `${key(r)} ${e.fdcId} ${e.percentDV}`);
     const food = FOODS.find((f) => f.id === r.foodId)!;
     const fact = food.nutrientFacts.find((f) => f.nutrientId === r.nutrientId);
     if (r.decision === "needs-review") {
@@ -303,11 +303,25 @@ test("owner-reviewed food tags (stage D batches 1-3) match FOOD_FACTS and carry 
   const ids = (k: string) => FOOD_TAG_REVIEWS.find((r) => key(r) === k)!.evidence.map((e) => e.fdcId).sort();
   assert.deepEqual(ids("dark-chocolate:iron"), ["170271", "170272", "170273"]);
   assert.deepEqual(ids("steel-cut-oats:fiber"), ["173904", "2346397"]);
-  // Every published food tag except water and omega-3 now has owner-approved USDA evidence.
+  // Batch 4: every published food tag now has owner-approved USDA evidence.
   const published = new Set(FOOD_TAG_REVIEWS.filter((r) => r.decision === "published").map(key));
   const unreviewed = Object.entries(FOOD_FACTS).flatMap(([f, ns]) => ns.map((n) => `${f}:${n}`)).filter((k) => !published.has(k));
-  assert(unreviewed.every((k) => k.endsWith(":water") || k.endsWith(":omega-3")), unreviewed.join(", "));
-  assert.equal(unreviewed.length, 8);
+  assert.deepEqual(unreviewed, []);
+  const batch4 = FOOD_TAG_REVIEWS.filter((r) => r.batch === 4);
+  assert.equal(batch4.length, 8);
+  for (const r of batch4) {
+    assert(r.evidence.every((e) => e.percentDV === null), key(r));
+    if (r.nutrientId === "water") assert(r.evidence.every((e) => e.rule === "water-percent" && e.waterPercent! >= 90), key(r));
+    else assert(r.evidence.every((e) => e.rule === "omega-3-grams" && e.omega3Grams! >= 0.16), key(r));
+  }
+  const tea = FOODS.find((f) => f.id === "green-tea")!.nutrientFacts.find((f) => f.nutrientId === "water")!;
+  assert(tea.sourceProvenance.some((s) => s.reviewOrigin === "owner-approved" && /99\.93% water by weight/.test(s.pageOrSection ?? "")));
+  // Dry matcha powder no longer passes the water tag (and Hydration) to the Green Tea Energy Bites.
+  assert.equal(foodIdForIngredient("Matcha or green tea powder"), undefined);
+  assert.equal(foodIdForIngredient("Brewed green tea"), "green-tea");
+  const bites = MEALS.find((m) => m.id === "green-tea-oat-bites")!;
+  assert(!verifiedNutrients(bites).includes("water"));
+  assert(verifiedNutrients(bites).includes("fiber"));
   // Confirmed protein sources say the %DV is uncorrected.
   const salmon = FOODS.find((f) => f.id === "wild-salmon")!;
   const protein = salmon.nutrientFacts.find((f) => f.nutrientId === "protein")!;

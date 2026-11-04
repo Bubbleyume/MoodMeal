@@ -10,6 +10,7 @@ import {
   FOOD_TAG_REVIEWS,
   FOOD_TAG_REVIEW_DATE,
   FOOD_TAG_SNAPSHOT,
+  type FoodTagEvidence,
 } from "../data/foodTagReviews";
 import { approvedChamomileToastNutrition, approvedPilotNutrition } from "../data/usdaPilot";
 
@@ -47,7 +48,8 @@ const aliases: [RegExp, string][] = [
   [/carrot/i, "rainbow-carrots"],
   [/pineapple/i, "pineapple"],
   [/chard/i, "swiss-chard"],
-  [/green tea|matcha/i, "green-tea"],
+  // Brewed green tea only: matcha and green tea powder are dry and stay unmapped (stage D batch 4).
+  [/^(?!.*(matcha|powder)).*green tea/i, "green-tea"],
   [/chia/i, "chia-pudding"],
 ];
 export function foodIdForIngredient(name: string) {
@@ -116,6 +118,13 @@ export function allergenTags(text: string) {
   return allergenRules.filter(([, re]) => re.test(text)).map(([name]) => name);
 }
 /** USDA evidence for an owner-reviewed, published food tag (stage D); empty otherwise. */
+function evidenceSummary(e: FoodTagEvidence, nutrientId: string) {
+  if (e.rule === "water-percent")
+    return `${e.waterPercent}% water by weight; MoodMeal counts a food as a water source at 90% or more (water has no FDA Daily Value).`;
+  if (e.rule === "omega-3-grams")
+    return `about ${e.omega3Grams} g of omega-3 fatty acids (ALA, EPA, DPA and DHA) per ${e.raccGrams} g reference amount (${e.raccCategory}); MoodMeal's own bar is 0.16 g, 10% of the ALA Adequate Intake (omega-3 has no FDA Daily Value).`;
+  return `about ${Math.round(e.percentDV ?? 0)}% of the FDA Daily Value for ${NUTRIENTS[nutrientId].label} per ${e.raccGrams} g reference amount (${e.raccCategory}).${nutrientId === "protein" ? " Not corrected for protein quality (PDCAAS)." : ""}`;
+}
 export function foodTagEvidence(foodId: string, nutrientId: string): Provenance[] {
   const review = FOOD_TAG_REVIEWS.find(
     (r) =>
@@ -126,10 +135,12 @@ export function foodTagEvidence(foodId: string, nutrientId: string): Provenance[
   return (review?.evidence ?? []).map((e) => ({
     sourceTitle: `USDA FoodData Central: ${e.description}`,
     author: "U.S. Department of Agriculture, Agricultural Research Service",
-    pageOrSection: `FDC ${e.fdcId}: about ${Math.round(e.percentDV)}% of the FDA Daily Value for ${NUTRIENTS[nutrientId].label} per ${e.raccGrams} g reference amount (${e.raccCategory}). Snapshot ${FOOD_TAG_SNAPSHOT}.${nutrientId === "protein" ? " Not corrected for protein quality (PDCAAS)." : ""}`,
+    pageOrSection: `FDC ${e.fdcId}: ${evidenceSummary(e, nutrientId)} Snapshot ${FOOD_TAG_SNAPSHOT}.`,
     sourceURL: `https://fdc.nal.usda.gov/food-details/${e.fdcId}/nutrients`,
     reviewedDate: FOOD_TAG_REVIEW_DATE,
-    reviewedBy: "Project owner (food tag review, 10% Daily Value bar)",
+    reviewedBy: e.rule
+      ? "Project owner (food tag review, MoodMeal rule for a nutrient with no Daily Value)"
+      : "Project owner (food tag review, 10% Daily Value bar)",
     reviewOrigin: "owner-approved",
     evidenceStatus: "source-supported",
     claimType: "food-nutrient",
