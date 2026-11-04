@@ -7,11 +7,10 @@
  * conversion, else from an owner-approved tag-check weight (batch 6, src/data/tagCheckWeights.ts). Unweighed amounts are never assumed, so
  * a low lower bound is "not-shown", never "below". MoodMeal's own rule, not an FDA meal claim.
  */
-import { FOOD_FACTS } from "../data/knowledge";
 import { FOOD_TAG_REVIEWS } from "../data/foodTagReviews";
 import { approvedIngredientInput } from "../data/usdaApprovals";
 import { tagCheckWeight } from "../data/tagCheckWeights";
-import { foodIdForIngredient } from "./catalog";
+import { foodIdForIngredient, inheritedNutrients } from "./catalog";
 import type { Recipe } from "../types";
 
 /** 21 CFR 101.9(c)(8)(iv) and (c)(9); same values as tools/research tag_evidence.py. */
@@ -66,11 +65,11 @@ function perGram(foodId: string, nutrientId: string) {
 export function checkMealTags(recipe: Recipe): MealTagCheck[] {
   const lines = recipe.structuredIngredients;
   const foodOf = (name: string) => foodIdForIngredient(name) ?? "";
-  const tags = [...new Set(lines.flatMap((i) => FOOD_FACTS[foodOf(i.name)] ?? []))];
+  const tags = [...new Set(lines.flatMap((i) => inheritedNutrients(i)))];
   const estimate = recipe.nutritionEstimate;
   return tags.map((nutrientId) => {
     const contributors = lines
-      .filter((i) => (FOOD_FACTS[foodOf(i.name)] ?? []).includes(nutrientId))
+      .filter((i) => inheritedNutrients(i).includes(nutrientId))
       .map((i) => {
         const approved = approvedIngredientInput(i, recipe.id)?.grams;
         const tagWeight = tagCheckWeight(i, recipe.id)?.grams;

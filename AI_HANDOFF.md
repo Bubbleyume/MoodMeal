@@ -1,5 +1,21 @@
 # MoodMeal AI Handoff
 
+## Knowledge stage D batch 7: more tag-check weights; juiced lines pass no fiber (Claude Code, 2026-11-04)
+
+Started at 09c445e (batch 6), equal to origin. The owner approved every recommendation in `docs/research/STAGE-D-BATCH-7.md`.
+
+- **13 more tag-check weights** (`tagCheckWeights.ts`, now 23):
+  - Need no recipe choice: Greek yogurt at 245 g per cup (the same for all three fat levels), kefir 243 g, blueberries 74 g per 1/2 cup, coconut water 245 g, and the quinoa salad's pineapple (82.5 g) and strawberries (83 g).
+  - Owner-defined sizes: medium apple 182 g, USDA 8¼ in cucumber 301 g, USDA reference avocado 201 g, USDA 2⅝ in orange 131 g, and kale measured raw and loose before massaging, 21 g per cup.
+  - Recipe text is unchanged, and the USDA ledger holds (yogurt fat level, kefir identity and others) are unchanged.
+- **Juiced lines:** `inheritedNutrients(line)` in `catalog.ts` drops fiber from a line whose notes say "juiced". Ginger Citrus Soup now shows only vitamin C, so it keeps Balanced Nutrition and Everyday Mood Support.
+- **Meal tags:** 109 in total, of which 78 meet, 1 is below and 30 are not shown.
+- Validation: 51 knowledge tests, typecheck, avatar tests, the build, the browser suite (no browser errors) and 48 research tests pass.
+- The owner approved committing and pushing batch 7, with its packet, on 2026-11-04.
+  - Still held: mixed berries, chocolate chips, oat flour, sautéed chard, spinach weights, popcorn, trail-mix walnuts and chopped almonds.
+  - Also later: PDCAAS values for the plant protein tags; mood-to-goal rules; glossary entries.
+  - Task 4 is still on hold.
+
 ## Knowledge stage D batch 6: tag-check weights (Claude Code, 2026-11-04)
 
 Started at 20cd6f6, equal to origin. The owner approved every recommendation in `docs/research/STAGE-D-BATCH-6.md`.

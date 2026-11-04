@@ -62,6 +62,14 @@ const aliases: [RegExp, string][] = [
 export function foodIdForIngredient(name: string) {
   return aliases.find(([re]) => re.test(name))?.[1];
 }
+/**
+ * Nutrient tags one ingredient line passes to its meal. A juiced line passes no fiber,
+ * because juice keeps little of the whole fruit's fiber (stage D batch 7, decision 3).
+ */
+export function inheritedNutrients(line: { name: string; notes?: string }): string[] {
+  const tags = FOOD_FACTS[foodIdForIngredient(line.name) ?? ""] ?? [];
+  return /\bjuiced\b/i.test(line.notes ?? "") ? tags.filter((n) => n !== "fiber") : tags;
+}
 export function ingredientId(name: string) {
   // Keep different preparations and ingredient forms separate for grocery quantities.
   return name
@@ -167,7 +175,7 @@ function metadata(
       : [
           ...new Set(
             ingredients.flatMap(
-              (i) => FOOD_FACTS[foodIdForIngredient(i.name) ?? ""] ?? [],
+              (i) => inheritedNutrients(parseIngredient(i)),
             ),
           ),
         ].filter((n) => !WITHHELD_MEAL_TAGS.has(`${id}:${n}`));
@@ -182,11 +190,7 @@ function metadata(
           kind === "foods"
             ? name
             : ingredients
-                .filter((i) =>
-                  (
-                    FOOD_FACTS[foodIdForIngredient(i.name) ?? ""] ?? []
-                  ).includes(n),
-                )
+                .filter((i) => inheritedNutrients(parseIngredient(i)).includes(n))
                 .map((i) => i.name)
                 .join(", ")
         }`,

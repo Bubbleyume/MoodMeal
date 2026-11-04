@@ -348,13 +348,13 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
     "status": "not-shown",
-    "perServing": 0,
+    "perServing": 3.1,
     "contributors": [
       {
         "ingredient": "Kale",
         "foodId": "kale",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 21,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -366,13 +366,13 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
     "status": "not-shown",
-    "perServing": 0,
+    "perServing": 4.1,
     "contributors": [
       {
         "ingredient": "Kale",
         "foodId": "kale",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 21,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -383,14 +383,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "vitamin-c",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 21.8,
     "contributors": [
       {
         "ingredient": "Kale",
         "foodId": "kale",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 21,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -701,14 +701,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "water",
     "basis": "weighed-ingredients",
     "unit": "g",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 143.3,
     "contributors": [
       {
         "ingredient": "Cucumber",
         "foodId": "cucumber",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 301,
+        "gramsBasis": "tag-check-weight"
       },
       {
         "ingredient": "Watermelon",
@@ -851,14 +851,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "protein",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 17.5,
     "contributors": [
       {
         "ingredient": "Kefir",
         "foodId": "kefir",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 243,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -869,14 +869,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "calcium",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 23.2,
     "contributors": [
       {
         "ingredient": "Kefir",
         "foodId": "kefir",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 243,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -887,14 +887,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "b12",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 29.4,
     "contributors": [
       {
         "ingredient": "Kefir",
         "foodId": "kefir",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 243,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -905,14 +905,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "fiber",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 5.5,
+    "status": "meets",
+    "perServing": 11.8,
     "contributors": [
       {
         "ingredient": "Blueberries",
         "foodId": "blueberries",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 74,
+        "gramsBasis": "tag-check-weight"
       },
       {
         "ingredient": "Banana",
@@ -929,14 +929,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "vitamin-c",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 5.7,
+    "status": "meets",
+    "perServing": 13.7,
     "contributors": [
       {
         "ingredient": "Blueberries",
         "foodId": "blueberries",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 74,
+        "gramsBasis": "tag-check-weight"
       },
       {
         "ingredient": "Banana",
@@ -1055,14 +1055,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "fiber",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 24.1,
     "contributors": [
       {
         "ingredient": "Avocado",
         "foodId": "avocado",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 100.5,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1223,14 +1223,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "water",
     "basis": "weighed-ingredients",
     "unit": "g",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 232.8,
     "contributors": [
       {
         "ingredient": "Coconut water",
         "foodId": "coconut-water",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 245,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1355,8 +1355,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "fiber",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 9.3,
+    "status": "meets",
+    "perServing": 12.2,
     "contributors": [
       {
         "ingredient": "Cooked quinoa",
@@ -1367,8 +1367,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Strawberries",
         "foodId": "strawberries",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 83,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1433,20 +1433,20 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "vitamin-c",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 49,
     "contributors": [
       {
         "ingredient": "Pineapple",
         "foodId": "pineapple",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 82.5,
+        "gramsBasis": "tag-check-weight"
       },
       {
         "ingredient": "Strawberries",
         "foodId": "strawberries",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 83,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1457,14 +1457,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "water",
     "basis": "weighed-ingredients",
     "unit": "g",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 143.3,
     "contributors": [
       {
         "ingredient": "Cucumber",
         "foodId": "cucumber",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 150.5,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1475,14 +1475,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "fiber",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 15.6,
     "contributors": [
       {
         "ingredient": "Apple",
         "foodId": "apple",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 182,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1944,37 +1944,19 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "decision": "published"
   },
   {
-    "mealId": "ginger-citrus-soup",
-    "recipeId": "recipe-ginger-citrus-soup",
-    "nutrientId": "fiber",
-    "basis": "weighed-ingredients",
-    "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
-    "contributors": [
-      {
-        "ingredient": "Orange",
-        "foodId": "citrus-orange",
-        "grams": null,
-        "gramsBasis": null
-      }
-    ],
-    "decision": "published"
-  },
-  {
     "mealId": "immune-boost-smoothie",
     "recipeId": "recipe-immune-boost-smoothie",
     "nutrientId": "vitamin-c",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 77.5,
     "contributors": [
       {
         "ingredient": "Orange",
         "foodId": "citrus-orange",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 131,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1985,14 +1967,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "fiber",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 11.2,
     "contributors": [
       {
         "ingredient": "Orange",
         "foodId": "citrus-orange",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 131,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -2003,14 +1985,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "protein",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 21.5,
     "contributors": [
       {
         "ingredient": "Greek yogurt",
         "foodId": "greek-yogurt",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 122.5,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -2021,14 +2003,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "calcium",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 10.4,
     "contributors": [
       {
         "ingredient": "Greek yogurt",
         "foodId": "greek-yogurt",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 122.5,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -2039,14 +2021,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "b12",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 35.2,
     "contributors": [
       {
         "ingredient": "Greek yogurt",
         "foodId": "greek-yogurt",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 122.5,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -2057,14 +2039,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "protein",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 43.1,
     "contributors": [
       {
         "ingredient": "Greek yogurt",
         "foodId": "greek-yogurt",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 245,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -2075,14 +2057,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "calcium",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 20.8,
     "contributors": [
       {
         "ingredient": "Greek yogurt",
         "foodId": "greek-yogurt",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 245,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -2093,14 +2075,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "b12",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 70.5,
     "contributors": [
       {
         "ingredient": "Greek yogurt",
         "foodId": "greek-yogurt",
-        "grams": null,
-        "gramsBasis": null
+        "grams": 245,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"

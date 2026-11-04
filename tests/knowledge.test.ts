@@ -23,7 +23,7 @@ import { RECIPES } from "../src/data/recipes";
 import { EMOTIONS } from "../src/data/emotions";
 import { DEFAULT_PREFERENCES, eligible } from "../src/lib/preferences";
 import { aggregateGroceries } from "../src/lib/grocery";
-import { parseIngredient, ingredientLine, foodIdForIngredient } from "../src/lib/catalog";
+import { parseIngredient, ingredientLine, foodIdForIngredient, inheritedNutrients } from "../src/lib/catalog";
 import {
   extractCandidates,
   transition,
@@ -335,7 +335,7 @@ test("meal tags follow the stage D batch 5 per-serving rule and its recorded sta
   const recomputed = RECIPES.flatMap(checkMealTags);
   assert.deepEqual(MEAL_TAG_REVIEWS.map(({ decision, ...check }) => check), recomputed);
   const count = (s: string) => MEAL_TAG_REVIEWS.filter((r) => r.status === s).length;
-  assert.deepEqual([MEAL_TAG_REVIEWS.length, count("meets"), count("below"), count("not-shown")], [110, 57, 1, 52]);
+  assert.deepEqual([MEAL_TAG_REVIEWS.length, count("meets"), count("below"), count("not-shown")], [109, 78, 1, 30]);
   for (const r of MEAL_TAG_REVIEWS) assert.equal(r.decision, r.status === "below" ? "needs-review" : "published");
   // Only the toast's vitamin C is withdrawn: 9.2% of the Daily Value per serving from the full estimate.
   const below = MEAL_TAG_REVIEWS.find((r) => r.status === "below")!;
@@ -359,9 +359,15 @@ test("meal tags follow the stage D batch 5 per-serving rule and its recorded sta
   // Fully weighed (pumpkin seeds, 7.9%) but untagged ingredients may add iron, so it is not-shown, not below.
   assert.equal(rice.status, "not-shown");
   assert(rice.contributors.every((c) => c.grams !== null));
-  const parfait = MEAL_TAG_REVIEWS.find((r) => r.mealId === "berry-yogurt-parfait" && r.nutrientId === "protein")!;
+  const parfait = MEAL_TAG_REVIEWS.find((r) => r.mealId === "berry-yogurt-parfait" && r.nutrientId === "fiber")!;
   assert.equal(parfait.status, "not-shown");
   assert(parfait.contributors.every((c) => c.grams === null && c.gramsBasis === null));
+  // Batch 7, decision 3: a juiced line passes no fiber; the soup keeps vitamin C.
+  assert.deepEqual(inheritedNutrients({ name: "Orange", notes: "juiced" }).sort(), ["vitamin-c"]);
+  assert.deepEqual(inheritedNutrients({ name: "Orange", notes: "peeled" }).sort(), ["fiber", "vitamin-c"]);
+  const soup = MEALS.find((m) => m.id === "ginger-citrus-soup")!;
+  assert.deepEqual([...verifiedNutrients(soup)], ["vitamin-c"]);
+  assert(!MEAL_TAG_REVIEWS.some((r) => r.mealId === "ginger-citrus-soup" && r.nutrientId === "fiber"));
   // Batch 6: tag-check weights. Each matches exactly one recipe line and is used only by the tag rule.
   const used = MEAL_TAG_REVIEWS.flatMap((r) => r.contributors.filter((c) => c.gramsBasis === "tag-check-weight").map((c) => `${r.recipeId}:${c.ingredient}`));
   assert.deepEqual([...new Set(used)].sort(), TAG_CHECK_WEIGHTS.map((w) => `${w.recipeId}:${w.ingredient}`).sort());
