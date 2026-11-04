@@ -75,11 +75,12 @@ test("all moods and intensities have source-backed matching explanations", () =>
       }
     }
 });
-test("tired salmon matches protein and B12, not omega-3 alone", () => {
+test("tired salmon matches protein, B12 and B6 (stage D batch 2), not omega-3 alone", () => {
   const salmon = FOODS.find((f) => f.id === "wild-salmon")!;
   assert.deepEqual(matchingNutrients(salmon, ["steady-energy"]), [
     "protein",
     "b12",
+    "b6",
   ]);
 });
 test("health conditions do not silently influence rankings", () => {
@@ -242,11 +243,12 @@ test("new sources are not published by default and every source states its revie
   }
   assert.equal(RECIPES.filter((r) => r.nutritionEstimate).length, 2);
 });
-test("owner-reviewed food tags (stage D batch 1) match FOOD_FACTS and carry USDA evidence", () => {
+test("owner-reviewed food tags (stage D batches 1 and 2) match FOOD_FACTS and carry USDA evidence", () => {
   const key = (r: { foodId: string; nutrientId: string }) => `${r.foodId}:${r.nutrientId}`;
-  assert.equal(FOOD_TAG_REVIEWS.length, 23);
-  assert.equal(new Set(FOOD_TAG_REVIEWS.map(key)).size, 23);
-  const withdrawn = FOOD_TAG_REVIEWS.filter((r) => r.decision === "needs-review");
+  assert.equal(FOOD_TAG_REVIEWS.length, 41);
+  assert.equal(new Set(FOOD_TAG_REVIEWS.map(key)).size, 41);
+  assert.equal(FOOD_TAG_REVIEWS.filter((r) => r.batch === 1).length, 23);
+  const withdrawn = FOOD_TAG_REVIEWS.filter((r) => r.action === "withdrawn");
   assert.deepEqual(withdrawn.map(key).sort(), [
     "brown-rice:fiber", "chia-pudding:protein", "cucumber:fiber", "pineapple:fiber", "pumpkin-seeds:fiber",
     "rainbow-carrots:fiber", "spinach:fiber", "sweet-potato:fiber", "swiss-chard:fiber", "walnuts:fiber",
@@ -256,8 +258,10 @@ test("owner-reviewed food tags (stage D batch 1) match FOOD_FACTS and carry USDA
     const tagged = (FOOD_FACTS[r.foodId] ?? []).includes(r.nutrientId);
     assert.equal(tagged, r.decision === "published", key(r));
     assert(r.evidence.length > 0, key(r));
-    for (const e of r.evidence)
-      assert.equal(e.percentDV >= 10, r.decision === "published", `${key(r)} ${e.fdcId} ${e.percentDV}`);
+    // Published tags and withdrawn tags follow the bar on every record; held tags are owner holds (see note).
+    if (r.action !== "held")
+      for (const e of r.evidence)
+        assert.equal(e.percentDV >= 10, r.decision === "published", `${key(r)} ${e.fdcId} ${e.percentDV}`);
     const food = FOODS.find((f) => f.id === r.foodId)!;
     const fact = food.nutrientFacts.find((f) => f.nutrientId === r.nutrientId);
     if (r.decision === "needs-review") {
@@ -278,6 +282,18 @@ test("owner-reviewed food tags (stage D batch 1) match FOOD_FACTS and carry USDA
   assert(!verifiedNutrients(salad).includes("fiber"));
   assert(verifiedNutrients(salad).includes("water"));
   assert.deepEqual(FOOD_FACTS["rainbow-carrots"], []);
+  // Batch 2: 15 additions; oat protein, chocolate fiber and popcorn magnesium held as needs-review.
+  const batch2 = FOOD_TAG_REVIEWS.filter((r) => r.batch === 2);
+  assert.equal(batch2.filter((r) => r.action === "added" && r.decision === "published").length, 15);
+  assert.deepEqual(batch2.filter((r) => r.action === "held").map(key).sort(),
+    ["dark-chocolate:fiber", "popcorn:magnesium", "steel-cut-oats:protein"]);
+  assert(batch2.filter((r) => r.action === "held").every((r) => r.decision === "needs-review"));
+  // Rolled oats map to the steel-cut food, so Warm Oatmeal must not gain protein from the held oat tag.
+  const oatmeal = MEALS.find((m) => m.id === "warm-oatmeal-berries")!;
+  assert(!oatmeal.nutrientFacts.some((f) => f.nutrientId === "protein"));
+  assert(verifiedNutrients(oatmeal).includes("vitamin-c"));
+  // Chocolate keeps only iron and magnesium, so it gains no Wind Down goal.
+  assert.deepEqual(FOOD_FACTS["dark-chocolate"], ["iron", "magnesium"]);
 });
 test("resource import never copies prose or inherits publication", () => {
   const text =

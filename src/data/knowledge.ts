@@ -200,28 +200,28 @@ export const GOALS: Record<
   },
 };
 // Qualitative food composition only; never infer nutrient amounts from these tags.
-// Owner-reviewed tags (stage D batch 1, 10% DV per FDA reference amount) and the
-// tags withdrawn to needs-review are recorded in foodTagReviews.ts.
+// Owner-reviewed tags (stage D batches 1 and 2, 10% DV per FDA reference amount) and the
+// tags withdrawn or held as needs-review are recorded in foodTagReviews.ts.
 export const FOOD_FACTS: Record<string, string[]> = {
-  "wild-salmon": ["protein", "b12", "omega-3"],
+  "wild-salmon": ["protein", "b12", "omega-3", "b6"],
   walnuts: ["omega-3", "magnesium"],
   "steel-cut-oats": ["fiber", "magnesium"],
   "dark-chocolate": ["iron", "magnesium"],
   "greek-yogurt": ["protein", "calcium", "b12"],
-  "mixed-berries": ["fiber"],
+  "mixed-berries": ["fiber", "vitamin-c"],
   "citrus-orange": ["vitamin-c", "fiber"],
   "ginger-root": [],
   garlic: [],
   "chamomile-tea": ["water"],
   "sweet-potato": ["b6"],
-  banana: ["fiber", "b6"],
+  banana: ["fiber", "b6", "vitamin-c"],
   spinach: ["iron", "magnesium", "vitamin-c"],
-  kale: ["fiber"],
-  "lean-beef": ["protein", "iron", "b12"],
-  quinoa: ["protein", "fiber"],
+  kale: ["fiber", "calcium", "vitamin-c"],
+  "lean-beef": ["protein", "iron", "b12", "b6"],
+  quinoa: ["protein", "fiber", "iron", "magnesium", "b6"],
   eggs: ["protein", "b12"],
-  blueberries: ["fiber"],
-  kefir: ["protein", "calcium"],
+  blueberries: ["fiber", "vitamin-c"],
+  kefir: ["protein", "calcium", "b12"],
   "brown-rice": ["magnesium", "b6"],
   avocado: ["fiber"],
   turkey: ["protein", "b12", "b6"],
@@ -230,12 +230,12 @@ export const FOOD_FACTS: Record<string, string[]> = {
   watermelon: ["water", "vitamin-c"],
   cucumber: ["water"],
   apple: ["fiber"],
-  "pumpkin-seeds": ["magnesium", "protein"],
+  "pumpkin-seeds": ["magnesium", "protein", "iron"],
   popcorn: ["fiber"],
   strawberries: ["vitamin-c", "fiber"],
   "rainbow-carrots": [],
   pineapple: ["vitamin-c"],
   "swiss-chard": ["vitamin-c", "magnesium"],
   "green-tea": ["water"],
-  "chia-pudding": ["omega-3", "fiber"],
+  "chia-pudding": ["omega-3", "fiber", "calcium", "iron", "magnesium"],
 };
