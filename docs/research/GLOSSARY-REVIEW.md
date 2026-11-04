@@ -95,7 +95,7 @@ This works the same way as removing the unused mood fields. Nothing users see ch
 
 All four recommendations were approved: rewrite the seven glossary entries (the protein kidney line is dropped), fix the lesson source, mark the checked text owner-reviewed, and delete the unused text.
 
-**Applied 2026-11-04, uncommitted until the owner reviews the change:**
+**Applied 2026-11-04 and committed in `8850dac` with this packet (owner-approved):**
 - `glossary.ts`: the seven definitions now use the proposed wording. Every term, including the three drawn from the nutrient list, carries the owner review (origin, reviewer and date).
 - `knowledge.ts`: the new `OWNER_TEXT_REVIEW` record applies to the five sources behind the nutrient explanations and the goal explanations. These are the ODS fact sheets, the MedlinePlus protein, fiber and water pages, and NIMH.
   - The record's reviewer line reads "Source comparison: Claude Code (AI-assisted; cited page retrieved 2026-11-04). Approval: project owner (glossary review decisions, 2026-11-04)".

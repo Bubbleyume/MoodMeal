@@ -1,6 +1,22 @@
 # MoodMeal AI Handoff
 
-## Glossary and educational text reviewed (Claude Code, 2026-11-04, uncommitted)
+## Automated Codex review coordinator (Claude Code, 2026-11-04)
+
+- A local coordinator sits outside the repo at `C:\Users\Shakh\Downloads\MoodMeal\ai-review\moodmeal-ai-review\`, with no Git. Claude Code runs `review.mjs submit|reply|status`, and the script runs a read-only Codex reviewer with its own `codex-home` and ChatGPT sign-in.
+  - The reviewer sees only the files listed in `config.json`.
+  - Transcripts are in `sessions\<id>\`.
+  - The loop stops on pass, owner decision, failure or 3 rounds.
+  - A pass is AI review, never owner approval, and never authorizes a commit, push or publication.
+- **Before staging and before committing,** run `status` and check that `usablePass` is true.
+  - The fingerprint now covers HEAD and the reviewed files' bytes, so staging the reviewed content keeps the pass.
+  - Staged content that differs from the reviewed files is listed in `stagedDiffersFromReviewed`, which makes `usablePass` false.
+  - Sessions recorded before this change report as not current.
+- The paths in `CLAUDE-INSTRUCTIONS.md` and the README now point to that folder. Coordinator tests: 20 pass (`node --test .\test.mjs`).
+- The first session, `MM-553cd456-dcc7-403b-83a6-e18ee96a768a`, reviewed the glossary change and passed in round 2.
+
+## Glossary and educational text reviewed (Claude Code, 2026-11-04)
+
+Committed and pushed as `8850dac` (owner-approved 2026-11-04, after the automated review passed).
 
 Started at 2b0e135, equal to origin. The owner's decisions are recorded in `docs/research/GLOSSARY-REVIEW.md`.
 
@@ -17,7 +33,7 @@ Started at 2b0e135, equal to origin. The owner's decisions are recorded in `docs
 - **Automated review:** session `MM-553cd456-dcc7-403b-83a6-e18ee96a768a` (transcript in `..\ai-review\moodmeal-ai-review\sessions\`, outside Git) found that enriched meals had lost `nutrients` (MM-GLOSSARY-001) and that the reviewer line credited the owner with the comparison (MM-GLOSSARY-002). Both are fixed. AI review is not owner approval.
 - Validation: 53 knowledge tests, typecheck, avatar tests, the build, the browser suite (no browser errors) and 48 research tests pass.
 - **Tooling gap:** the development-only `knowledge-export.ts` doesn't read the glossary's or the mood mapping's review yet.
-- Next: owner review and commit. Later work: the 30 unchecked meal tags; PDCAAS values for plant protein; the support note when the launch country is decided; a periodic recheck of the cited pages. Task 4 is still on hold.
+- Later work: the 30 unchecked meal tags; PDCAAS values for plant protein; the support note when the launch country is decided; a periodic recheck of the cited pages. Task 4 is still on hold.
 
 ## Mood-to-goal rules reviewed (Claude Code, 2026-11-04)
 
