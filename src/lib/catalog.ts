@@ -3,8 +3,14 @@ import type {
   LibraryMetadata,
   StructuredIngredient,
   GoalId,
+  Provenance,
 } from "../types/library";
 import { FOOD_FACTS, NUTRIENTS, GOALS, SEEDED_AI_REVIEW, source } from "../data/knowledge";
+import {
+  FOOD_TAG_REVIEWS,
+  FOOD_TAG_REVIEW_DATE,
+  FOOD_TAG_SNAPSHOT,
+} from "../data/foodTagReviews";
 import { approvedChamomileToastNutrition, approvedPilotNutrition } from "../data/usdaPilot";
 
 const aliases: [RegExp, string][] = [
@@ -109,6 +115,27 @@ const allergenRules: [string, RegExp][] = [
 export function allergenTags(text: string) {
   return allergenRules.filter(([, re]) => re.test(text)).map(([name]) => name);
 }
+/** USDA evidence for an owner-reviewed, published food tag (stage D); empty otherwise. */
+export function foodTagEvidence(foodId: string, nutrientId: string): Provenance[] {
+  const review = FOOD_TAG_REVIEWS.find(
+    (r) =>
+      r.foodId === foodId &&
+      r.nutrientId === nutrientId &&
+      r.decision === "published",
+  );
+  return (review?.evidence ?? []).map((e) => ({
+    sourceTitle: `USDA FoodData Central: ${e.description}`,
+    author: "U.S. Department of Agriculture, Agricultural Research Service",
+    pageOrSection: `FDC ${e.fdcId}: about ${Math.round(e.percentDV)}% of the FDA Daily Value for ${NUTRIENTS[nutrientId].label} per ${e.raccGrams} g reference amount (${e.raccCategory}). Snapshot ${FOOD_TAG_SNAPSHOT}.`,
+    sourceURL: `https://fdc.nal.usda.gov/food-details/${e.fdcId}/nutrients`,
+    reviewedDate: FOOD_TAG_REVIEW_DATE,
+    reviewedBy: "Project owner (food tag review, 10% Daily Value bar)",
+    reviewOrigin: "owner-approved",
+    evidenceStatus: "source-supported",
+    claimType: "food-nutrient",
+    reviewStatus: "published",
+  }));
+}
 function metadata(
   id: string,
   kind: "foods" | "meals",
@@ -146,6 +173,7 @@ function metadata(
                 .join(", ")
         }`,
       },
+      ...(kind === "foods" ? foodTagEvidence(id, n) : []),
     ],
   }));
   const allergens = allergenTags(text);

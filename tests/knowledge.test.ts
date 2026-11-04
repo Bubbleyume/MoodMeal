@@ -31,7 +31,8 @@ import {
   importDraftRecords,
 } from "../src/lib/libraryReview";
 import { historyInsights } from "../src/lib/interactions";
-import { NUTRIENTS, GOALS, SEEDED_AI_REVIEW, source } from "../src/data/knowledge";
+import { NUTRIENTS, GOALS, SEEDED_AI_REVIEW, source, FOOD_FACTS } from "../src/data/knowledge";
+import { FOOD_TAG_REVIEWS } from "../src/data/foodTagReviews";
 import { readableQuantity, US_VOLUME_IN_TSP } from "../src/lib/units";
 import { validateBarcode, mapProduct, isCalculable, lookupProduct, createLookupLimiter, OFF_NUTRIENT_MAP, OFF_APP_ID, previewValues, describeConflict, per100gNutrients } from "../src/lib/openFoodFacts";
 import { adaptNutrition, checkConsistency, declaredPrecisionHalf, readEntry } from "../src/lib/offNutritionAdapter";
@@ -240,6 +241,43 @@ test("new sources are not published by default and every source states its revie
     for (const s of r.nutritionEstimate?.sources ?? []) assert.equal(s.reviewOrigin, "owner-approved", `${r.id} ${s.sourceTitle}`);
   }
   assert.equal(RECIPES.filter((r) => r.nutritionEstimate).length, 2);
+});
+test("owner-reviewed food tags (stage D batch 1) match FOOD_FACTS and carry USDA evidence", () => {
+  const key = (r: { foodId: string; nutrientId: string }) => `${r.foodId}:${r.nutrientId}`;
+  assert.equal(FOOD_TAG_REVIEWS.length, 23);
+  assert.equal(new Set(FOOD_TAG_REVIEWS.map(key)).size, 23);
+  const withdrawn = FOOD_TAG_REVIEWS.filter((r) => r.decision === "needs-review");
+  assert.deepEqual(withdrawn.map(key).sort(), [
+    "brown-rice:fiber", "chia-pudding:protein", "cucumber:fiber", "pineapple:fiber", "pumpkin-seeds:fiber",
+    "rainbow-carrots:fiber", "spinach:fiber", "sweet-potato:fiber", "swiss-chard:fiber", "walnuts:fiber",
+    "walnuts:protein", "watermelon:fiber",
+  ]);
+  for (const r of FOOD_TAG_REVIEWS) {
+    const tagged = (FOOD_FACTS[r.foodId] ?? []).includes(r.nutrientId);
+    assert.equal(tagged, r.decision === "published", key(r));
+    assert(r.evidence.length > 0, key(r));
+    for (const e of r.evidence)
+      assert.equal(e.percentDV >= 10, r.decision === "published", `${key(r)} ${e.fdcId} ${e.percentDV}`);
+    const food = FOODS.find((f) => f.id === r.foodId)!;
+    const fact = food.nutrientFacts.find((f) => f.nutrientId === r.nutrientId);
+    if (r.decision === "needs-review") {
+      assert.equal(fact, undefined, key(r));
+      assert(!verifiedNutrients(food).includes(r.nutrientId), key(r));
+    } else {
+      const usda = fact!.sourceProvenance.filter((s) => s.sourceURL?.startsWith("https://fdc.nal.usda.gov/"));
+      assert.deepEqual(usda.map((s) => s.sourceURL), r.evidence.map((e) => `https://fdc.nal.usda.gov/food-details/${e.fdcId}/nutrients`));
+      assert(usda.every((s) => s.reviewOrigin === "owner-approved" && s.reviewStatus === "published"), key(r));
+      assert(verifiedNutrients(food).includes(r.nutrientId), key(r));
+    }
+  }
+  // Spinach iron rests on generic raw spinach only; baby spinach (6.0%) is not its evidence.
+  const iron = FOOD_TAG_REVIEWS.find((r) => key(r) === "spinach:iron")!;
+  assert.deepEqual(iron.evidence.map((e) => e.fdcId), ["168462"]);
+  // A withdrawn tag no longer reaches meals through that food.
+  const salad = MEALS.find((m) => m.id === "cooling-cucumber-salad")!;
+  assert(!verifiedNutrients(salad).includes("fiber"));
+  assert(verifiedNutrients(salad).includes("water"));
+  assert.deepEqual(FOOD_FACTS["rainbow-carrots"], []);
 });
 test("resource import never copies prose or inherits publication", () => {
   const text =
