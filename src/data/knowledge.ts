@@ -1,10 +1,20 @@
-import type { Provenance, GoalId } from "../types/library";
+import type { Provenance, GoalId, ReviewOrigin, ReviewStatus } from "../types/library";
+
+export interface SourceReview {
+  reviewStatus: ReviewStatus;
+  reviewOrigin: ReviewOrigin;
+}
+/** New records are not published until someone decides they should be. */
+export const PENDING_REVIEW: SourceReview = { reviewStatus: "needs-review", reviewOrigin: "unspecified" };
+/** The seeded 2026-10-13 records: published after an AI-assisted source check only. */
+export const SEEDED_AI_REVIEW: SourceReview = { reviewStatus: "published", reviewOrigin: "ai-assisted" };
 
 export function source(
   sourceTitle: string,
   sourceURL: string,
   pageOrSection: string,
   claimType: Provenance["claimType"] = "nutrient-function",
+  review: SourceReview = PENDING_REVIEW,
 ): Provenance {
   return {
     sourceTitle,
@@ -23,11 +33,13 @@ export function source(
               : sourceURL.includes("fda.gov")
                 ? "U.S. Food and Drug Administration"
                 : "U.S. National Library of Medicine",
-    reviewedDate: "2026-10-13",
-    reviewedBy: "MoodMeal source check (AI-assisted; not clinical review)",
+    ...(review.reviewOrigin === "ai-assisted"
+      ? { reviewedDate: "2026-10-13", reviewedBy: "MoodMeal source check (AI-assisted; not clinical review)" }
+      : {}),
+    reviewOrigin: review.reviewOrigin,
     evidenceStatus: "source-supported",
     claimType,
-    reviewStatus: "published",
+    reviewStatus: review.reviewStatus,
   };
 }
 const ods = (name: string, slug: string) =>
@@ -35,6 +47,8 @@ const ods = (name: string, slug: string) =>
     name,
     `https://ods.od.nih.gov/factsheets/${slug}-HealthProfessional/`,
     "Introduction and food sources",
+    "nutrient-function",
+    SEEDED_AI_REVIEW,
   );
 export const NUTRIENTS: Record<
   string,
@@ -48,6 +62,8 @@ export const NUTRIENTS: Record<
       "Protein in diet",
       "https://medlineplus.gov/ency/article/002467.htm",
       "Function; Food sources",
+      "nutrient-function",
+      SEEDED_AI_REVIEW,
     ),
   },
   fiber: {
@@ -58,6 +74,8 @@ export const NUTRIENTS: Record<
       "Dietary Fiber",
       "https://medlineplus.gov/dietaryfiber.html",
       "Summary",
+      "nutrient-function",
+      SEEDED_AI_REVIEW,
     ),
   },
   b12: {
@@ -110,6 +128,8 @@ export const NUTRIENTS: Record<
       "Water in diet",
       "https://medlineplus.gov/ency/article/002471.htm",
       "Function; Food sources",
+      "nutrient-function",
+      SEEDED_AI_REVIEW,
     ),
   },
 };
@@ -118,6 +138,7 @@ export const SELF_CARE_SOURCE = source(
   "https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health",
   "How can I take care of my mental health?",
   "wellness-education",
+  SEEDED_AI_REVIEW,
 );
 export const GOALS: Record<
   GoalId,

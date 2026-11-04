@@ -19,6 +19,8 @@ export type ClaimType =
   | "recipe"
   | "support-goal"
   | "research-note";
+/** Who stands behind a source check: an AI-assisted pass, or the project owner's explicit approval. */
+export type ReviewOrigin = "ai-assisted" | "owner-approved" | "unspecified";
 export interface Provenance {
   sourceTitle: string;
   author: string;
@@ -28,6 +30,7 @@ export interface Provenance {
   doi?: string;
   reviewedDate?: string;
   reviewedBy?: string;
+  reviewOrigin?: ReviewOrigin;
   evidenceStatus: EvidenceStatus;
   claimType: ClaimType;
   reviewStatus: ReviewStatus;

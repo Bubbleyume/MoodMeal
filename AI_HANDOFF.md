@@ -1,5 +1,20 @@
 # MoodMeal AI Handoff
 
+## Knowledge stage B: review origin recorded (Claude Code, 2026-11-03)
+
+Started at a9b960a, equal to origin after pushing 07ecbf6 and a9b960a. The owner approved stage B, then approved committing and pushing it on 2026-11-04. The research-engine lines in `package.json`/`.gitignore` are not part of this commit.
+
+- `Provenance` has an optional `reviewOrigin`: `"ai-assisted" | "owner-approved" | "unspecified"`.
+- `source()` takes a fifth `review` argument and defaults to `PENDING_REVIEW`: `needs-review`, origin `unspecified`, with no reviewer or review date. New records are therefore never published by default.
+- The 9 existing seeded calls pass `SEEDED_AI_REVIEW` explicitly (published, AI-assisted, unchanged 2026-10-13 reviewer text). The two USDA recipe-estimate source lists are marked `owner-approved`.
+- Users see no change. The catalog and knowledge-inventory exports are identical to before. Counts are unchanged: 237 claims, 208 published with AI-assisted review only, 2 owner-approved.
+- `tools/research/knowledge-export.ts` now reads the field first and falls back to the reviewer text.
+- Tests:
+  - New knowledge test: fresh sources are not published; every nutrient and recipe source is AI-assisted; both estimates are owner-approved.
+  - The library-workflow fixture now passes an explicit checked review instead of relying on the old default.
+- Validation: typecheck, 49 knowledge tests, avatar tests, the docs/usda tests, 33 research tests, the build and the browser suite (served on port 4175, no browser errors) all pass.
+- Next: stage C, a read-only report checking food and meal nutrient tags against USDA amounts. The owner chose the threshold on 2026-11-04: at least 10% of the Daily Value per reference serving (FDA "good source"). Task 4 is still on hold.
+
 ## Milk checkpoint and ledger reconciliation (Claude Code, 2026-11-03)
 
 - The owner confirmed Codex's 2% milk approval. Codex's ten files were committed unchanged as 07ecbf6 ("Approve 2% milk for Warm Oatmeal only"), after typecheck, 48 knowledge tests, avatar tests, the docs/usda tests and the build passed. `docs/RECIPE-SOURCE-CROSSWALK.md` and `AGENTS.md` remain untracked.

@@ -42,7 +42,7 @@ export function approvedPilotNutrition(recipe: {
       pageOrSection:`FDC ${i.fdcId}; food_portion.csv row ${i.portionId}: ${i.portionDescription}. Nutrients per 100 g; source rows preserved in docs/usda/pilot-source-records.json.`,
       sourceURL:`https://fdc.nal.usda.gov/food-details/${i.fdcId}/nutrients`,
       reviewedBy:"User-approved reference weights and source matching; AI-assisted calculation; not laboratory-verified or kitchen-tested",
-      evidenceStatus:"source-supported", claimType:"recipe", reviewStatus:"reviewed",
+      reviewOrigin:"owner-approved", evidenceStatus:"source-supported", claimType:"recipe", reviewStatus:"reviewed",
     })),
   };
 }
@@ -84,6 +84,7 @@ export function approvedChamomileToastNutrition(recipe: Pick<Recipe,
       sourceURL: record.sourceURL,
       reviewedDate: "2026-10-19",
       reviewedBy: "User-approved ingredient identity, preparation and reference portion; AI-assisted calculation; not laboratory-verified or kitchen-tested",
+      reviewOrigin: "owner-approved" as const,
       evidenceStatus: "source-supported" as const,
       claimType: "recipe" as const,
       reviewStatus: "reviewed" as const,

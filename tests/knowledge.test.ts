@@ -31,7 +31,7 @@ import {
   importDraftRecords,
 } from "../src/lib/libraryReview";
 import { historyInsights } from "../src/lib/interactions";
-import { NUTRIENTS, GOALS, source } from "../src/data/knowledge";
+import { NUTRIENTS, GOALS, SEEDED_AI_REVIEW, source } from "../src/data/knowledge";
 import { readableQuantity, US_VOLUME_IN_TSP } from "../src/lib/units";
 import { validateBarcode, mapProduct, isCalculable, lookupProduct, createLookupLimiter, OFF_NUTRIENT_MAP, OFF_APP_ID, previewValues, describeConflict, per100gNutrients } from "../src/lib/openFoodFacts";
 import { adaptNutrition, checkConsistency, declaredPrecisionHalf, readEntry } from "../src/lib/offNutritionAdapter";
@@ -223,7 +223,24 @@ test("every meal uses canonical recipe quantity and time", () => {
   }
   for (const f of FOODS) assert(existsSync("public" + f.image));
 });
-const provenance = source("Test source", "https://example.org", "Section 1");
+// A source that has already been checked, as the library workflow expects.
+const provenance = source("Test source", "https://example.org", "Section 1", "nutrient-function", SEEDED_AI_REVIEW);
+test("new sources are not published by default and every source states its review origin", () => {
+  const fresh = source("New source", "https://example.org", "Section 2");
+  assert.equal(fresh.reviewStatus, "needs-review");
+  assert.equal(fresh.reviewOrigin, "unspecified");
+  assert.equal(fresh.reviewedBy, undefined);
+  assert.equal(fresh.reviewedDate, undefined);
+  for (const n of Object.values(NUTRIENTS)) {
+    assert.equal(n.source.reviewStatus, "published");
+    assert.equal(n.source.reviewOrigin, "ai-assisted");
+  }
+  for (const r of RECIPES) {
+    for (const s of r.sourceProvenance) assert.equal(s.reviewOrigin, "ai-assisted", `${r.id} ${s.sourceTitle}`);
+    for (const s of r.nutritionEstimate?.sources ?? []) assert.equal(s.reviewOrigin, "owner-approved", `${r.id} ${s.sourceTitle}`);
+  }
+  assert.equal(RECIPES.filter((r) => r.nutritionEstimate).length, 2);
+});
 test("resource import never copies prose or inherits publication", () => {
   const text =
     "Vitamin B12 treats depression with a 50 mg supplement. Recipe: cup of spinach. Sleep and gut health.";

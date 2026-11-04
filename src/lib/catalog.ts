@@ -4,7 +4,7 @@ import type {
   StructuredIngredient,
   GoalId,
 } from "../types/library";
-import { FOOD_FACTS, NUTRIENTS, GOALS, source } from "../data/knowledge";
+import { FOOD_FACTS, NUTRIENTS, GOALS, SEEDED_AI_REVIEW, source } from "../data/knowledge";
 import { approvedChamomileToastNutrition, approvedPilotNutrition } from "../data/usdaPilot";
 
 const aliases: [RegExp, string][] = [
@@ -238,10 +238,9 @@ export function enrichRecipe(raw: unknown): Recipe {
     "",
     `Recipe ${r.id}; existing app recipe adapted for structured ingredients`,
     "recipe",
+    SEEDED_AI_REVIEW,
   );
   recipeSource.author = "MoodMeal";
-  recipeSource.evidenceStatus = "source-supported";
-  recipeSource.reviewStatus = "published";
   recipeSource.reviewedBy =
     "MoodMeal editorial structure and temperature check (AI-assisted); not kitchen-tested";
   return {
@@ -271,6 +270,7 @@ export function enrichRecipe(raw: unknown): Recipe {
         "https://www.foodsafety.gov/food-safety-charts/safe-minimum-internal-temperatures",
         "Fish 145°F; poultry/reheated leftovers 165°F; beef steaks 145°F plus 3-minute rest; egg dishes 160°F",
         "recipe",
+        SEEDED_AI_REVIEW,
       ),
       ...m.sourceProvenance,
     ],

@@ -1,4 +1,4 @@
-import { SELF_CARE_SOURCE, NUTRIENTS, source } from "./knowledge";
+import { SELF_CARE_SOURCE, NUTRIENTS, SEEDED_AI_REVIEW, source } from "./knowledge";
 import type { Provenance } from "../types/library";
 export interface Lesson {
   id: string;
@@ -95,6 +95,7 @@ export const LESSONS: Lesson[] = entries.map(
               "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease/eating-diet-nutrition",
               "Cross-contact; food labels; guidance on restrictive diets",
               "wellness-education",
+              SEEDED_AI_REVIEW,
             ),
           ]
         : id === "gut-digestion"
@@ -105,6 +106,7 @@ export const LESSONS: Lesson[] = entries.map(
                 "https://www.nccih.nih.gov/health/probiotics-usefulness-and-safety",
                 "What do we know about effectiveness?",
                 "wellness-education",
+                SEEDED_AI_REVIEW,
               ),
             ]
           : id === "hydration"
