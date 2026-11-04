@@ -21,16 +21,26 @@ export function goalsForMood(mood: EmotionId, intensity: number): GoalId[] {
     angry: "calm-grounded",
     nervous: "calm-grounded",
     shy: "everyday-mood-support",
-    excited: "hydration",
+    excited: "balanced-nutrition",
     bored: "focus-attention",
     silly: "balanced-nutrition",
     worried: "calm-grounded",
     sick: "hydration",
   };
   const goals = [primary[mood]];
-  if (intensity >= 8 && ["worried", "nervous", "angry"].includes(mood))
+  // Mood-to-goal review 2026-11-04 (docs/research/MOOD-GOAL-REVIEW.md): Excited moved to
+  // Balanced Nutrition; Scared joins the other calm moods for Wind Down at high intensity.
+  if (intensity >= 8 && ["worried", "nervous", "angry", "scared"].includes(mood))
     goals.push("wind-down");
   return goals;
+}
+/**
+ * True when a food or meal is, or contains, green tea, matcha or chocolate. Checks names and
+ * ingredient names, not ids (mood-to-goal review, decision 3), since matcha has no food mapping.
+ */
+export function hasCaffeineSource(item: Food | Meal) {
+  const names = [item.name, ...("ingredients" in item ? item.ingredients.map((i) => i.name) : [])];
+  return names.some((n) => /green tea|matcha|chocolate/i.test(n));
 }
 /** Facts that may reach users: published and backed by a published, supporting source. */
 export function verifiedNutrients(item: Food | Meal) {
@@ -179,7 +189,7 @@ export function getRecommendations(
           matchingNutrients(i, goals).length > 0 &&
           !(
             (goals.includes("wind-down") || goals.includes("calm-grounded")) &&
-            /green-tea|chocolate/.test(i.id)
+            hasCaffeineSource(i)
           ),
       )
       .sort(

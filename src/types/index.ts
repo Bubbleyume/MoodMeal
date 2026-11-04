@@ -25,13 +25,8 @@ export interface Emotion {
   color: string;
   /** Tailwind gradient classes for cards/backgrounds tied to this emotion. */
   gradient: string;
-  description: string;
-  /** Nutrients generally associated with supporting this feeling/state. */
-  nutrientFocus: string[];
-  /** Quick-glance example food names shown on the emotion card itself. */
-  exampleFoods: string[];
-  /** Quick-glance example meal names shown on the emotion card itself. */
-  exampleMeals: string[];
+  // description, nutrientFocus, exampleFoods and exampleMeals were removed on 2026-11-04
+  // (docs/research/MOOD-GOAL-REVIEW.md, decision 4): unused, and they held unreviewed claims.
 }
 
 export type FoodCategory =

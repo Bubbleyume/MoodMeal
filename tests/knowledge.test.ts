@@ -14,6 +14,7 @@ import {
   nutrientDisplay,
   verifiedNutrients,
   USDA_NUTRIENT_IDS,
+  hasCaffeineSource,
 } from "../src/lib/recommendations";
 import type { RecipeNutritionEstimate } from "../src/types/nutrition";
 import type { GoalId } from "../src/types/library";
@@ -106,6 +107,28 @@ test("health conditions do not silently influence rankings", () => {
 });
 test("intensity can introduce wind-down goal", () =>
   assert(goalsForMood("worried", 9).includes("wind-down")));
+test("mood-to-goal review (2026-11-04): mapping, wind-down moods and the caffeine filter", () => {
+  const expected: Record<string, GoalId> = {
+    happy: "balanced-nutrition", silly: "balanced-nutrition", excited: "balanced-nutrition",
+    sad: "everyday-mood-support", shy: "everyday-mood-support", tired: "steady-energy",
+    scared: "calm-grounded", angry: "calm-grounded", nervous: "calm-grounded", worried: "calm-grounded",
+    bored: "focus-attention", sick: "hydration",
+  };
+  for (const e of EMOTIONS) {
+    assert.deepEqual(goalsForMood(e.id, 5), [expected[e.id]], e.id);
+    const calm = expected[e.id] === "calm-grounded";
+    assert.deepEqual(goalsForMood(e.id, 8), calm ? ["calm-grounded", "wind-down"] : [expected[e.id]], e.id);
+    // The unused, unreviewed mood fields are gone.
+    for (const field of ["description", "nutrientFocus", "exampleFoods", "exampleMeals"]) assert(!(field in e), `${e.id}.${field}`);
+  }
+  // Ingredient-based caffeine check: the popcorn mix's chocolate chips count, matcha counts.
+  const flagged = [...FOODS, ...MEALS].filter(hasCaffeineSource).map((i) => i.id).sort();
+  assert.deepEqual(flagged, ["dark-chocolate", "dark-chocolate-trail-mix", "green-tea", "green-tea-oat-bites", "loaded-popcorn-mix"]);
+  for (const id of ["scared", "worried"] as const) {
+    const r = getRecommendations({ emotionId: id, intensity: 9, preferences: DEFAULT_PREFERENCES });
+    assert(![...r.foods, ...r.meals].some(hasCaffeineSource), id);
+  }
+});
 test("diet and every declared allergen excluded", () => {
   for (const allergen of [
     "milk",

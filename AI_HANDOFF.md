@@ -1,5 +1,19 @@
 # MoodMeal AI Handoff
 
+## Mood-to-goal rules reviewed (Claude Code, 2026-11-04)
+
+Started at 598f010, equal to origin. The owner's decisions are recorded in `docs/research/MOOD-GOAL-REVIEW.md`.
+
+- Excited now maps to **Balanced Nutrition**, no longer Hydration. Sick stays on Hydration.
+- **Scared** joins Worried, Nervous and Angry, adding Wind Down at intensity 8 or more. Wind Down never changes the picks, only the label and the explanation.
+- **Caffeine filter fix:** calm moods used to leave out items by id, which missed Loaded Popcorn Trail Mix (dark chocolate chips). The new `hasCaffeineSource()` checks names and ingredient names for green tea, matcha and chocolate.
+- **Removed:** the unused mood fields `description`, `nutrientFocus`, `exampleFoods` and `exampleMeals`, which held unreviewed claims, are gone from `emotions.ts` and the `Emotion` type.
+- **Not approved:** a support note for strong check-ins. Raise it again with the launch-country decision; no crisis number until then.
+- Validation: 52 knowledge tests, typecheck, avatar tests, the build, the browser suite (no browser errors) and 48 research tests pass.
+- The owner approved committing and pushing this review, with its packet, on 2026-11-04.
+  - Later work: glossary review; recipe tips with unreviewed claims, for example L-theanine in Green Tea Energy Bites and "flavonoid antioxidants" in the trail mix; the 30 unchecked meal tags; PDCAAS values for plant protein.
+  - Task 4 is still on hold.
+
 ## Knowledge stage D batch 7: more tag-check weights; juiced lines pass no fiber (Claude Code, 2026-11-04)
 
 Started at 09c445e (batch 6), equal to origin. The owner approved every recommendation in `docs/research/STAGE-D-BATCH-7.md`.
@@ -657,7 +671,7 @@ Do not reverse these without explicit instruction.
 - Dietary preference filtering is keyword-based rather than driven by reviewed per-item tags.
 - Seeded knowledge provenance is mostly NIH/ODS fact sheets. There is no `reviewedBy` workflow with real reviewers, and library review state lives only in localStorage.
 - `src/data/foods.ts` and `meals.ts` retain emoji metadata although the screens use local illustrations. `ImagePlaceholder` remains as a fallback component.
-- Mood-to-support-goal mapping is hard-coded and needs a content review.
+- Mood-to-support-goal mapping is hard-coded; it was reviewed by the owner on 2026-11-04 (`docs/research/MOOD-GOAL-REVIEW.md`).
 - The UI uses first-party router, icon, chart, and React type-shim stand-ins. They are documented in README; replacement is optional for the MVP but needs a deliberate migration if desired.
 - Build succeeds but reports outdated Browserslist data. Physical-device and assistive-technology checks remain incomplete; prior browser checks use emulation.
 - The app stores profile, mood history, preferences, and other user-entered data in localStorage. Public launch still needs an accurate privacy notice, support contact, deployment/rollback plan, and review of the health-related screens and claims for the target audience/jurisdiction.
