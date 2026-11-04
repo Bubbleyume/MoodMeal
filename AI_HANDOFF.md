@@ -1,5 +1,22 @@
 # MoodMeal AI Handoff
 
+## Knowledge stage D batch 3: AI-reviewed food tags confirmed by the owner (Claude Code, 2026-11-04)
+
+Started at bc1e20d (batch 2), equal to origin. The owner approved every recommendation in `docs/research/STAGE-D-BATCH-3.md`.
+
+- **Confirmed (36):** 30 non-protein tags and 6 animal protein tags (salmon, Greek yogurt, beef, eggs, kefir, turkey). Each meets the 10% bar on every record checked. Protein sources say the %DV is not corrected for protein quality (PDCAAS).
+- **Held as needs-review (3):** protein for quinoa, almonds and pumpkin seeds, until reviewed PDCAAS values are recorded.
+  - Pumpkin seeds lose Focus, Wind Down and Everyday Mood Support.
+  - Brown Rice Veggie Bowl loses Focus and Wind Down.
+  - 8 meals lose a protein chip.
+- **Extra records checked:** chocolate iron and magnesium meet the bar at all three cacao ranges (170271/170272/170273), oat fiber and magnesium on rolled oats 173904, and avocado on 171706.
+- **Unchanged:** the 8 water and omega-3 tags stay published with AI-assisted review only, pending a separate rule.
+- `foodTagReviews.ts` has 80 entries. Food tags now number 70, 62 of them owner-approved, and meal tags 111.
+- Validation: 50 knowledge tests, typecheck, avatar tests, the build, the browser suite (no browser errors) and 48 research tests pass.
+- The owner approved committing and pushing batch 3 on 2026-11-04. The research tooling, packet, `.gitignore` and `package.json` lines are excluded.
+  - Later work: a rule for the water and omega-3 tags; sourcing PDCAAS for the plant protein tags; mood-to-goal rules; glossary entries; checking meal quantities for inherited tags.
+  - Task 4 is still on hold.
+
 ## Knowledge stage D batch 2: evidence-supported food tags added (Claude Code, 2026-11-04)
 
 Started at c5d9908 (batch 1), equal to origin. The owner approved every recommendation in `docs/research/STAGE-D-BATCH-2.md`.

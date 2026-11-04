@@ -126,7 +126,7 @@ export function foodTagEvidence(foodId: string, nutrientId: string): Provenance[
   return (review?.evidence ?? []).map((e) => ({
     sourceTitle: `USDA FoodData Central: ${e.description}`,
     author: "U.S. Department of Agriculture, Agricultural Research Service",
-    pageOrSection: `FDC ${e.fdcId}: about ${Math.round(e.percentDV)}% of the FDA Daily Value for ${NUTRIENTS[nutrientId].label} per ${e.raccGrams} g reference amount (${e.raccCategory}). Snapshot ${FOOD_TAG_SNAPSHOT}.`,
+    pageOrSection: `FDC ${e.fdcId}: about ${Math.round(e.percentDV)}% of the FDA Daily Value for ${NUTRIENTS[nutrientId].label} per ${e.raccGrams} g reference amount (${e.raccCategory}). Snapshot ${FOOD_TAG_SNAPSHOT}.${nutrientId === "protein" ? " Not corrected for protein quality (PDCAAS)." : ""}`,
     sourceURL: `https://fdc.nal.usda.gov/food-details/${e.fdcId}/nutrients`,
     reviewedDate: FOOD_TAG_REVIEW_DATE,
     reviewedBy: "Project owner (food tag review, 10% Daily Value bar)",

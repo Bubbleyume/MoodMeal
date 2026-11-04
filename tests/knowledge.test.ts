@@ -243,10 +243,10 @@ test("new sources are not published by default and every source states its revie
   }
   assert.equal(RECIPES.filter((r) => r.nutritionEstimate).length, 2);
 });
-test("owner-reviewed food tags (stage D batches 1 and 2) match FOOD_FACTS and carry USDA evidence", () => {
+test("owner-reviewed food tags (stage D batches 1-3) match FOOD_FACTS and carry USDA evidence", () => {
   const key = (r: { foodId: string; nutrientId: string }) => `${r.foodId}:${r.nutrientId}`;
-  assert.equal(FOOD_TAG_REVIEWS.length, 41);
-  assert.equal(new Set(FOOD_TAG_REVIEWS.map(key)).size, 41);
+  assert.equal(FOOD_TAG_REVIEWS.length, 80);
+  assert.equal(new Set(FOOD_TAG_REVIEWS.map(key)).size, 80);
   assert.equal(FOOD_TAG_REVIEWS.filter((r) => r.batch === 1).length, 23);
   const withdrawn = FOOD_TAG_REVIEWS.filter((r) => r.action === "withdrawn");
   assert.deepEqual(withdrawn.map(key).sort(), [
@@ -294,6 +294,24 @@ test("owner-reviewed food tags (stage D batches 1 and 2) match FOOD_FACTS and ca
   assert(verifiedNutrients(oatmeal).includes("vitamin-c"));
   // Chocolate keeps only iron and magnesium, so it gains no Wind Down goal.
   assert.deepEqual(FOOD_FACTS["dark-chocolate"], ["iron", "magnesium"]);
+  // Batch 3: 36 confirmations (30 non-protein, 6 animal protein); plant protein held.
+  const batch3 = FOOD_TAG_REVIEWS.filter((r) => r.batch === 3);
+  assert.equal(batch3.filter((r) => r.action === "confirmed" && r.decision === "published").length, 36);
+  assert.deepEqual(batch3.filter((r) => r.action === "held").map(key).sort(),
+    ["almonds:protein", "pumpkin-seeds:protein", "quinoa:protein"]);
+  // Chocolate iron and magnesium were checked at every cacao range; oats on the rolled-oats record.
+  const ids = (k: string) => FOOD_TAG_REVIEWS.find((r) => key(r) === k)!.evidence.map((e) => e.fdcId).sort();
+  assert.deepEqual(ids("dark-chocolate:iron"), ["170271", "170272", "170273"]);
+  assert.deepEqual(ids("steel-cut-oats:fiber"), ["173904", "2346397"]);
+  // Every published food tag except water and omega-3 now has owner-approved USDA evidence.
+  const published = new Set(FOOD_TAG_REVIEWS.filter((r) => r.decision === "published").map(key));
+  const unreviewed = Object.entries(FOOD_FACTS).flatMap(([f, ns]) => ns.map((n) => `${f}:${n}`)).filter((k) => !published.has(k));
+  assert(unreviewed.every((k) => k.endsWith(":water") || k.endsWith(":omega-3")), unreviewed.join(", "));
+  assert.equal(unreviewed.length, 8);
+  // Confirmed protein sources say the %DV is uncorrected.
+  const salmon = FOODS.find((f) => f.id === "wild-salmon")!;
+  const protein = salmon.nutrientFacts.find((f) => f.nutrientId === "protein")!;
+  assert(protein.sourceProvenance.some((s) => s.reviewOrigin === "owner-approved" && /not corrected for protein quality/i.test(s.pageOrSection ?? "")));
 });
 test("resource import never copies prose or inherits publication", () => {
   const text =

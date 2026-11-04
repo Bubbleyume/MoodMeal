@@ -200,7 +200,7 @@ export const GOALS: Record<
   },
 };
 // Qualitative food composition only; never infer nutrient amounts from these tags.
-// Owner-reviewed tags (stage D batches 1 and 2, 10% DV per FDA reference amount) and the
+// Owner-reviewed tags (stage D batches 1-3, 10% DV per FDA reference amount) and the
 // tags withdrawn or held as needs-review are recorded in foodTagReviews.ts.
 export const FOOD_FACTS: Record<string, string[]> = {
   "wild-salmon": ["protein", "b12", "omega-3", "b6"],
@@ -218,19 +218,19 @@ export const FOOD_FACTS: Record<string, string[]> = {
   spinach: ["iron", "magnesium", "vitamin-c"],
   kale: ["fiber", "calcium", "vitamin-c"],
   "lean-beef": ["protein", "iron", "b12", "b6"],
-  quinoa: ["protein", "fiber", "iron", "magnesium", "b6"],
+  quinoa: ["fiber", "iron", "magnesium", "b6"],
   eggs: ["protein", "b12"],
   blueberries: ["fiber", "vitamin-c"],
   kefir: ["protein", "calcium", "b12"],
   "brown-rice": ["magnesium", "b6"],
   avocado: ["fiber"],
   turkey: ["protein", "b12", "b6"],
-  almonds: ["protein", "magnesium", "fiber"],
+  almonds: ["magnesium", "fiber"],
   "coconut-water": ["water"],
   watermelon: ["water", "vitamin-c"],
   cucumber: ["water"],
   apple: ["fiber"],
-  "pumpkin-seeds": ["magnesium", "protein", "iron"],
+  "pumpkin-seeds": ["magnesium", "iron"],
   popcorn: ["fiber"],
   strawberries: ["vitamin-c", "fiber"],
   "rainbow-carrots": [],
