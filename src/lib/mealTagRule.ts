@@ -3,12 +3,14 @@
  * A meal tag is shown to meet when one serving provides at least 10% of the FDA Daily Value
  * (omega-3: 0.16 g; water: 120 g from ingredients that meet the 90% water rule). The amount
  * comes from the published recipe estimate when one exists; otherwise only tagged ingredients
- * with an approved gram weight count (a lower bound). Unweighed amounts are never assumed, so
+ * with an approved gram weight count (a lower bound). Grams come from an approved USDA
+ * conversion, else from an owner-approved tag-check weight (batch 6, src/data/tagCheckWeights.ts). Unweighed amounts are never assumed, so
  * a low lower bound is "not-shown", never "below". MoodMeal's own rule, not an FDA meal claim.
  */
 import { FOOD_FACTS } from "../data/knowledge";
 import { FOOD_TAG_REVIEWS } from "../data/foodTagReviews";
 import { approvedIngredientInput } from "../data/usdaApprovals";
+import { tagCheckWeight } from "../data/tagCheckWeights";
 import { foodIdForIngredient } from "./catalog";
 import type { Recipe } from "../types";
 
@@ -32,8 +34,9 @@ export type MealTagStatus = "meets" | "below" | "not-shown";
 export interface MealTagContributor {
   ingredient: string;
   foodId: string;
-  /** Approved recipe-scoped grams for the whole recipe; null when no weight is approved. */
+  /** Grams for the whole recipe; null when no weight is approved. */
   grams: number | null;
+  gramsBasis: "approved-usda-conversion" | "tag-check-weight" | null;
 }
 export interface MealTagCheck {
   mealId: string;
@@ -68,11 +71,17 @@ export function checkMealTags(recipe: Recipe): MealTagCheck[] {
   return tags.map((nutrientId) => {
     const contributors = lines
       .filter((i) => (FOOD_FACTS[foodOf(i.name)] ?? []).includes(nutrientId))
-      .map((i) => ({
-        ingredient: i.name,
-        foodId: foodOf(i.name),
-        grams: approvedIngredientInput(i, recipe.id)?.grams ?? null,
-      }));
+      .map((i) => {
+        const approved = approvedIngredientInput(i, recipe.id)?.grams;
+        const tagWeight = tagCheckWeight(i, recipe.id)?.grams;
+        return {
+          ingredient: i.name,
+          foodId: foodOf(i.name),
+          grams: approved ?? tagWeight ?? null,
+          gramsBasis: approved !== undefined ? "approved-usda-conversion" as const
+            : tagWeight !== undefined ? "tag-check-weight" as const : null,
+        };
+      });
     const unit = nutrientId === "water" || nutrientId === "omega-3" ? "g" : "percent-dv";
     const bar = nutrientId === "water" ? MEAL_BAR_WATER_GRAMS
       : nutrientId === "omega-3" ? MEAL_BAR_OMEGA3_GRAMS : MEAL_BAR_PERCENT_DV;

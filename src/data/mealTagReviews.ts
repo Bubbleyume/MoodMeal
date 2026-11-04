@@ -17,13 +17,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "protein",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 44.9,
     "contributors": [
       {
         "ingredient": "Wild salmon fillet",
         "foodId": "wild-salmon",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -34,13 +35,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "b12",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 150.3,
     "contributors": [
       {
         "ingredient": "Wild salmon fillet",
         "foodId": "wild-salmon",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -51,13 +53,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "omega-3",
     "basis": "weighed-ingredients",
     "unit": "g",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 1,
     "contributors": [
       {
         "ingredient": "Wild salmon fillet",
         "foodId": "wild-salmon",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -68,18 +71,20 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "b6",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 46.6,
     "contributors": [
       {
         "ingredient": "Wild salmon fillet",
         "foodId": "wild-salmon",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       },
       {
         "ingredient": "Cooked quinoa",
         "foodId": "quinoa",
-        "grams": null
+        "grams": 138.75,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -90,18 +95,20 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "fiber",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 13.9,
     "contributors": [
       {
         "ingredient": "Cooked quinoa",
         "foodId": "quinoa",
-        "grams": null
+        "grams": 138.75,
+        "gramsBasis": "tag-check-weight"
       },
       {
         "ingredient": "Avocado",
         "foodId": "avocado",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -112,18 +119,20 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "iron",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 11.5,
     "contributors": [
       {
         "ingredient": "Cooked quinoa",
         "foodId": "quinoa",
-        "grams": null
+        "grams": 138.75,
+        "gramsBasis": "tag-check-weight"
       },
       {
         "ingredient": "Baby spinach",
         "foodId": "spinach",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -134,18 +143,20 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "magnesium",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 21.1,
     "contributors": [
       {
         "ingredient": "Cooked quinoa",
         "foodId": "quinoa",
-        "grams": null
+        "grams": 138.75,
+        "gramsBasis": "tag-check-weight"
       },
       {
         "ingredient": "Baby spinach",
         "foodId": "spinach",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -162,7 +173,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Baby spinach",
         "foodId": "spinach",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -179,12 +191,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Rolled oats",
         "foodId": "steel-cut-oats",
-        "grams": 40.5
+        "grams": 40.5,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Mixed berries",
         "foodId": "mixed-berries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -201,12 +215,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Rolled oats",
         "foodId": "steel-cut-oats",
-        "grams": 40.5
+        "grams": 40.5,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Walnuts",
         "foodId": "walnuts",
-        "grams": 7.3125
+        "grams": 7.3125,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -223,7 +239,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Mixed berries",
         "foodId": "mixed-berries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -240,7 +257,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Walnuts",
         "foodId": "walnuts",
-        "grams": 7.3125
+        "grams": 7.3125,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -257,7 +275,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Brown rice",
         "foodId": "brown-rice",
-        "grams": 151.5
+        "grams": 151.5,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -274,12 +293,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Brown rice",
         "foodId": "brown-rice",
-        "grams": 151.5
+        "grams": 151.5,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Sweet potato",
         "foodId": "sweet-potato",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -290,13 +311,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "protein",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 12.6,
     "contributors": [
       {
         "ingredient": "Egg",
         "foodId": "eggs",
-        "grams": null
+        "grams": 50,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -307,13 +329,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "b12",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 18.5,
     "contributors": [
       {
         "ingredient": "Egg",
         "foodId": "eggs",
-        "grams": null
+        "grams": 50,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -330,7 +353,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Kale",
         "foodId": "kale",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -347,7 +371,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Kale",
         "foodId": "kale",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -364,7 +389,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Kale",
         "foodId": "kale",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -375,13 +401,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "protein",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 48.4,
     "contributors": [
       {
         "ingredient": "Lean beef strips",
         "foodId": "lean-beef",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -392,18 +419,20 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "iron",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 12.6,
     "contributors": [
       {
         "ingredient": "Lean beef strips",
         "foodId": "lean-beef",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       },
       {
         "ingredient": "Spinach",
         "foodId": "spinach",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -414,13 +443,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "b12",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 127.1,
     "contributors": [
       {
         "ingredient": "Lean beef strips",
         "foodId": "lean-beef",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -432,17 +462,19 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
     "status": "meets",
-    "perServing": 10.9,
+    "perServing": 47.1,
     "contributors": [
       {
         "ingredient": "Lean beef strips",
         "foodId": "lean-beef",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       },
       {
         "ingredient": "Brown rice",
         "foodId": "brown-rice",
-        "grams": 151.5
+        "grams": 151.5,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -459,12 +491,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Spinach",
         "foodId": "spinach",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       },
       {
         "ingredient": "Brown rice",
         "foodId": "brown-rice",
-        "grams": 151.5
+        "grams": 151.5,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -481,7 +515,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Spinach",
         "foodId": "spinach",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -498,12 +533,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Sweet potato",
         "foodId": "sweet-potato",
-        "grams": 130
+        "grams": 130,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Banana",
         "foodId": "banana",
-        "grams": 59
+        "grams": 59,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -520,7 +557,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Almond butter",
         "foodId": "almonds",
-        "grams": 32
+        "grams": 32,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -537,12 +575,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Almond butter",
         "foodId": "almonds",
-        "grams": 32
+        "grams": 32,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Banana",
         "foodId": "banana",
-        "grams": 59
+        "grams": 59,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -559,7 +599,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Banana",
         "foodId": "banana",
-        "grams": 59
+        "grams": 59,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "needs-review"
@@ -576,7 +617,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Chamomile tea bag",
         "foodId": "chamomile-tea",
-        "grams": 237
+        "grams": 237,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -588,17 +630,19 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
     "status": "meets",
-    "perServing": 16.1,
+    "perServing": 57.6,
     "contributors": [
       {
         "ingredient": "Sweet potato",
         "foodId": "sweet-potato",
-        "grams": 130
+        "grams": 130,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Cooked turkey breast",
         "foodId": "turkey",
-        "grams": null
+        "grams": 85.048569375,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -610,17 +654,19 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
     "status": "meets",
-    "perServing": 25.2,
+    "perServing": 75.4,
     "contributors": [
       {
         "ingredient": "Egg",
         "foodId": "eggs",
-        "grams": 100
+        "grams": 100,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Cooked turkey breast",
         "foodId": "turkey",
-        "grams": null
+        "grams": 85.048569375,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -632,17 +678,19 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
     "status": "meets",
-    "perServing": 37,
+    "perServing": 99.3,
     "contributors": [
       {
         "ingredient": "Egg",
         "foodId": "eggs",
-        "grams": 100
+        "grams": 100,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Cooked turkey breast",
         "foodId": "turkey",
-        "grams": null
+        "grams": 85.048569375,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -659,12 +707,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Cucumber",
         "foodId": "cucumber",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       },
       {
         "ingredient": "Watermelon",
         "foodId": "watermelon",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -681,7 +731,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Watermelon",
         "foodId": "watermelon",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -692,13 +743,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "protein",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 48.4,
     "contributors": [
       {
         "ingredient": "Lean beef",
         "foodId": "lean-beef",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -709,13 +761,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "iron",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 12.6,
     "contributors": [
       {
         "ingredient": "Lean beef",
         "foodId": "lean-beef",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -726,13 +779,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "b12",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 127.1,
     "contributors": [
       {
         "ingredient": "Lean beef",
         "foodId": "lean-beef",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -743,13 +797,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "b6",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 36.2,
     "contributors": [
       {
         "ingredient": "Lean beef",
         "foodId": "lean-beef",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -766,7 +821,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Swiss chard",
         "foodId": "swiss-chard",
-        "grams": 72
+        "grams": 72,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -783,7 +839,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Swiss chard",
         "foodId": "swiss-chard",
-        "grams": 72
+        "grams": 72,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -800,7 +857,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Kefir",
         "foodId": "kefir",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -817,7 +875,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Kefir",
         "foodId": "kefir",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -834,7 +893,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Kefir",
         "foodId": "kefir",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -851,12 +911,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Blueberries",
         "foodId": "blueberries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       },
       {
         "ingredient": "Banana",
         "foodId": "banana",
-        "grams": 59
+        "grams": 59,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -873,12 +935,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Blueberries",
         "foodId": "blueberries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       },
       {
         "ingredient": "Banana",
         "foodId": "banana",
-        "grams": 59
+        "grams": 59,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -895,7 +959,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Banana",
         "foodId": "banana",
-        "grams": 59
+        "grams": 59,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -912,17 +977,20 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Brown rice",
         "foodId": "brown-rice",
-        "grams": 151.5
+        "grams": 151.5,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Swiss chard",
         "foodId": "swiss-chard",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       },
       {
         "ingredient": "Pumpkin seeds",
         "foodId": "pumpkin-seeds",
-        "grams": 16.125
+        "grams": 16.125,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -939,7 +1007,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Brown rice",
         "foodId": "brown-rice",
-        "grams": 151.5
+        "grams": 151.5,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -956,7 +1025,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Swiss chard",
         "foodId": "swiss-chard",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -973,7 +1043,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Pumpkin seeds",
         "foodId": "pumpkin-seeds",
-        "grams": 16.125
+        "grams": 16.125,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -990,7 +1061,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Avocado",
         "foodId": "avocado",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1007,7 +1079,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Egg",
         "foodId": "eggs",
-        "grams": 50
+        "grams": 50,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1024,7 +1097,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Egg",
         "foodId": "eggs",
-        "grams": 50
+        "grams": 50,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1035,13 +1109,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "protein",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 67,
     "contributors": [
       {
         "ingredient": "Cooked turkey breast",
         "foodId": "turkey",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1052,13 +1127,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "b12",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 83.1,
     "contributors": [
       {
         "ingredient": "Cooked turkey breast",
         "foodId": "turkey",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1069,13 +1145,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "b6",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 55.4,
     "contributors": [
       {
         "ingredient": "Cooked turkey breast",
         "foodId": "turkey",
-        "grams": null
+        "grams": 113.3980925,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1092,7 +1169,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Almonds",
         "foodId": "almonds",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1109,7 +1187,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Almonds",
         "foodId": "almonds",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1126,12 +1205,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Pineapple",
         "foodId": "pineapple",
-        "grams": 165
+        "grams": 165,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Banana",
         "foodId": "banana",
-        "grams": 59
+        "grams": 59,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1148,7 +1229,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Coconut water",
         "foodId": "coconut-water",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1159,18 +1241,20 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "fiber",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 5.5,
+    "status": "meets",
+    "perServing": 18.4,
     "contributors": [
       {
         "ingredient": "Banana",
         "foodId": "banana",
-        "grams": 59
+        "grams": 59,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Chia seeds",
         "foodId": "chia-pudding",
-        "grams": null
+        "grams": 10.5,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1187,7 +1271,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Banana",
         "foodId": "banana",
-        "grams": 59
+        "grams": 59,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1198,13 +1283,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "omega-3",
     "basis": "weighed-ingredients",
     "unit": "g",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 1.9,
     "contributors": [
       {
         "ingredient": "Chia seeds",
         "foodId": "chia-pudding",
-        "grams": null
+        "grams": 10.5,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1216,12 +1302,13 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
     "status": "not-shown",
-    "perServing": 0,
+    "perServing": 5.1,
     "contributors": [
       {
         "ingredient": "Chia seeds",
         "foodId": "chia-pudding",
-        "grams": null
+        "grams": 10.5,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1233,12 +1320,13 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
     "status": "not-shown",
-    "perServing": 0,
+    "perServing": 4.5,
     "contributors": [
       {
         "ingredient": "Chia seeds",
         "foodId": "chia-pudding",
-        "grams": null
+        "grams": 10.5,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1250,12 +1338,13 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
     "status": "not-shown",
-    "perServing": 0,
+    "perServing": 8.4,
     "contributors": [
       {
         "ingredient": "Chia seeds",
         "foodId": "chia-pudding",
-        "grams": null
+        "grams": 10.5,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1267,17 +1356,19 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
     "status": "not-shown",
-    "perServing": 0,
+    "perServing": 9.3,
     "contributors": [
       {
         "ingredient": "Cooked quinoa",
         "foodId": "quinoa",
-        "grams": null
+        "grams": 185,
+        "gramsBasis": "tag-check-weight"
       },
       {
         "ingredient": "Strawberries",
         "foodId": "strawberries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1289,12 +1380,13 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
     "status": "not-shown",
-    "perServing": 0,
+    "perServing": 7.7,
     "contributors": [
       {
         "ingredient": "Cooked quinoa",
         "foodId": "quinoa",
-        "grams": null
+        "grams": 185,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1305,13 +1397,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "magnesium",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 14.1,
     "contributors": [
       {
         "ingredient": "Cooked quinoa",
         "foodId": "quinoa",
-        "grams": null
+        "grams": 185,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1323,12 +1416,13 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
     "status": "not-shown",
-    "perServing": 0,
+    "perServing": 6.7,
     "contributors": [
       {
         "ingredient": "Cooked quinoa",
         "foodId": "quinoa",
-        "grams": null
+        "grams": 185,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1345,12 +1439,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Pineapple",
         "foodId": "pineapple",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       },
       {
         "ingredient": "Strawberries",
         "foodId": "strawberries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1367,7 +1463,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Cucumber",
         "foodId": "cucumber",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1384,7 +1481,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Apple",
         "foodId": "apple",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1401,7 +1499,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Pumpkin seeds",
         "foodId": "pumpkin-seeds",
-        "grams": 8.0625
+        "grams": 8.0625,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1418,7 +1517,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Pumpkin seeds",
         "foodId": "pumpkin-seeds",
-        "grams": 8.0625
+        "grams": 8.0625,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1435,12 +1535,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Air-popped popcorn",
         "foodId": "popcorn",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       },
       {
         "ingredient": "Almonds",
         "foodId": "almonds",
-        "grams": 17.875
+        "grams": 17.875,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1457,12 +1559,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Almonds",
         "foodId": "almonds",
-        "grams": 17.875
+        "grams": 17.875,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Dark chocolate chips",
         "foodId": "dark-chocolate",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1479,7 +1583,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Dark chocolate chips",
         "foodId": "dark-chocolate",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1496,17 +1601,20 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Strawberries",
         "foodId": "strawberries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       },
       {
         "ingredient": "Pineapple",
         "foodId": "pineapple",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       },
       {
         "ingredient": "Blueberries",
         "foodId": "blueberries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1523,12 +1631,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Strawberries",
         "foodId": "strawberries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       },
       {
         "ingredient": "Blueberries",
         "foodId": "blueberries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1545,17 +1655,20 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Banana",
         "foodId": "banana",
-        "grams": 118
+        "grams": 118,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Oat flour",
         "foodId": "steel-cut-oats",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       },
       {
         "ingredient": "Berries, for topping",
         "foodId": "mixed-berries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1572,7 +1685,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Banana",
         "foodId": "banana",
-        "grams": 118
+        "grams": 118,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1589,12 +1703,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Banana",
         "foodId": "banana",
-        "grams": 118
+        "grams": 118,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Berries, for topping",
         "foodId": "mixed-berries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1611,7 +1727,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Eggs",
         "foodId": "eggs",
-        "grams": 100
+        "grams": 100,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1628,7 +1745,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Eggs",
         "foodId": "eggs",
-        "grams": 100
+        "grams": 100,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1645,7 +1763,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Oat flour",
         "foodId": "steel-cut-oats",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1662,7 +1781,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Swiss chard",
         "foodId": "swiss-chard",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1674,22 +1794,25 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
     "status": "meets",
-    "perServing": 22.7,
+    "perServing": 43.8,
     "contributors": [
       {
         "ingredient": "Swiss chard",
         "foodId": "swiss-chard",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       },
       {
         "ingredient": "Quinoa",
         "foodId": "quinoa",
-        "grams": null
+        "grams": 138.75,
+        "gramsBasis": "tag-check-weight"
       },
       {
         "ingredient": "Pumpkin seeds",
         "foodId": "pumpkin-seeds",
-        "grams": 16.125
+        "grams": 16.125,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1700,13 +1823,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "fiber",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 13.9,
     "contributors": [
       {
         "ingredient": "Quinoa",
         "foodId": "quinoa",
-        "grams": null
+        "grams": 138.75,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1717,18 +1841,20 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "iron",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 7.9,
+    "status": "meets",
+    "perServing": 19.4,
     "contributors": [
       {
         "ingredient": "Quinoa",
         "foodId": "quinoa",
-        "grams": null
+        "grams": 138.75,
+        "gramsBasis": "tag-check-weight"
       },
       {
         "ingredient": "Pumpkin seeds",
         "foodId": "pumpkin-seeds",
-        "grams": 16.125
+        "grams": 16.125,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1739,13 +1865,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "nutrientId": "b6",
     "basis": "weighed-ingredients",
     "unit": "percent-dv",
-    "status": "not-shown",
-    "perServing": 0,
+    "status": "meets",
+    "perServing": 10,
     "contributors": [
       {
         "ingredient": "Quinoa",
         "foodId": "quinoa",
-        "grams": null
+        "grams": 138.75,
+        "gramsBasis": "tag-check-weight"
       }
     ],
     "decision": "published"
@@ -1762,12 +1889,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Rolled oats",
         "foodId": "steel-cut-oats",
-        "grams": 81
+        "grams": 81,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Almond butter",
         "foodId": "almonds",
-        "grams": 125
+        "grams": 125,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1784,12 +1913,14 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Rolled oats",
         "foodId": "steel-cut-oats",
-        "grams": 81
+        "grams": 81,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Almond butter",
         "foodId": "almonds",
-        "grams": 125
+        "grams": 125,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -1806,7 +1937,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Orange",
         "foodId": "citrus-orange",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1823,7 +1955,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Orange",
         "foodId": "citrus-orange",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1840,7 +1973,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Orange",
         "foodId": "citrus-orange",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1857,7 +1991,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Orange",
         "foodId": "citrus-orange",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1874,7 +2009,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Greek yogurt",
         "foodId": "greek-yogurt",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1891,7 +2027,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Greek yogurt",
         "foodId": "greek-yogurt",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1908,7 +2045,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Greek yogurt",
         "foodId": "greek-yogurt",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1925,7 +2063,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Greek yogurt",
         "foodId": "greek-yogurt",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1942,7 +2081,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Greek yogurt",
         "foodId": "greek-yogurt",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1959,7 +2099,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Greek yogurt",
         "foodId": "greek-yogurt",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1976,7 +2117,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Mixed berries",
         "foodId": "mixed-berries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -1993,7 +2135,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Mixed berries",
         "foodId": "mixed-berries",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -2010,17 +2153,20 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Almonds",
         "foodId": "almonds",
-        "grams": 35.75
+        "grams": 35.75,
+        "gramsBasis": "approved-usda-conversion"
       },
       {
         "ingredient": "Walnuts",
         "foodId": "walnuts",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       },
       {
         "ingredient": "Dark chocolate chips",
         "foodId": "dark-chocolate",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -2037,7 +2183,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Almonds",
         "foodId": "almonds",
-        "grams": 35.75
+        "grams": 35.75,
+        "gramsBasis": "approved-usda-conversion"
       }
     ],
     "decision": "published"
@@ -2054,7 +2201,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Walnuts",
         "foodId": "walnuts",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"
@@ -2071,7 +2219,8 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
       {
         "ingredient": "Dark chocolate chips",
         "foodId": "dark-chocolate",
-        "grams": null
+        "grams": null,
+        "gramsBasis": null
       }
     ],
     "decision": "published"

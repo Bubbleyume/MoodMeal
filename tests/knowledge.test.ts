@@ -35,6 +35,7 @@ import { NUTRIENTS, GOALS, SEEDED_AI_REVIEW, source, FOOD_FACTS } from "../src/d
 import { FOOD_TAG_REVIEWS } from "../src/data/foodTagReviews";
 import { MEAL_TAG_REVIEWS } from "../src/data/mealTagReviews";
 import { checkMealTags } from "../src/lib/mealTagRule";
+import { TAG_CHECK_WEIGHTS } from "../src/data/tagCheckWeights";
 import { readableQuantity, US_VOLUME_IN_TSP } from "../src/lib/units";
 import { validateBarcode, mapProduct, isCalculable, lookupProduct, createLookupLimiter, OFF_NUTRIENT_MAP, OFF_APP_ID, previewValues, describeConflict, per100gNutrients } from "../src/lib/openFoodFacts";
 import { adaptNutrition, checkConsistency, declaredPrecisionHalf, readEntry } from "../src/lib/offNutritionAdapter";
@@ -334,7 +335,7 @@ test("meal tags follow the stage D batch 5 per-serving rule and its recorded sta
   const recomputed = RECIPES.flatMap(checkMealTags);
   assert.deepEqual(MEAL_TAG_REVIEWS.map(({ decision, ...check }) => check), recomputed);
   const count = (s: string) => MEAL_TAG_REVIEWS.filter((r) => r.status === s).length;
-  assert.deepEqual([MEAL_TAG_REVIEWS.length, count("meets"), count("below"), count("not-shown")], [110, 32, 1, 77]);
+  assert.deepEqual([MEAL_TAG_REVIEWS.length, count("meets"), count("below"), count("not-shown")], [110, 57, 1, 52]);
   for (const r of MEAL_TAG_REVIEWS) assert.equal(r.decision, r.status === "below" ? "needs-review" : "published");
   // Only the toast's vitamin C is withdrawn: 9.2% of the Daily Value per serving from the full estimate.
   const below = MEAL_TAG_REVIEWS.find((r) => r.status === "below")!;
@@ -354,8 +355,25 @@ test("meal tags follow the stage D batch 5 per-serving rule and its recorded sta
   // Unweighed ingredients are never treated as zero: a low lower bound is "not-shown", not "below".
   assert(MEAL_TAG_REVIEWS.filter((r) => r.basis === "weighed-ingredients").every((r) => r.status !== "below"));
   const salmon = MEAL_TAG_REVIEWS.find((r) => r.mealId === "salmon-quinoa-bowl" && r.nutrientId === "protein")!;
-  assert.equal(salmon.status, "not-shown");
-  assert.equal(salmon.contributors.find((c) => c.foodId === "wild-salmon")!.grams, null);
+  const rice = MEAL_TAG_REVIEWS.find((r) => r.mealId === "brown-rice-veggie-bowl" && r.nutrientId === "iron")!;
+  // Fully weighed (pumpkin seeds, 7.9%) but untagged ingredients may add iron, so it is not-shown, not below.
+  assert.equal(rice.status, "not-shown");
+  assert(rice.contributors.every((c) => c.grams !== null));
+  const parfait = MEAL_TAG_REVIEWS.find((r) => r.mealId === "berry-yogurt-parfait" && r.nutrientId === "protein")!;
+  assert.equal(parfait.status, "not-shown");
+  assert(parfait.contributors.every((c) => c.grams === null && c.gramsBasis === null));
+  // Batch 6: tag-check weights. Each matches exactly one recipe line and is used only by the tag rule.
+  const used = MEAL_TAG_REVIEWS.flatMap((r) => r.contributors.filter((c) => c.gramsBasis === "tag-check-weight").map((c) => `${r.recipeId}:${c.ingredient}`));
+  assert.deepEqual([...new Set(used)].sort(), TAG_CHECK_WEIGHTS.map((w) => `${w.recipeId}:${w.ingredient}`).sort());
+  for (const w of TAG_CHECK_WEIGHTS) {
+    const recipe = RECIPES.find((r) => r.id === w.recipeId)!;
+    const lines = recipe.structuredIngredients.filter((i) => i.name === w.ingredient && i.quantity === w.quantity && i.unit === w.unit && i.notes === w.notes);
+    assert.equal(lines.length, 1, `${w.recipeId}:${w.ingredient}`);
+    assert.equal(approvedIngredientInput(lines[0], w.recipeId), null, `${w.recipeId}:${w.ingredient} is not a USDA approval`);
+    assert.equal(recipe.nutritionEstimate, null, w.recipeId);
+  }
+  assert.equal(salmon.status, "meets");
+  assert.equal(salmon.contributors.find((c) => c.foodId === "wild-salmon")!.gramsBasis, "tag-check-weight");
   // The skewers' full estimate (with pineapple fiber) meets the bar where the tagged fruits alone would not.
   const skewerFiber = MEAL_TAG_REVIEWS.find((r) => r.mealId === "rainbow-fruit-skewers" && r.nutrientId === "fiber")!;
   assert.deepEqual([skewerFiber.status, skewerFiber.basis, skewerFiber.perServing], ["meets", "recipe-estimate", 12.4]);

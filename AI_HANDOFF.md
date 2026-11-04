@@ -1,5 +1,19 @@
 # MoodMeal AI Handoff
 
+## Knowledge stage D batch 6: tag-check weights (Claude Code, 2026-11-04)
+
+Started at 20cd6f6, equal to origin. The owner approved every recommendation in `docs/research/STAGE-D-BATCH-6.md`.
+
+- New `src/data/tagCheckWeights.ts` holds 10 owner-approved gram weights. They are used **only** by the meal tag rule: they are not USDA mappings, and they never feed the calculator or recipe estimates. The USDA ledger holds are unchanged.
+  - Exact mass conversions for oz: salmon 4 oz; beef 4 oz in Steak & Swiss Chard and in the stir-fry; turkey 4 oz and 3 oz.
+  - The power bowl egg, as a large egg of 50 g.
+  - Chia: 1 tbsp = 10.5 g, from cup ÷ 16.
+  - Cooked quinoa at 185 g per cup (FDC 168917) for three recipes.
+- `checkMealTags` uses an approved USDA conversion first, then a tag-check weight, and records `gramsBasis`.
+- Meal tags: 57 meet, 1 below and 52 not shown, out of 110. Nothing users see changed.
+- Validation: 51 knowledge tests, typecheck, avatar tests, the build, the browser suite (no browser errors) and 48 research tests pass.
+- The owner approved committing and pushing batch 6, with its packet, on 2026-11-04. Later work: further tag-check weights or USDA approvals for the 52 unchecked meal tags; PDCAAS values for the plant protein tags; mood-to-goal rules; glossary entries. Task 4 is still on hold.
+
 ## Knowledge stage D batch 5: per-serving rule for meal tags (Claude Code, 2026-11-04)
 
 Started at fd69ea4 (batch 4), equal to origin. The owner approved every recommendation in `docs/research/STAGE-D-BATCH-5.md`.
