@@ -13,6 +13,12 @@ import {
   type FoodTagEvidence,
 } from "../data/foodTagReviews";
 import { approvedChamomileToastNutrition, approvedPilotNutrition } from "../data/usdaPilot";
+import { MEAL_TAG_REVIEWS } from "../data/mealTagReviews";
+
+// Meal tags shown to fall below the batch 5 per-serving rule (owner-approved withdrawal).
+const WITHHELD_MEAL_TAGS = new Set(
+  MEAL_TAG_REVIEWS.filter((r) => r.decision === "needs-review").map((r) => `${r.mealId}:${r.nutrientId}`),
+);
 
 const aliases: [RegExp, string][] = [
   [/salmon/i, "wild-salmon"],
@@ -41,7 +47,8 @@ const aliases: [RegExp, string][] = [
   [/coconut water/i, "coconut-water"],
   [/watermelon/i, "watermelon"],
   [/cucumber/i, "cucumber"],
-  [/apple/i, "apple"],
+  // Whole word only, so "Pineapple" reaches the pineapple alias below (stage D batch 5).
+  [/\bapple/i, "apple"],
   [/pumpkin seed/i, "pumpkin-seeds"],
   [/popcorn/i, "popcorn"],
   [/strawberr/i, "strawberries"],
@@ -163,7 +170,7 @@ function metadata(
               (i) => FOOD_FACTS[foodIdForIngredient(i.name) ?? ""] ?? [],
             ),
           ),
-        ];
+        ].filter((n) => !WITHHELD_MEAL_TAGS.has(`${id}:${n}`));
   const facts = nutrientIds.map((n) => ({
     nutrientId: n,
     reviewStatus: "published" as const,

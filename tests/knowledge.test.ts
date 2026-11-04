@@ -33,6 +33,8 @@ import {
 import { historyInsights } from "../src/lib/interactions";
 import { NUTRIENTS, GOALS, SEEDED_AI_REVIEW, source, FOOD_FACTS } from "../src/data/knowledge";
 import { FOOD_TAG_REVIEWS } from "../src/data/foodTagReviews";
+import { MEAL_TAG_REVIEWS } from "../src/data/mealTagReviews";
+import { checkMealTags } from "../src/lib/mealTagRule";
 import { readableQuantity, US_VOLUME_IN_TSP } from "../src/lib/units";
 import { validateBarcode, mapProduct, isCalculable, lookupProduct, createLookupLimiter, OFF_NUTRIENT_MAP, OFF_APP_ID, previewValues, describeConflict, per100gNutrients } from "../src/lib/openFoodFacts";
 import { adaptNutrition, checkConsistency, declaredPrecisionHalf, readEntry } from "../src/lib/offNutritionAdapter";
@@ -326,6 +328,43 @@ test("owner-reviewed food tags (stage D batches 1-4) match FOOD_FACTS and carry 
   const salmon = FOODS.find((f) => f.id === "wild-salmon")!;
   const protein = salmon.nutrientFacts.find((f) => f.nutrientId === "protein")!;
   assert(protein.sourceProvenance.some((s) => s.reviewOrigin === "owner-approved" && /not corrected for protein quality/i.test(s.pageOrSection ?? "")));
+});
+test("meal tags follow the stage D batch 5 per-serving rule and its recorded statuses", () => {
+  // The recorded file must match the rule applied to today's recipes; regenerate and review on drift.
+  const recomputed = RECIPES.flatMap(checkMealTags);
+  assert.deepEqual(MEAL_TAG_REVIEWS.map(({ decision, ...check }) => check), recomputed);
+  const count = (s: string) => MEAL_TAG_REVIEWS.filter((r) => r.status === s).length;
+  assert.deepEqual([MEAL_TAG_REVIEWS.length, count("meets"), count("below"), count("not-shown")], [110, 32, 1, 77]);
+  for (const r of MEAL_TAG_REVIEWS) assert.equal(r.decision, r.status === "below" ? "needs-review" : "published");
+  // Only the toast's vitamin C is withdrawn: 9.2% of the Daily Value per serving from the full estimate.
+  const below = MEAL_TAG_REVIEWS.find((r) => r.status === "below")!;
+  assert.deepEqual([below.mealId, below.nutrientId, below.basis, below.perServing], ["chamomile-comfort-toast", "vitamin-c", "recipe-estimate", 9.2]);
+  const toastMeal = MEALS.find((m) => m.id === "chamomile-comfort-toast")!;
+  const toastRecipe = RECIPES.find((r) => r.mealId === "chamomile-comfort-toast")!;
+  for (const item of [toastMeal, toastRecipe]) {
+    assert(!verifiedNutrients(item).includes("vitamin-c"));
+    assert.deepEqual([...verifiedNutrients(item)].sort(), ["b6", "fiber", "magnesium", "water"]);
+  }
+  // Every other recorded tag is still shown, and nothing is shown without a record.
+  for (const m of MEALS) {
+    const shown = [...verifiedNutrients(m)].sort();
+    const published = MEAL_TAG_REVIEWS.filter((r) => r.mealId === m.id && r.decision === "published").map((r) => r.nutrientId).sort();
+    assert.deepEqual(shown, published, m.id);
+  }
+  // Unweighed ingredients are never treated as zero: a low lower bound is "not-shown", not "below".
+  assert(MEAL_TAG_REVIEWS.filter((r) => r.basis === "weighed-ingredients").every((r) => r.status !== "below"));
+  const salmon = MEAL_TAG_REVIEWS.find((r) => r.mealId === "salmon-quinoa-bowl" && r.nutrientId === "protein")!;
+  assert.equal(salmon.status, "not-shown");
+  assert.equal(salmon.contributors.find((c) => c.foodId === "wild-salmon")!.grams, null);
+  // The skewers' full estimate (with pineapple fiber) meets the bar where the tagged fruits alone would not.
+  const skewerFiber = MEAL_TAG_REVIEWS.find((r) => r.mealId === "rainbow-fruit-skewers" && r.nutrientId === "fiber")!;
+  assert.deepEqual([skewerFiber.status, skewerFiber.basis, skewerFiber.perServing], ["meets", "recipe-estimate", 12.4]);
+  // Pineapple is pineapple, not apple.
+  assert.equal(foodIdForIngredient("Pineapple"), "pineapple");
+  assert.equal(foodIdForIngredient("Apple"), "apple");
+  const tropicalC = MEAL_TAG_REVIEWS.find((r) => r.mealId === "tropical-energy-smoothie" && r.nutrientId === "vitamin-c")!;
+  assert(tropicalC.contributors.some((c) => c.ingredient === "Pineapple" && c.foodId === "pineapple"));
+  assert(!MEAL_TAG_REVIEWS.some((r) => r.contributors.some((c) => c.ingredient === "Pineapple" && c.foodId === "apple")));
 });
 test("resource import never copies prose or inherits publication", () => {
   const text =
