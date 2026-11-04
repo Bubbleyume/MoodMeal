@@ -27,11 +27,6 @@ export const RECIPES: Recipe[] = [
       "Assemble the bowl: quinoa on the bottom, spinach and avocado on top, salmon placed over everything.",
       "Drizzle with lemon juice and remaining olive oil before serving.",
     ],
-    nutritionHighlights: [
-      "Omega-3 fatty acids from salmon support normal brain function",
-      "Quinoa provides a complete plant protein and steady energy",
-      "Spinach adds folate and magnesium",
-    ],
   },
   {
     id: "recipe-warm-oatmeal-berries",
@@ -55,11 +50,6 @@ export const RECIPES: Recipe[] = [
       "Stir in the oats and reduce heat to low; cook 8–10 minutes, stirring occasionally, until creamy.",
       "Spoon into a bowl and top with berries, walnuts, and a drizzle of honey.",
       "Finish with 1/16 tsp ground cinnamon.",
-    ],
-    nutritionHighlights: [
-      "Complex carbohydrates support steady, sustained energy",
-      "Berries add fiber and antioxidants",
-      "Walnuts provide plant-based omega-3s",
     ],
   },
   {
@@ -86,11 +76,6 @@ export const RECIPES: Recipe[] = [
       "Layer warm brown rice, kale, and sweet potato in a bowl, then top with the egg.",
       "Finish with sesame seeds and a small drizzle of soy sauce.",
     ],
-    nutritionHighlights: [
-      "Balanced protein and complex carbs support steady energy",
-      "Kale adds vitamin K and calcium",
-      "Sweet potato contributes fiber and beta-carotene",
-    ],
   },
   {
     id: "recipe-iron-rich-stir-fry",
@@ -116,11 +101,6 @@ export const RECIPES: Recipe[] = [
       "Return the beef to the pan, add soy sauce, and toss to combine.",
       "Serve hot over brown rice.",
     ],
-    nutritionHighlights: [
-      "Lean beef is a dense source of iron and B12",
-      "Spinach adds folate and additional iron",
-      "Brown rice rounds out the meal with complex carbohydrates",
-    ],
   },
   {
     id: "recipe-chamomile-comfort-toast",
@@ -144,11 +124,6 @@ export const RECIPES: Recipe[] = [
       "Spread almond butter over each sweet potato \"toast\".",
       "Top with banana slices and 1/16 tsp ground cinnamon.",
       "Enjoy warm alongside the cup of chamomile tea.",
-    ],
-    nutritionHighlights: [
-      "Sweet potato offers slow-releasing complex carbohydrates",
-      "Chamomile is a caffeine-free herbal tea often used in wind-down routines",
-      "Almond butter adds healthy fats and magnesium",
     ],
   },
   {
@@ -175,11 +150,6 @@ export const RECIPES: Recipe[] = [
       "Make two small wells and crack the eggs directly into the pan; cover and cook until whites and yolks are firm; egg dishes should reach 160°F (71°C).",
       "Season with paprika, salt, and pepper before serving.",
     ],
-    nutritionHighlights: [
-      "Turkey contains tryptophan, an amino acid involved in normal neurotransmitter function",
-      "Sweet potato provides comforting, steady-releasing carbohydrates",
-      "Eggs add choline and protein",
-    ],
   },
   {
     id: "recipe-cooling-cucumber-salad",
@@ -204,11 +174,6 @@ export const RECIPES: Recipe[] = [
       "Whisk lime juice and olive oil together, then drizzle over the salad.",
       "Toss gently and serve chilled.",
     ],
-    nutritionHighlights: [
-      "High water content supports hydration",
-      "Watermelon adds vitamin C and natural sweetness",
-      "A cool, light dish for warm or heated moments",
-    ],
   },
   {
     id: "recipe-steak-and-greens",
@@ -232,10 +197,6 @@ export const RECIPES: Recipe[] = [
       "In the same pan, add remaining oil and garlic, then sauté the Swiss chard for 3–4 minutes until wilted.",
       "Slice the beef and serve over the sautéed chard.",
     ],
-    nutritionHighlights: [
-      "Iron and zinc from beef support normal energy metabolism",
-      "Swiss chard is rich in magnesium, involved in normal muscle and nerve function",
-    ],
   },
   {
     id: "recipe-calming-kefir-smoothie",
@@ -257,11 +218,6 @@ export const RECIPES: Recipe[] = [
       "Add all ingredients to a blender.",
       "Blend on high for 30–45 seconds until smooth.",
       "Pour into a glass and enjoy right away.",
-    ],
-    nutritionHighlights: [
-      "Kefir provides live cultures that support gut wellness",
-      "Blueberries add antioxidants",
-      "A cool, easy-to-digest option when you need to feel settled",
     ],
   },
   {
@@ -287,11 +243,6 @@ export const RECIPES: Recipe[] = [
       "Assemble brown rice and chard in a bowl.",
       "Top with pumpkin seeds and drizzle with tahini dressing.",
     ],
-    nutritionHighlights: [
-      "Magnesium-rich ingredients throughout",
-      "Complex carbohydrates support steady energy",
-      "A grounding, easy weeknight bowl",
-    ],
   },
   {
     id: "recipe-gentle-avocado-toast",
@@ -314,11 +265,6 @@ export const RECIPES: Recipe[] = [
       "Hard-boil the egg until the white and yolk are firm, then cool, peel and halve.",
       "Mash the avocado directly onto the toast with 1/16 tsp fine table salt.",
       "Top with the cooked egg and 1/16 tsp crushed chili flakes.",
-    ],
-    nutritionHighlights: [
-      "Avocado provides healthy fats and potassium",
-      "Egg adds choline and protein",
-      "A simple, low-effort plate for quieter moments",
     ],
   },
   {
@@ -343,10 +289,6 @@ export const RECIPES: Recipe[] = [
       "Sprinkle chopped almonds over the top.",
       "Drizzle lightly with hoisin or soy sauce, then wrap and eat by hand.",
     ],
-    nutritionHighlights: [
-      "Turkey contains tryptophan, involved in normal neurotransmitter function",
-      "A light, crunchy, low-effort build-your-own meal",
-    ],
   },
   {
     id: "recipe-tropical-energy-smoothie",
@@ -368,10 +310,6 @@ export const RECIPES: Recipe[] = [
       "Add all ingredients to a blender.",
       "Blend until smooth, about 30 seconds.",
       "Pour into a large glass and enjoy immediately.",
-    ],
-    nutritionHighlights: [
-      "Coconut water helps replenish electrolytes",
-      "Pineapple provides vitamin C and a naturally sweet, energizing flavor",
     ],
   },
   {
@@ -395,10 +333,6 @@ export const RECIPES: Recipe[] = [
       "Add torn mint leaves and lime juice.",
       "Toss gently to combine and serve chilled or at room temperature.",
     ],
-    nutritionHighlights: [
-      "Quinoa is a complete plant protein",
-      "Fruit adds vitamin C and natural sweetness without added sugar",
-    ],
   },
   {
     id: "recipe-crunchy-veggie-snack-plate",
@@ -421,10 +355,6 @@ export const RECIPES: Recipe[] = [
       "Add a small bowl of hummus in the center for dipping.",
       "Sprinkle pumpkin seeds over everything for extra crunch.",
     ],
-    nutritionHighlights: [
-      "A variety of textures and colors to keep things interesting",
-      "Fiber-rich produce supports steady digestion",
-    ],
   },
   {
     id: "recipe-loaded-popcorn-mix",
@@ -446,10 +376,6 @@ export const RECIPES: Recipe[] = [
       "Toss with almonds and dark chocolate chips while still slightly warm.",
       "Finish with 0.4 g weighed sea salt.",
     ],
-    nutritionHighlights: [
-      "Whole-grain popcorn provides fiber",
-      "A small amount of dark chocolate adds flavonoid antioxidants",
-    ],
   },
   {
     id: "recipe-rainbow-fruit-skewers",
@@ -469,10 +395,6 @@ export const RECIPES: Recipe[] = [
     instructions: [
       "Thread strawberries, pineapple, and blueberries onto skewers in a repeating, colorful pattern.",
       "Arrange on a plate and serve chilled.",
-    ],
-    nutritionHighlights: [
-      "A playful, colorful way to enjoy vitamin C and antioxidants",
-      "Naturally sweet with no added sugar",
     ],
   },
   {
@@ -499,11 +421,6 @@ export const RECIPES: Recipe[] = [
       "Cook until golden on both sides and fully set through the center, flipping when bubbles form. The egg-containing batter should reach 160°F (71°C).",
       "Top with fresh berries before serving.",
     ],
-    nutritionHighlights: [
-      "Banana provides potassium and natural sweetness",
-      "Eggs add protein and choline",
-      "A fun, colorful breakfast that still delivers real nutrition",
-    ],
   },
   {
     id: "recipe-magnesium-boost-bowl",
@@ -527,10 +444,6 @@ export const RECIPES: Recipe[] = [
       "Whisk tahini and lemon juice with a splash of water into a smooth dressing.",
       "Layer quinoa and chard in a bowl, top with pumpkin seeds, and drizzle with dressing.",
     ],
-    nutritionHighlights: [
-      "Rich in magnesium, involved in normal muscle and nerve function",
-      "A grounding, plant-forward bowl",
-    ],
   },
   {
     id: "recipe-green-tea-oat-bites",
@@ -552,10 +465,6 @@ export const RECIPES: Recipe[] = [
       "Divide into 8 equal portions and roll into balls.",
       "Refrigerate for at least 30 minutes to firm up before eating.",
       "Keep refrigerated in a covered container and use within 3–4 days.",
-    ],
-    nutritionHighlights: [
-      "Green tea powder contains L-theanine, often associated with calm alertness",
-      "Oats provide steady, slow-releasing energy",
     ],
   },
   {
@@ -580,10 +489,6 @@ export const RECIPES: Recipe[] = [
       "Cook for 10–12 minutes until the carrots are tender.",
       "Stir in the fresh orange juice just before serving.",
     ],
-    nutritionHighlights: [
-      "Warm and soothing, with vitamin C from citrus",
-      "Ginger is often used in comforting, warming preparations",
-    ],
   },
   {
     id: "recipe-immune-boost-smoothie",
@@ -604,10 +509,6 @@ export const RECIPES: Recipe[] = [
       "Add all ingredients to a blender with a few ice cubes.",
       "Blend until smooth and creamy.",
       "Pour into a glass and sip slowly.",
-    ],
-    nutritionHighlights: [
-      "Vitamin C from orange supports the immune system as part of general wellness",
-      "Greek yogurt adds probiotics and protein",
     ],
   },
   {
@@ -631,10 +532,6 @@ export const RECIPES: Recipe[] = [
       "Repeat with the remaining yogurt, berries, and granola.",
       "Finish with a light drizzle of honey.",
     ],
-    nutritionHighlights: [
-      "Probiotics from yogurt support gut wellness",
-      "Berries add fiber and antioxidants",
-    ],
   },
   {
     id: "recipe-dark-chocolate-trail-mix",
@@ -655,10 +552,6 @@ export const RECIPES: Recipe[] = [
       "Combine all ingredients in a bowl or jar.",
       "Shake or stir to mix evenly.",
       "Portion into small bags for easy grab-and-go snacking.",
-    ],
-    nutritionHighlights: [
-      "Nuts provide magnesium and healthy fats",
-      "A small amount of dark chocolate adds flavonoid antioxidants",
     ],
   },
 ].map(enrichRecipe);

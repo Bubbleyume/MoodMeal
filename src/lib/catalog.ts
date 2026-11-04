@@ -185,6 +185,11 @@ function metadata(
     sourceProvenance: [
       {
         ...NUTRIENTS[n].source,
+        // The owner approved the nutrient's explanation (compared with this page by Claude Code,
+        // 2026-11-04), not that the page lists these foods, so this claim keeps its AI-assisted review.
+        reviewOrigin: "ai-assisted" as const,
+        reviewedBy: "MoodMeal source check (AI-assisted; not clinical review)",
+        reviewedDate: "2026-10-13",
         claimType: "food-nutrient" as const,
         pageOrSection: `Food sources; qualitative composition for ${
           kind === "foods"
@@ -268,9 +273,12 @@ export function enrichFood(raw: unknown): Food {
 }
 export function enrichMeal(raw: unknown): Meal {
   const m = raw as Meal;
+  const meta = metadata(m.id, "meals", m.name, m.ingredients);
   return {
     ...m,
-    ...metadata(m.id, "meals", m.name, m.ingredients),
+    ...meta,
+    // Derived from the reviewed facts, as in enrichFood; the raw nutrient lists were removed.
+    nutrients: meta.nutrientFacts.map((n) => NUTRIENTS[n.nutrientId].label),
     name: rename[m.id] ?? m.name,
     description: `Made with ${m.ingredients
       .slice(0, 3)
@@ -324,7 +332,6 @@ export function enrichRecipe(raw: unknown): Recipe {
       ),
       ...m.sourceProvenance,
     ],
-    nutritionHighlights: [],
     instructions: r.instructions,
   };
 }

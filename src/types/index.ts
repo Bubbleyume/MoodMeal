@@ -47,7 +47,6 @@ export interface Food extends LibraryMetadata {
   nutrients: string[];
   description: string;
   servingSuggestion: string;
-  moodTags: EmotionId[];
 }
 
 export type Difficulty = "Easy" | "Medium" | "Advanced";
@@ -66,7 +65,6 @@ export interface Meal extends LibraryMetadata {
   nutrients: string[];
   prepTimeMinutes: number;
   difficulty: Difficulty;
-  moodTags: EmotionId[];
   recipeId: string;
   description: string;
 }
@@ -87,7 +85,6 @@ export interface Recipe extends LibraryMetadata {
   cookTimeMinutes: number;
   ingredients: IngredientLine[];
   instructions: string[];
-  nutritionHighlights: string[];
 }
 
 export interface GroceryItem {

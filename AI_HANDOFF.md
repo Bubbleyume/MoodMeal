@@ -1,5 +1,24 @@
 # MoodMeal AI Handoff
 
+## Glossary and educational text reviewed (Claude Code, 2026-11-04, uncommitted)
+
+Started at 2b0e135, equal to origin. The owner's decisions are recorded in `docs/research/GLOSSARY-REVIEW.md`.
+
+- **Sources:** Claude Code (AI-assisted) downloaded every cited page (ODS, MedlinePlus, NHLBI, NIMH, NIDDK, NCCIH) on 2026-11-04 and compared the text sentence by sentence. ODS blocks WebFetch, so PowerShell `Invoke-WebRequest` was used. The owner approved the resulting decisions but didn't repeat the comparison.
+- **Glossary:** seven definitions were rewritten to match their sources: antioxidants, fiber, protein, iron, omega-3, carbohydrates and magnesium. The unsourced protein kidney caution was dropped; it can return with a reviewed NIDDK source.
+- **Owner approval recorded:** the new `OWNER_TEXT_REVIEW` (origin owner-approved, 2026-11-04) names Claude Code for the source comparison and the owner for the approval. It covers:
+  - the nutrient explanation sources;
+  - the goal sources (NIMH and MedlinePlus water);
+  - the lesson sources;
+  - every glossary term.
+
+  The food and meal "source of" facts keep their AI-assisted review. The Gut & Digestion lesson now also cites the MedlinePlus "Fiber" encyclopedia page, for "increase gradually".
+- **Unused text removed:** raw food and meal `description`, `nutrients` and `moodTags`, raw meal ingredient lists and recipe `nutritionHighlights`. They held unreviewed claims, and no screen showed them. The shown `nutrients` of foods and meals are derived from the reviewed `nutrientFacts` in `catalog.ts`.
+- **Automated review:** session `MM-553cd456-dcc7-403b-83a6-e18ee96a768a` (transcript in `..\ai-review\moodmeal-ai-review\sessions\`, outside Git) found that enriched meals had lost `nutrients` (MM-GLOSSARY-001) and that the reviewer line credited the owner with the comparison (MM-GLOSSARY-002). Both are fixed. AI review is not owner approval.
+- Validation: 53 knowledge tests, typecheck, avatar tests, the build, the browser suite (no browser errors) and 48 research tests pass.
+- **Tooling gap:** the development-only `knowledge-export.ts` doesn't read the glossary's or the mood mapping's review yet.
+- Next: owner review and commit. Later work: the 30 unchecked meal tags; PDCAAS values for plant protein; the support note when the launch country is decided; a periodic recheck of the cited pages. Task 4 is still on hold.
+
 ## Mood-to-goal rules reviewed (Claude Code, 2026-11-04)
 
 Started at 598f010, equal to origin. The owner's decisions are recorded in `docs/research/MOOD-GOAL-REVIEW.md`.

@@ -3,11 +3,26 @@ import type { Provenance, GoalId, ReviewOrigin, ReviewStatus } from "../types/li
 export interface SourceReview {
   reviewStatus: ReviewStatus;
   reviewOrigin: ReviewOrigin;
+  reviewedBy?: string;
+  reviewedDate?: string;
 }
 /** New records are not published until someone decides they should be. */
 export const PENDING_REVIEW: SourceReview = { reviewStatus: "needs-review", reviewOrigin: "unspecified" };
 /** The seeded 2026-10-13 records: published after an AI-assisted source check only. */
 export const SEEDED_AI_REVIEW: SourceReview = { reviewStatus: "published", reviewOrigin: "ai-assisted" };
+/**
+ * User-facing text from the glossary review (2026-11-04; docs/research/GLOSSARY-REVIEW.md).
+ * Claude Code (AI-assisted) compared each statement with the cited page as retrieved on 2026-11-04;
+ * the project owner then approved the packet's recommendations. The comparison is the AI's, the
+ * approval is the owner's: the owner did not perform the source comparison.
+ */
+export const OWNER_TEXT_REVIEW: SourceReview = {
+  reviewStatus: "published",
+  reviewOrigin: "owner-approved",
+  reviewedBy:
+    "Source comparison: Claude Code (AI-assisted; cited page retrieved 2026-11-04). Approval: project owner (glossary review decisions, 2026-11-04)",
+  reviewedDate: "2026-11-04",
+};
 
 export function source(
   sourceTitle: string,
@@ -36,6 +51,8 @@ export function source(
     ...(review.reviewOrigin === "ai-assisted"
       ? { reviewedDate: "2026-10-13", reviewedBy: "MoodMeal source check (AI-assisted; not clinical review)" }
       : {}),
+    ...(review.reviewedBy ? { reviewedBy: review.reviewedBy } : {}),
+    ...(review.reviewedDate ? { reviewedDate: review.reviewedDate } : {}),
     reviewOrigin: review.reviewOrigin,
     evidenceStatus: "source-supported",
     claimType,
@@ -48,7 +65,7 @@ const ods = (name: string, slug: string) =>
     `https://ods.od.nih.gov/factsheets/${slug}-HealthProfessional/`,
     "Introduction and food sources",
     "nutrient-function",
-    SEEDED_AI_REVIEW,
+    OWNER_TEXT_REVIEW,
   );
 export const NUTRIENTS: Record<
   string,
@@ -63,7 +80,7 @@ export const NUTRIENTS: Record<
       "https://medlineplus.gov/ency/article/002467.htm",
       "Function; Food sources",
       "nutrient-function",
-      SEEDED_AI_REVIEW,
+      OWNER_TEXT_REVIEW,
     ),
   },
   fiber: {
@@ -75,7 +92,7 @@ export const NUTRIENTS: Record<
       "https://medlineplus.gov/dietaryfiber.html",
       "Summary",
       "nutrient-function",
-      SEEDED_AI_REVIEW,
+      OWNER_TEXT_REVIEW,
     ),
   },
   b12: {
@@ -129,7 +146,7 @@ export const NUTRIENTS: Record<
       "https://medlineplus.gov/ency/article/002471.htm",
       "Function; Food sources",
       "nutrient-function",
-      SEEDED_AI_REVIEW,
+      OWNER_TEXT_REVIEW,
     ),
   },
 };
@@ -138,7 +155,7 @@ export const SELF_CARE_SOURCE = source(
   "https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health",
   "How can I take care of my mental health?",
   "wellness-education",
-  SEEDED_AI_REVIEW,
+  OWNER_TEXT_REVIEW,
 );
 export const GOALS: Record<
   GoalId,

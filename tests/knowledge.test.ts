@@ -34,6 +34,8 @@ import {
 import { historyInsights } from "../src/lib/interactions";
 import { NUTRIENTS, GOALS, SEEDED_AI_REVIEW, source, FOOD_FACTS } from "../src/data/knowledge";
 import { FOOD_TAG_REVIEWS } from "../src/data/foodTagReviews";
+import { TERMS } from "../src/data/glossary";
+import { LESSONS } from "../src/data/education";
 import { MEAL_TAG_REVIEWS } from "../src/data/mealTagReviews";
 import { checkMealTags } from "../src/lib/mealTagRule";
 import { TAG_CHECK_WEIGHTS } from "../src/data/tagCheckWeights";
@@ -259,9 +261,11 @@ test("new sources are not published by default and every source states its revie
   assert.equal(fresh.reviewOrigin, "unspecified");
   assert.equal(fresh.reviewedBy, undefined);
   assert.equal(fresh.reviewedDate, undefined);
+  // Nutrient explanations: compared with their pages by Claude Code (AI-assisted), then approved by the owner (glossary review, 2026-11-04).
   for (const n of Object.values(NUTRIENTS)) {
     assert.equal(n.source.reviewStatus, "published");
-    assert.equal(n.source.reviewOrigin, "ai-assisted");
+    assert.equal(n.source.reviewOrigin, "owner-approved");
+    assert.equal(n.source.reviewedDate, "2026-11-04");
   }
   for (const r of RECIPES) {
     for (const s of r.sourceProvenance) assert.equal(s.reviewOrigin, "ai-assisted", `${r.id} ${s.sourceTitle}`);
@@ -412,6 +416,43 @@ test("meal tags follow the stage D batch 5 per-serving rule and its recorded sta
   const tropicalC = MEAL_TAG_REVIEWS.find((r) => r.mealId === "tropical-energy-smoothie" && r.nutrientId === "vitamin-c")!;
   assert(tropicalC.contributors.some((c) => c.ingredient === "Pineapple" && c.foodId === "pineapple"));
   assert(!MEAL_TAG_REVIEWS.some((r) => r.contributors.some((c) => c.ingredient === "Pineapple" && c.foodId === "apple")));
+});
+test("glossary review (2026-11-04): source-matched wording, owner-reviewed text and no unused claims", () => {
+  const def = (id: string) => TERMS.find((t) => t.id === id)!.definition;
+  assert.match(def("antioxidants"), /^Substances that may prevent or delay some types of cell damage\./);
+  assert.doesNotMatch(def("antioxidants"), /free radicals/);
+  assert.doesNotMatch(def("fiber"), /blood sugar/);
+  assert.doesNotMatch(def("protein"), /kidney|tofu|eggs/);
+  assert.doesNotMatch(def("iron"), /anemia/i);
+  assert.doesNotMatch(def("magnesium"), /energy/);
+  assert.equal(TERMS.length, new Set(TERMS.map((t) => t.id)).size);
+  // The source comparison is attributed to Claude Code (AI-assisted); approval is the owner's, recorded separately.
+  const attribution = /^Source comparison: Claude Code \(AI-assisted;.*\)\. Approval: project owner/;
+  for (const t of TERMS) {
+    assert.deepEqual([t.reviewOrigin, t.reviewedDate], ["owner-approved", "2026-11-04"], t.id);
+    assert.match(t.reviewedBy, attribution, t.id);
+  }
+  for (const n of Object.values(NUTRIENTS)) assert.match(n.source.reviewedBy ?? "", attribution, n.label);
+  for (const l of LESSONS) for (const p of l.sourceProvenance) assert.match(p.reviewedBy ?? "", attribution, l.id);
+  assert(![...TERMS.map((t) => t.reviewedBy), ...Object.values(NUTRIENTS).map((n) => n.source.reviewedBy)].some((r) => /^Project owner \(text checked/.test(r ?? "")));
+  for (const g of Object.values(GOALS)) for (const p of g.sourceProvenance) assert.equal(p.reviewOrigin, "owner-approved", g.label);
+  for (const l of LESSONS) for (const p of l.sourceProvenance) assert.equal(p.reviewOrigin, "owner-approved", l.id);
+  const gut = LESSONS.find((l) => l.id === "gut-digestion")!;
+  assert(gut.sourceProvenance.some((p) => p.sourceURL === "https://medlineplus.gov/ency/article/002470.htm"));
+  // A food's qualitative "source of" claim keeps its AI-assisted review; only its USDA evidence is owner-approved.
+  const salmon = FOODS.find((f) => f.id === "wild-salmon")!.nutrientFacts.find((f) => f.nutrientId === "b12")!;
+  assert(salmon.sourceProvenance.some((p) => p.reviewOrigin === "ai-assisted" && /qualitative composition/.test(p.pageOrSection ?? "")));
+  // Unused raw text is gone; shown descriptions are generated.
+  const src = (f: string) => readFileSync(f, "utf8");
+  assert.doesNotMatch(src("src/data/foods.ts"), /moodTags|description:|nutrients:|L-theanine/);
+  assert.doesNotMatch(src("src/data/meals.ts"), /moodTags|description:|nutrients:/);
+  assert.doesNotMatch(src("src/data/recipes.ts"), /nutritionHighlights|flavonoid/);
+  for (const f of FOODS) assert.equal(f.description, "An everyday ingredient to explore as part of a varied diet.");
+  for (const m of MEALS) assert.match(m.description, /^Made with /);
+  // Meals still satisfy the Meal contract: nutrients are derived from the reviewed facts, as for foods.
+  for (const item of [...FOODS, ...MEALS])
+    assert.deepEqual(item.nutrients, item.nutrientFacts.map((n) => NUTRIENTS[n.nutrientId].label), item.id);
+  assert(MEALS.some((m) => m.nutrients.length > 0));
 });
 test("resource import never copies prose or inherits publication", () => {
   const text =
