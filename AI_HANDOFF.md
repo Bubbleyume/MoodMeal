@@ -18,7 +18,7 @@ Started at fd69ea4 (batch 4), equal to origin. The owner approved every recommen
   - `tools/research/generate_food_tag_reviews.py` and `generate-meal-tag-reviews.mjs`;
   - `moodmeal_research/` `__init__`, `config`, `normalize`, `provenance`, `tag_evidence` and `adapters/__init__` and `usda_csv`;
   - `stage-c-food-map.json`.
-  The rest of the research engine, the packets, `.gitignore` and `package.json` lines stay uncommitted.
+  The rest of the research engine, `.gitignore` and `package.json` lines stay uncommitted. The stage D packets and `docs/research/README.md` were committed afterwards (owner-approved 2026-11-04). `TASK-3-DECISIONS.md` is still uncommitted.
   - Later work: approve gram weights so more meal tags can be checked; PDCAAS values for the plant protein tags; mood-to-goal rules; glossary entries.
   - Task 4 is still on hold.
 
