@@ -63,6 +63,11 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
         "gramsBasis": "tag-check-weight"
       }
     ],
+    "omega3": {
+      "path": "combined",
+      "alaPerServing": 0.05,
+      "combinedPerServing": 0.96
+    },
     "decision": "published"
   },
   {
@@ -261,6 +266,11 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
         "gramsBasis": "approved-usda-conversion"
       }
     ],
+    "omega3": {
+      "path": "combined",
+      "alaPerServing": 0.66,
+      "combinedPerServing": 0.66
+    },
     "decision": "published"
   },
   {
@@ -1293,6 +1303,11 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
         "gramsBasis": "tag-check-weight"
       }
     ],
+    "omega3": {
+      "path": "ala",
+      "alaPerServing": 1.87,
+      "combinedPerServing": null
+    },
     "decision": "published"
   },
   {
@@ -2178,7 +2193,7 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
     "basis": "weighed-ingredients",
     "unit": "g",
     "status": "not-shown",
-    "perServing": 0,
+    "perServing": null,
     "contributors": [
       {
         "ingredient": "Walnuts",
@@ -2187,6 +2202,11 @@ export const MEAL_TAG_REVIEWS: MealTagReview[] = [
         "gramsBasis": null
       }
     ],
+    "omega3": {
+      "path": null,
+      "alaPerServing": null,
+      "combinedPerServing": null
+    },
     "decision": "published"
   },
   {

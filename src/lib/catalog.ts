@@ -10,6 +10,7 @@ import {
   FOOD_TAG_REVIEWS,
   FOOD_TAG_REVIEW_DATE,
   FOOD_TAG_SNAPSHOT,
+  OMEGA3_RULE_DATE,
   type FoodTagEvidence,
 } from "../data/foodTagReviews";
 import { approvedChamomileToastNutrition, approvedPilotNutrition } from "../data/usdaPilot";
@@ -136,8 +137,17 @@ export function allergenTags(text: string) {
 function evidenceSummary(e: FoodTagEvidence, nutrientId: string) {
   if (e.rule === "water-percent")
     return `${e.waterPercent}% water by weight; MoodMeal counts a food as a water source at 90% or more (water has no FDA Daily Value).`;
-  if (e.rule === "omega-3-grams")
-    return `about ${e.omega3Grams} g of omega-3 fatty acids (ALA, EPA, DPA and DHA) per ${e.raccGrams} g reference amount (${e.raccCategory}); MoodMeal's own bar is 0.16 g, 10% of the ALA Adequate Intake (omega-3 has no FDA Daily Value).`;
+  if (e.rule === "omega-3-grams") {
+    // Omega-3 rule review, option B (2026-11-06): ALA alone, or the complete combined sum.
+    const list = (xs: string[]) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
+    const noCode = e.noCodeRows?.length
+      ? ` The USDA values for ${list(e.noCodeRows)} have no derivation code and are counted on their data points.`
+      : "";
+    if (e.omega3Path === "ala")
+      return `about ${e.alaGrams} g of ALA (alpha-linolenic acid, a plant omega-3 fatty acid) per ${e.raccGrams} g reference amount (${e.raccCategory}). The USDA record doesn't report EPA, DPA or DHA, so no combined omega-3 total is given. MoodMeal's own criterion for this path is at least 0.16 g of ALA, one tenth of 1.6 g, the Adequate Intake for ALA in adult men; omega-3 has no FDA Daily Value.${noCode}`;
+    const zeros = e.omega3Zeros?.length ? `; ${list(e.omega3Zeros)} recorded as 0` : "";
+    return `about ${e.omega3Grams} g of omega-3 fatty acids (ALA, EPA, DPA and DHA combined${zeros}) per ${e.raccGrams} g reference amount (${e.raccCategory}). MoodMeal's own criterion for this path is at least 0.16 g combined, an editorial threshold set at one tenth of 1.6 g, the Adequate Intake for ALA in adult men. It is not a recommended intake for combined omega-3s; omega-3 has no FDA Daily Value.${noCode}`;
+  }
   return `about ${Math.round(e.percentDV ?? 0)}% of the FDA Daily Value for ${NUTRIENTS[nutrientId].label} per ${e.raccGrams} g reference amount (${e.raccCategory}).${nutrientId === "protein" ? " Not corrected for protein quality (PDCAAS)." : ""}`;
 }
 export function foodTagEvidence(foodId: string, nutrientId: string): Provenance[] {
@@ -152,11 +162,16 @@ export function foodTagEvidence(foodId: string, nutrientId: string): Provenance[
     author: "U.S. Department of Agriculture, Agricultural Research Service",
     pageOrSection: `FDC ${e.fdcId}: ${evidenceSummary(e, nutrientId)} Snapshot ${FOOD_TAG_SNAPSHOT}.`,
     sourceURL: `https://fdc.nal.usda.gov/food-details/${e.fdcId}/nutrients`,
-    reviewedDate: FOOD_TAG_REVIEW_DATE,
-    reviewedBy: e.rule
-      ? "Project owner (food tag review, MoodMeal rule for a nutrient with no Daily Value)"
-      : "Project owner (food tag review, 10% Daily Value bar)",
-    reviewOrigin: "owner-approved",
+    // Omega-3 (owner decision 2026-11-06, OMEGA3-001): the rule and the chia reference were reviewed by the
+    // owner, but these regenerated results are an AI-assisted calculation until the owner approves them in a
+    // separate, dated decision. Committing this code must not change the attribution.
+    reviewedDate: e.rule === "omega-3-grams" ? OMEGA3_RULE_DATE : FOOD_TAG_REVIEW_DATE,
+    reviewedBy: e.rule === "omega-3-grams"
+      ? "AI-assisted calculation (Claude Code) under the owner-reviewed omega-3 rule and chia reference; the regenerated results are not yet owner-approved"
+      : e.rule
+        ? "Project owner (food tag review, MoodMeal rule for a nutrient with no Daily Value)"
+        : "Project owner (food tag review, 10% Daily Value bar)",
+    reviewOrigin: e.rule === "omega-3-grams" ? "ai-assisted" as const : "owner-approved" as const,
     evidenceStatus: "source-supported",
     claimType: "food-nutrient",
     reviewStatus: "published",

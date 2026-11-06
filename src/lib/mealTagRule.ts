@@ -6,6 +6,13 @@
  * with an approved gram weight count (a lower bound). Grams come from an approved USDA
  * conversion, else from an owner-approved tag-check weight (batch 6, src/data/tagCheckWeights.ts). Unweighed amounts are never assumed, so
  * a low lower bound is "not-shown", never "below". MoodMeal's own rule, not an FDA meal claim.
+ *
+ * Omega-3 (omega-3 rule review, option B, owner decisions 2026-11-06): two paths at MoodMeal's 0.16 g
+ * criterion, calculated separately so ALA is never counted twice: ALA alone, or the complete
+ * ALA + EPA + DPA + DHA sum. If any weighed line's food lacks a complete combined value, the
+ * combined total is unknown (never zero-filled). The combined path is used when it meets.
+ * A path's amount is null (unknown) when no tagged line is weighed or a weighed line's food lacks
+ * it; a reported zero stays zero. The 0.16 g criterion is applied to unrounded amounts.
  */
 import { FOOD_TAG_REVIEWS } from "../data/foodTagReviews";
 import { approvedIngredientInput } from "../data/usdaApprovals";
@@ -43,23 +50,45 @@ export interface MealTagCheck {
   nutrientId: string;
   status: MealTagStatus;
   basis: "recipe-estimate" | "weighed-ingredients";
-  /** Per serving: %DV, or grams for omega-3 and water. Rounded to 0.1. */
-  perServing: number;
+  /**
+   * Per serving: %DV, or grams for omega-3 and water. Rounded to 0.1. Null only for omega-3 when neither
+   * path amount is known (e.g. nothing weighed); other nutrients keep the batch 5 sum, pending the meal-tag work.
+   */
+  perServing: number | null;
   unit: "percent-dv" | "g";
   contributors: MealTagContributor[];
+  /** Omega-3 only: both paths per serving (rounded to 0.01 g for display; null = unknown) and the path the tag meets on. */
+  omega3?: { path: "combined" | "ala" | null; alaPerServing: number | null; combinedPerServing: number | null };
 }
 
-/** Tag measure per gram of a food, from its lowest owner-approved evidence record. */
-function perGram(foodId: string, nutrientId: string) {
+function publishedReview(foodId: string, nutrientId: string) {
   const review = FOOD_TAG_REVIEWS.find(
     (r) => r.foodId === foodId && r.nutrientId === nutrientId && r.decision === "published",
   );
   if (!review) throw new Error(`no published review for ${foodId}:${nutrientId}`);
-  const values = review.evidence.map((e) =>
-    nutrientId === "water" ? e.waterPercent! / 100
-      : nutrientId === "omega-3" ? e.omega3Grams! / e.raccGrams!
-        : e.percentDV! / e.raccGrams!);
+  return review;
+}
+/** Tag measure per gram of a food, from its lowest owner-approved evidence record (not omega-3). */
+function perGram(foodId: string, nutrientId: string) {
+  const values = publishedReview(foodId, nutrientId).evidence.map((e) =>
+    nutrientId === "water" ? e.waterPercent! / 100 : e.percentDV! / e.raccGrams!);
   return Math.min(...values);
+}
+/**
+ * Omega-3 per gram on each path, from the lowest evidence record's unrounded per-100 g amount.
+ * A path is null (unknown) unless every evidence record reports it.
+ */
+function omega3PerGram(foodId: string) {
+  const evidence = publishedReview(foodId, "omega-3").evidence;
+  const perGramOf = (v: number | null | undefined) => (v === null || v === undefined ? null : v / 100);
+  const lowest = (xs: (number | null)[]) => (xs.every((x) => x !== null) ? Math.min(...(xs as number[])) : null);
+  return { ala: lowest(evidence.map((e) => perGramOf(e.alaPer100g))), combined: lowest(evidence.map((e) => perGramOf(e.omega3Per100g))) };
+}
+/** The omega-3 path a meal meets on, from unrounded per-serving amounts: combined first, then ALA. Unknown never meets. */
+export function omega3MealPath(ala: number | null, combined: number | null, bar = MEAL_BAR_OMEGA3_GRAMS) {
+  if (combined !== null && combined + TOLERANCE >= bar) return "combined" as const;
+  if (ala !== null && ala + TOLERANCE >= bar) return "ala" as const;
+  return null;
 }
 
 export function checkMealTags(recipe: Recipe): MealTagCheck[] {
@@ -92,6 +121,27 @@ export function checkMealTags(recipe: Recipe): MealTagCheck[] {
         mealId: recipe.mealId, recipeId: recipe.id, nutrientId, basis: "recipe-estimate" as const, unit,
         status: perServing + TOLERANCE >= bar ? "meets" as const : "below" as const,
         perServing: Math.round(perServing * 10) / 10, contributors,
+      };
+    }
+    if (nutrientId === "omega-3") {
+      const weighed = contributors.filter((c) => c.grams !== null);
+      // Unknown (null) when nothing is weighed or a weighed line's food lacks the path; never an empty sum of 0.
+      const sum = (pick: (g: { ala: number | null; combined: number | null }) => number | null) => {
+        if (!weighed.length) return null;
+        const parts = weighed.map((c) => { const g = pick(omega3PerGram(c.foodId)); return g === null ? null : (c.grams! / recipe.servings) * g; });
+        return parts.every((x) => x !== null) ? (parts as number[]).reduce((a, b) => a + b, 0) : null;
+      };
+      const ala = sum((g) => g.ala);
+      const combined = sum((g) => g.combined);
+      const path = omega3MealPath(ala, combined, bar);
+      const display = (x: number | null) => (x === null ? null : Math.round(x * 100) / 100);
+      // Owner decision 2026-11-06 (OMEGA3-002): with no known path amount, perServing is null too; a known zero stays 0.
+      const shown = path === "ala" ? ala : path === "combined" ? combined : combined ?? ala;
+      return {
+        mealId: recipe.mealId, recipeId: recipe.id, nutrientId, basis: "weighed-ingredients" as const, unit,
+        status: path ? "meets" as const : "not-shown" as const,
+        perServing: shown === null ? null : Math.round(shown * 10) / 10, contributors,
+        omega3: { path, alaPerServing: display(ala), combinedPerServing: display(combined) },
       };
     }
     const lowerBound = contributors.reduce(

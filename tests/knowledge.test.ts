@@ -37,7 +37,7 @@ import { FOOD_TAG_REVIEWS } from "../src/data/foodTagReviews";
 import { TERMS } from "../src/data/glossary";
 import { LESSONS } from "../src/data/education";
 import { MEAL_TAG_REVIEWS } from "../src/data/mealTagReviews";
-import { checkMealTags } from "../src/lib/mealTagRule";
+import { checkMealTags, omega3MealPath } from "../src/lib/mealTagRule";
 import { TAG_CHECK_WEIGHTS } from "../src/data/tagCheckWeights";
 import { readableQuantity, US_VOLUME_IN_TSP } from "../src/lib/units";
 import { validateBarcode, mapProduct, isCalculable, lookupProduct, createLookupLimiter, OFF_NUTRIENT_MAP, OFF_APP_ID, previewValues, describeConflict, per100gNutrients } from "../src/lib/openFoodFacts";
@@ -300,7 +300,9 @@ test("owner-reviewed food tags (stage D batches 1-4) match FOOD_FACTS and carry 
     } else {
       const usda = fact!.sourceProvenance.filter((s) => s.sourceURL?.startsWith("https://fdc.nal.usda.gov/"));
       assert.deepEqual(usda.map((s) => s.sourceURL), r.evidence.map((e) => `https://fdc.nal.usda.gov/food-details/${e.fdcId}/nutrients`));
-      assert(usda.every((s) => s.reviewOrigin === "owner-approved" && s.reviewStatus === "published"), key(r));
+      // Omega-3 evidence regenerated on 2026-11-06 is an AI-assisted calculation until the owner approves it (OMEGA3-001).
+      const origin = r.nutrientId === "omega-3" ? "ai-assisted" : "owner-approved";
+      assert(usda.every((s) => s.reviewOrigin === origin && s.reviewStatus === "published"), key(r));
       assert(verifiedNutrients(food).includes(r.nutrientId), key(r));
     }
   }
@@ -342,7 +344,8 @@ test("owner-reviewed food tags (stage D batches 1-4) match FOOD_FACTS and carry 
   for (const r of batch4) {
     assert(r.evidence.every((e) => e.percentDV === null), key(r));
     if (r.nutrientId === "water") assert(r.evidence.every((e) => e.rule === "water-percent" && e.waterPercent! >= 90), key(r));
-    else assert(r.evidence.every((e) => e.rule === "omega-3-grams" && e.omega3Grams! >= 0.16), key(r));
+    else assert(r.evidence.every((e) => e.rule === "omega-3-grams" && (e.omega3Path === "combined"
+      ? e.omega3Grams !== null && e.omega3Grams! >= 0.16 : e.alaGrams !== null && e.alaGrams! >= 0.16)), key(r));
   }
   const tea = FOODS.find((f) => f.id === "green-tea")!.nutrientFacts.find((f) => f.nutrientId === "water")!;
   assert(tea.sourceProvenance.some((s) => s.reviewOrigin === "owner-approved" && /99\.93% water by weight/.test(s.pageOrSection ?? "")));
@@ -356,6 +359,101 @@ test("owner-reviewed food tags (stage D batches 1-4) match FOOD_FACTS and carry 
   const salmon = FOODS.find((f) => f.id === "wild-salmon")!;
   const protein = salmon.nutrientFacts.find((f) => f.nutrientId === "protein")!;
   assert(protein.sourceProvenance.some((s) => s.reviewOrigin === "owner-approved" && /not corrected for protein quality/i.test(s.pageOrSection ?? "")));
+});
+test("omega-3 uses two explicit paths and never zero-fills a missing component (rule review, option B)", () => {
+  const key = (r: { foodId: string; nutrientId: string }) => `${r.foodId}:${r.nutrientId}`;
+  const omega = Object.fromEntries(FOOD_TAG_REVIEWS.filter((r) => r.nutrientId === "omega-3").map((r) => [r.foodId, r]));
+  assert.deepEqual(Object.keys(omega).sort(), ["chia-pudding", "walnuts", "wild-salmon"]);
+  for (const r of Object.values(omega)) {
+    const paths = new Set(r.evidence.map((e) => e.omega3Path));
+    assert.equal(paths.size, 1, key(r));
+    for (const e of r.evidence) {
+      // A combined total exists only when ALA, EPA, DPA and DHA are all reported; it is never ALA alone.
+      if (e.omega3Grams !== null) assert(e.omega3Grams! >= e.alaGrams!, e.fdcId);
+    }
+  }
+  // Chia: FDC 170554 only (owner's reference record); ALA path; combined total unknown.
+  const chia = omega["chia-pudding"];
+  assert.deepEqual(chia.evidence.map((e) => e.fdcId), ["170554"]);
+  assert.equal(chia.evidence[0].omega3Path, "ala");
+  assert.equal(chia.evidence[0].alaGrams, 5.35);
+  assert.equal(chia.evidence[0].omega3Grams, null);
+  // Salmon: cooked sockeye 173692 is recipe-calculated (RA) and excluded; the rest meet the combined path.
+  const salmon = omega["wild-salmon"];
+  assert.deepEqual(salmon.evidence.map((e) => e.fdcId), ["173686", "175136", "173691"]);
+  assert(salmon.evidence.every((e) => e.omega3Path === "combined" && e.omega3Grams! >= 0.16));
+  assert(salmon.evidence.some((e) => e.alaGrams! < 0.16), "salmon would not meet an ALA-only rule");
+  assert.deepEqual(salmon.evidence.filter((e) => e.noCodeRows!.length).map((e) => e.fdcId), ["173686", "175136"]);
+  assert(/173692/.test(salmon.note));
+  // Walnuts: measured zeros make the combined total complete.
+  assert.deepEqual(omega.walnuts.evidence[0].omega3Zeros, ["EPA", "DPA", "DHA"]);
+  // Wording: each path names what was counted and calls 0.16 g MoodMeal's criterion.
+  const line = (foodId: string) => FOODS.find((f) => f.id === foodId)!.nutrientFacts.find((f) => f.nutrientId === "omega-3")!
+    .sourceProvenance.filter((s) => s.sourceURL?.startsWith("https://fdc.nal.usda.gov/")).map((s) => s.pageOrSection ?? "").join(" ");
+  assert(/5\.35 g of ALA/.test(line("chia-pudding")) && /doesn't report EPA, DPA or DHA/.test(line("chia-pudding")));
+  assert(!/combined\)/.test(line("chia-pudding")));
+  assert(/ALA, EPA, DPA and DHA combined/.test(line("wild-salmon")) && /not a recommended intake/.test(line("wild-salmon")));
+  for (const f of ["chia-pudding", "walnuts", "wild-salmon"]) assert(/MoodMeal's own criterion/.test(line(f)), f);
+  // Meal tags: MT-063 reports 1.87 g of ALA from chia with the combined total unknown.
+  const meal = (mealId: string) => MEAL_TAG_REVIEWS.find((r) => r.mealId === mealId && r.nutrientId === "omega-3")!;
+  assert.deepEqual(meal("tropical-energy-smoothie").omega3, { path: "ala", alaPerServing: 1.87, combinedPerServing: null });
+  assert.equal(meal("tropical-energy-smoothie").status, "meets");
+  assert.equal(meal("salmon-quinoa-bowl").omega3!.path, "combined");
+  assert.equal(meal("warm-oatmeal-berries").omega3!.path, "combined");
+  assert.equal(meal("dark-chocolate-trail-mix").status, "not-shown");
+  // MT-107: nothing weighed, so both path amounts and perServing are unknown (null), not 0 (OMEGA3-002).
+  assert.deepEqual(meal("dark-chocolate-trail-mix").omega3, { path: null, alaPerServing: null, combinedPerServing: null });
+  assert.equal(meal("dark-chocolate-trail-mix").perServing, null);
+  // Any omega-3 meal: perServing is null exactly when neither path amount is known; otherwise a number (a known 0 stays 0).
+  for (const r of MEAL_TAG_REVIEWS.filter((x) => x.nutrientId === "omega-3")) {
+    const known = r.omega3!.alaPerServing !== null || r.omega3!.combinedPerServing !== null;
+    assert.equal(r.perServing === null, !known, r.mealId);
+    if (r.perServing === null) assert.equal(r.status, "not-shown", r.mealId);
+  }
+  // Other nutrients keep the batch 5 numeric perServing (unweighed tags are handled in the separate meal-tag work).
+  assert(MEAL_TAG_REVIEWS.filter((x) => x.nutrientId !== "omega-3").every((x) => typeof x.perServing === "number"));
+  // Provenance: the regenerated omega-3 evidence is AI-assisted, never credited to the owner (OMEGA3-001).
+  for (const f of ["chia-pudding", "walnuts", "wild-salmon"]) {
+    const usda = FOODS.find((x) => x.id === f)!.nutrientFacts.find((x) => x.nutrientId === "omega-3")!
+      .sourceProvenance.filter((s) => s.sourceURL?.startsWith("https://fdc.nal.usda.gov/"));
+    assert(usda.length > 0, f);
+    for (const s of usda) {
+      assert.equal(s.reviewOrigin, "ai-assisted", f);
+      assert(/AI-assisted calculation/.test(s.reviewedBy ?? "") && /not yet owner-approved/.test(s.reviewedBy ?? ""), f);
+      assert(!/^Project owner/.test(s.reviewedBy ?? ""), f);
+      assert.equal(s.reviewStatus, "published", f);
+    }
+  }
+  assert.deepEqual(meal("dark-chocolate-trail-mix").contributors.map((c) => c.grams), [null]);
+});
+test("omega-3 thresholds use unrounded amounts; unknown stays null and measured zero stays zero", () => {
+  // Meal path: 0.159 g fails although it rounds to 0.16 g; unknown never meets.
+  assert.equal(omega3MealPath(0.159, null), null);
+  assert.equal(omega3MealPath(null, 0.159), null);
+  assert.equal(omega3MealPath(0.159, 0.159), null);
+  assert.equal(omega3MealPath(0.16, null), "ala");
+  assert.equal(omega3MealPath(null, 0.16), "combined");
+  assert.equal(omega3MealPath(0.2, 0.159), "ala");
+  assert.equal(omega3MealPath(0.159, 0.2), "combined");
+  assert.equal(omega3MealPath(null, null), null);
+  assert.equal(omega3MealPath(0, 0), null);
+  // Food tags: each record's path is decided on the unrounded amount; the stored grams are that amount rounded for display.
+  for (const r of FOOD_TAG_REVIEWS.filter((x) => x.nutrientId === "omega-3")) for (const e of r.evidence) {
+    const ala = e.alaPer100g === null || e.alaPer100g === undefined ? null : (e.alaPer100g * e.raccGrams!) / 100;
+    const combined = e.omega3Per100g === null || e.omega3Per100g === undefined ? null : (e.omega3Per100g * e.raccGrams!) / 100;
+    assert.equal(e.alaGrams, ala === null ? null : Math.round(ala * 100) / 100, e.fdcId);
+    assert.equal(e.omega3Grams, combined === null ? null : Math.round(combined * 100) / 100, e.fdcId);
+    const decisive = e.omega3Path === "combined" ? combined : ala;
+    assert(decisive !== null && decisive >= 0.16, `${e.fdcId} meets its path on the unrounded amount`);
+  }
+  // Walnuts: EPA, DPA and DHA are reported as 0, so the combined total equals ALA (measured zero, not unknown).
+  const walnut = FOOD_TAG_REVIEWS.find((x) => x.foodId === "walnuts" && x.nutrientId === "omega-3")!.evidence[0];
+  assert.equal(walnut.omega3Per100g, walnut.alaPer100g);
+  assert.deepEqual(walnut.omega3Zeros, ["EPA", "DPA", "DHA"]);
+  // Chia: the combined total is unknown, not 0.
+  const chia = FOOD_TAG_REVIEWS.find((x) => x.foodId === "chia-pudding" && x.nutrientId === "omega-3")!.evidence[0];
+  assert.equal(chia.omega3Per100g, null);
+  assert.equal(chia.omega3Grams, null);
 });
 test("meal tags follow the stage D batch 5 per-serving rule and its recorded statuses", () => {
   // The recorded file must match the rule applied to today's recipes; regenerate and review on drift.

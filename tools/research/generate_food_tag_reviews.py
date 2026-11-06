@@ -14,6 +14,7 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / 'tools/research'))
 from moodmeal_research import tag_evidence as te  # noqa: E402
 from moodmeal_research.adapters.usda_csv import UsdaCsvAdapter  # noqa: E402
+from moodmeal_research import omega3 as o3  # noqa: E402
 
 WITHDRAW = [('walnuts', 'protein'), ('walnuts', 'fiber'), ('sweet-potato', 'fiber'), ('spinach', 'fiber'),
             ('brown-rice', 'fiber'), ('watermelon', 'fiber'), ('cucumber', 'fiber'), ('pumpkin-seeds', 'fiber'),
@@ -64,9 +65,17 @@ EXTRA_3 = {'dark-chocolate': [('170271', 'as-sold'), ('170272', 'as-sold')], 'st
 WATER_RULE_PERCENT = 90.0  # FDC 1051, g water per 100 g of the record
 WATER_4 = {'chamomile-tea': ['174156'], 'green-tea': ['171917'], 'cucumber': ['168409'],
            'coconut-water': ['174831'], 'watermelon': ['167765']}
-OMEGA3_RULE_GRAMS = 0.16  # 10% of the 1.6 g/day ALA Adequate Intake (National Academies, men)
+OMEGA3_RULE_GRAMS = o3.RULE_GRAMS  # MoodMeal's criterion: 10% of the 1.6 g/day ALA Adequate Intake (National Academies, men)
 OMEGA3_4 = ['wild-salmon', 'walnuts', 'chia-pudding']  # records from the stage C map
 EPA, DPA, DHA = '1278', '1280', '1272'
+# Omega-3 rule review, option B (owner decisions 2026-11-06, docs/research/OMEGA3-RULE-REVIEW.md):
+# - two paths at 0.16 g, calculated separately: ALA alone, or the complete ALA + EPA + DPA + DHA sum;
+# - a missing component leaves the combined total unknown (never zero);
+# - K1 evidence rule for every component row: derivation code first (A, AI, AR qualify; any other code does not);
+#   no code qualifies only with data points > 0, and is flagged;
+# - chia uses FDC 170554 only for omega-3.
+OMEGA3_RULE_DATE = '2026-11-06'
+OMEGA3_RECORDS = {'chia-pudding': {'170554'}}
 
 fm = te.load(te.FOOD_MAP)
 foods = {f['foodId']: f for f in fm['foods']}
@@ -75,8 +84,9 @@ fm3 = copy.deepcopy(fm)
 for f in fm3['foods']:
     f['records'] = f['records'] + [{'fdcId': i, 'form': form, 'basis': 'batch-3-check'}
                                    for i, form in EXTRA_3.get(f['foodId'], [])]
-records = {k: v['record'] for k, v in UsdaCsvAdapter(csv).load(
-    sorted(set(te.required_fdc_ids(fm3)) | {i for ids in WATER_4.values() for i in ids})).items()}
+loaded = UsdaCsvAdapter(csv).load(sorted(set(te.required_fdc_ids(fm3)) | {i for ids in WATER_4.values() for i in ids}))
+records = {k: v['record'] for k, v in loaded.items()}
+raw_rows = {k: {nid: n['sourceRow'] for nid, n in v['compare']['nutrients'].items()} for k, v in loaded.items()}
 tags = {}
 for f, n in WITHDRAW + KEEP + ADD + ADD_2 + list(HOLD_2):
     tags.setdefault(f, []).append(n)
@@ -151,24 +161,57 @@ for f, ids in WATER_4.items():
                    'percentDV': None, 'rule': 'water-percent', 'waterPercent': w})
     entry(4, f, 'water', 'published', 'confirmed', 'Batch 4, decision 1: at least 90% water by weight '
           '(MoodMeal rule; water has no FDA Daily Value).', ev)
+with (csv / 'food_nutrient_derivation.csv').open(encoding='utf-8-sig', newline='') as fh:
+    DERIVATION = {r['id']: r['code'] for r in __import__('csv').DictReader(fh)}
+
+
+def why(name, c):
+    code = c.get('derivationCode')
+    return name + ' ' + c['evidence'] + (' (' + code + ')' if code else '')
+
+
 for f in OMEGA3_4:
-    ev = []
+    ev, excluded, exact = [], [], []
     for rec_entry in foods[f]['records']:
         i = rec_entry['fdcId']
+        if f in OMEGA3_RECORDS and i not in OMEGA3_RECORDS[f]:
+            continue
         rec = records[i]
         grams, _ = te.racc_grams(foods[f], rec_entry, rec)
         assert grams, (f, i)
-        ala_id = '1404' if amount(rec, '1404') is not None else '1270'
-        parts = [amount(rec, ala_id)] + [amount(rec, n) for n in (EPA, DPA, DHA)]
-        assert parts[0] is not None, (f, i)
-        total = round(sum(x or 0 for x in parts) * grams / 100, 2)
-        epa_dha = None if amount(rec, EPA) is None or amount(rec, DHA) is None else             round((amount(rec, EPA) + amount(rec, DHA)) * grams / 100, 2)
-        assert total >= OMEGA3_RULE_GRAMS, (f, i, total)
+        ala_id, parts = o3.components(raw_rows[i], DERIVATION)
+        # Unrounded amounts decide; the two paths are calculated separately, so ALA is never counted twice.
+        ala100, combined100 = o3.per_100g(parts)
+        if ala100 is None and combined100 is None:
+            excluded.append(i + ' (' + ', '.join(why(k, c) for k, c in parts.items() if not o3.usable(c)) + ')')
+            continue
+        ala = None if ala100 is None else ala100 * grams / 100
+        combined = None if combined100 is None else combined100 * grams / 100
+        exact.append({'ala': ala, 'combined': combined})
+        epa_dha = (o3.display((parts['EPA']['amountPer100g'] + parts['DHA']['amountPer100g']) * grams / 100)
+                   if o3.usable(parts['EPA']) and o3.usable(parts['DHA']) else None)
         ev.append({'fdcId': i, 'description': rec['description'], 'raccGrams': grams,
                    'raccCategory': foods[f]['racc']['category'], 'percentDV': None, 'rule': 'omega-3-grams',
-                   'omega3Grams': total, 'epaDhaGrams': epa_dha, 'alaNutrientId': ala_id})
-    entry(4, f, 'omega-3', 'published', 'confirmed', 'Batch 4, decision 2: at least 0.16 g of ALA, EPA, DPA and DHA '
-          'per reference amount (MoodMeal rule: 10% of the 1.6 g ALA Adequate Intake; no FDA Daily Value).', ev)
+                   'alaGrams': o3.display(ala), 'omega3Grams': o3.display(combined),
+                   'alaPer100g': ala100, 'omega3Per100g': combined100,
+                   'epaDhaGrams': epa_dha, 'alaNutrientId': ala_id,
+                   'omega3Zeros': [k for k in ('EPA', 'DPA', 'DHA') if o3.usable(parts[k]) and parts[k]['amountPer100g'] == 0],
+                   'noCodeRows': [k for k, c in parts.items() if c['evidence'] == 'no code, data points']})
+    assert ev, f
+    # The tag meets on a path when every eligible record meets it (combined first), judged on unrounded values.
+    path = o3.tag_path(exact)
+    assert path, (f, 'meets neither omega-3 path on unrounded values')
+    for e in ev:
+        e['omega3Path'] = path
+    note = (f"Batch 4, decision 2, revised {OMEGA3_RULE_DATE} by the omega-3 rule review (option B): meets the "
+            + ('combined path (ALA + EPA + DPA + DHA, every component reported)' if path == 'combined' else 'ALA path (ALA alone; EPA, DPA and DHA not reported, so the combined total is unknown)')
+            + " at MoodMeal's 0.16 g criterion, judged on unrounded amounts. These regenerated values are an AI-assisted"
+            " calculation (Claude Code) under the owner-reviewed rule; approving them is a separate owner decision, not yet made.")
+    if f in OMEGA3_RECORDS:
+        note += f" Uses FDC {', '.join(sorted(OMEGA3_RECORDS[f]))} only, the owner's reference record for omega-3."
+    if excluded:
+        note += ' Excluded under the evidence rule: ' + '; '.join(excluded) + '.'
+    entry(4, f, 'omega-3', 'published', 'confirmed', note, ev)
 
 body = json.dumps(entries, indent=2, ensure_ascii=False)
 ts = f'''import type {{ ReviewStatus }} from "../types/library";
@@ -178,7 +221,7 @@ ts = f'''import type {{ ReviewStatus }} from "../types/library";
  * Bar: at least 10% of the FDA Daily Value per reference amount customarily consumed
  * (21 CFR 101.9, 101.12(b), 101.54(c)(1)); amounts from the USDA FoodData Central
  * CSV snapshot of 2026-04-30. Water (at least 90% by weight) and omega-3 (at least 0.16 g per reference
- * amount) use MoodMeal's own batch 4 rules, because FDA sets no Daily Value for them. Generated by tools/research/generate_food_tag_reviews.py; do not edit by hand.
+ * amount, on the ALA path or the complete combined path; revised 2026-11-06) use MoodMeal's own rules, because FDA sets no Daily Value for them. Generated by tools/research/generate_food_tag_reviews.py; do not edit by hand.
  * Withdrawn and held tags stay here as needs-review and are absent from FOOD_FACTS. "held" means the
  * evidence looked supportive but the owner chose not to publish the tag; the note says why.
  */
@@ -192,10 +235,21 @@ export interface FoodTagEvidence {{
   percentDV: number | null;
   rule?: "water-percent" | "omega-3-grams";
   waterPercent?: number;
-  /** ALA + EPA + DPA + DHA per reference amount; ALA from FDC 1404, or 1270 where 1404 is absent. */
-  omega3Grams?: number;
+  /** Omega-3 rule review, option B (2026-11-06). ALA alone per reference amount; ALA from FDC 1404, or 1270 where 1404 is absent. */
+  alaGrams?: number | null;
+  /** ALA + EPA + DPA + DHA per reference amount; null when any component is unreported or not eligible (never zero-filled). */
+  omega3Grams?: number | null;
+  /** Unrounded per-100 g amounts on each path, used for every threshold check; the per-reference-amount values above are rounded for display. */
+  alaPer100g?: number | null;
+  omega3Per100g?: number | null;
   epaDhaGrams?: number | null;
   alaNutrientId?: "1404" | "1270";
+  /** The path the tag meets on: the complete combined sum, or ALA alone. */
+  omega3Path?: "combined" | "ala";
+  /** EPA, DPA or DHA reported as zero. */
+  omega3Zeros?: string[];
+  /** Components whose rows have no USDA derivation code and count on their data points (flagged evidence). */
+  noCodeRows?: string[];
 }}
 export interface FoodTagReview {{
   foodId: string;
@@ -208,6 +262,7 @@ export interface FoodTagReview {{
 }}
 export const FOOD_TAG_REVIEW_DATE = "2026-11-04";
 export const FOOD_TAG_SNAPSHOT = "FoodData_Central_csv_2026-04-30";
+export const OMEGA3_RULE_DATE = "{OMEGA3_RULE_DATE}";
 export const FOOD_TAG_REVIEWS: FoodTagReview[] = {body};
 '''
 (REPO / 'src/data/foodTagReviews.ts').write_text(ts, encoding='utf-8')
