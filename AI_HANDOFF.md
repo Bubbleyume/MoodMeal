@@ -1,5 +1,83 @@
 # MoodMeal AI Handoff
 
+## Meal-tag evidence review and the omega-3 correction (Claude Code, 2026-11-05/06)
+
+Started at `3952db8`, equal to origin. **Two commits, both pushed to origin on 2026-11-07 (owner-authorized):** the omega-3 correction, `430dee0`, and the research test runner, `0a80674`. `origin/knowledge-system-foundation` moved from `3952db8` to `0a80674` as a fast-forward. `git ls-remote` confirmed the remote branch at `0a80674c60150519590f89ec151af15c27e224d1`, equal to local HEAD.
+- **Push note:** the system Git config (`C:/Program Files/Git/etc/gitconfig`) sets `http.sslBackend=openssl`, and OpenSSL failed to verify GitHub's certificate ("unable to get local issuer certificate"). The fetch and push used `git -c http.sslBackend=schannel …`, the Windows certificate store, which still verifies certificates. That applied to those commands only, and no Git setting was changed. Plain `git fetch` and `git push` will fail the same way until the OpenSSL certificate store is fixed. The meal-tag research packets and scripts are untracked, and no meal-tag result is approved. **Every result approval is blank.**
+
+- **Packets** (untracked, in `docs/research/`):
+  - `MEAL-TAG-EVIDENCE.md`: revision 4, with its audit table and appendix regenerated on 2026-11-06 for the two-path omega-3 rule;
+  - `MEAL-TAG-RETENTION.md`, revision 2: USDA Release 6 retention factors;
+  - `MEAL-TAG-COOKED-RECORDS.md`, revision 2: the nine results without a factor;
+  - `MEAL-TAG-APPROVAL-SHEET.md` and `.csv`: the third issue, with 77 rows, each with a fresh SHA-256 evidence fingerprint, and decisions blank;
+  - `OMEGA3-RULE-REVIEW.md`: revision 4, committed in `430dee0`.
+- **Scripts:** in `tools/research/meal-tag-evidence/` (untracked, read-only), with a PowerShell README.
+- **Review bundles:** in `..\review-bundles\` (outside Git), with retained USDA files and SHA256SUMS. The owner verified issue 2.
+- **Proposed rule (not applied):** line-matched records, with the weight state settled first. 77 would meet and 31 be unresolved, against 78 and 30 recorded; MT-092 drops to 9.40%.
+- **Labels:** P partly weighed, H identity held, W "4 oz" read as raw, C cooking-dependent, C\* met without the cooked lines. Exact retention estimates are kept apart from scenario (proxy) estimates, and a missing factor or value never defaults to 100% or 0.
+- **Owner decisions** (method only, 2026-11-05/06):
+  - K1: the derivation code takes precedence; no-code rows with data points stay as flagged scenario evidence.
+  - K2: the dry-matter, fat-free and related-cut yield estimates stay separate.
+  - K3: the proxies stay open.
+  - K4: all nine cooked-record results stay pending.
+  - K5: MT-063 reports 1.87 g of ALA from chia, with the four-component total unknown, reviewed separately as a runtime correction.
+  - The 12 W results stay conditional until the owner decides what "4 oz" means.
+- **Omega-3 correction (option B, owner decisions 2026-11-06): committed as `430dee0` on `knowledge-system-foundation`, pushed 2026-11-07.**
+  - The owner authorized a local commit after coordinator session `MM-62945d67-c713-4135-9b63-5e66ce3953fe` passed. `usablePass` was confirmed again after staging.
+  - The commit contains exactly nine files:
+    - `src/lib/mealTagRule.ts`, `src/lib/catalog.ts`, and the regenerated `src/data/foodTagReviews.ts` and `src/data/mealTagReviews.ts`;
+    - `tests/knowledge.test.ts` and `tools/research/generate_food_tag_reviews.py`;
+    - the new `tools/research/moodmeal_research/omega3.py`, `tools/research/tests/test_omega3.py` and `docs/research/OMEGA3-RULE-REVIEW.md`.
+  - `.gitignore`, `package.json` and this file were kept out of it.
+  - Two paths at MoodMeal's 0.16 g criterion, calculated separately: ALA alone, or the complete ALA + EPA + DPA + DHA sum. A missing component is never zero.
+  - K1 now applies to the omega-3 food-tag rows: cooked sockeye 173692 (RA) is excluded, and the Atlantic and coho no-code rows are flagged.
+  - Chia uses FDC 170554 only, on the ALA path; MT-063 is 1.87 g of ALA with the combined total unknown.
+  - No status changes. Details are in `docs/research/OMEGA3-RULE-REVIEW.md`, revision 4.
+  - Revision 3 fixes the owner's two findings:
+    - unknown meal-path amounts are null (MT-107: both null), and a measured zero stays zero;
+    - the 0.16 g criterion is applied to unrounded amounts, using the new pure module `tools/research/moodmeal_research/omega3.py`. Unrounded `alaPer100g` and `omega3Per100g` are stored, and only the display values are rounded.
+  - Tests: knowledge 55 and research 59 (with the new `tests/test_omega3.py`) pass, along with typecheck, avatars, build and the browser suite.
+  - Submitted to the review coordinator with its allowlist set to this change's six text files. The glossary scope is saved as `config.glossary-scope.json`, and the Python files went in as context only. Session `MM-25b268bf-…` ended needs owner.
+  - Revision 4 applies the owner's decisions (2026-11-06):
+    - OMEGA3-001: the regenerated omega-3 evidence is credited as an AI-assisted calculation under the owner-reviewed rule and chia reference. Approving the results is a separate, dated owner decision, and a commit must not change the attribution; a test enforces this.
+    - OMEGA3-002: MT-107 `perServing`, `alaPerServing` and `combinedPerServing` are null, and the same applies to any omega-3 meal with no known path amount. `perServing` is now `number | null`. The other unweighed tags are left to the meal-tag work.
+  - Python context hashes are recorded in `..\ai-review\moodmeal-ai-review\python-context-omega3-r4.json`.
+  - The regenerated omega-3 evidence stays credited as an AI-assisted calculation after the commit.
+- **Research refreshed for `430dee0` (2026-11-06, untracked).** The meal-tag research scripts now use the two-path omega-3 rule:
+  - ALA and the complete four-component total are calculated separately, with unknown amounts kept `null` and the 0.16 g criterion applied before rounding;
+  - the K1 rule applies to each component row, and chia uses FDC 170554 for omega-3;
+  - the new shared helper is `omega3.mjs`, and `csv-values.mjs` now records data points and derivation codes;
+  - `extract.mjs`, `recalc.mjs`, `retention.mjs`, `appendix.mjs` and `approval-sheet.mjs` are updated.
+
+  The approval sheet (third issue) and the evidence packet's appendix were regenerated from one run. They agree on all 108 entries: **77 meet the rule and 31 are unresolved**, and every approval is blank. All 108 fingerprints are new.
+  - MT-063: 1.87 g of ALA per serving, combined total unknown. It is no longer H, because chia is matched to 170554.
+  - MT-107: both path amounts unknown, still needing an approved walnut weight.
+  - MT-003 and MT-012 are unchanged on the combined path.
+  - Among the 77, the labels are none 30, P 10, H 23, W 12, C 30 and C\* 3.
+- **Python test-runner follow-up: complete.** Committed as `0a80674` (owner-authorized 2026-11-06), pushed 2026-11-07.
+  - `0a80674` adds exactly two files, unchanged: `tools/research/run_tests.py` (an 11-line standard-library runner) and the empty `tools/research/tests/__init__.py`. Only those two paths were staged.
+  - The committed `test_omega3.py` (in `430dee0`) now runs from the committed tree. **All 11 omega-3 tests passed from a clean export** of `0a80674`: `python -I -B tools/research/run_tests.py` exits 0. `python -I -B -m unittest discover -s tools/research/tests -t tools/research` also works.
+  - In a working tree with the local research tooling, the runner still runs the full research suite.
+  - **The coordinator review was skipped** because the coordinator doesn't accept `.py` files.
+- **Open:**
+  - the retention code choices (R3), using the blank decision sheet `docs/research/MEAL-TAG-R3-CODES.md` (untracked, 2026-11-07, generated by `r3-sheet.mjs`):
+    - it covers 15 weighed cooked lines: 7 exact categories, 1 method-unstated scenario set, 5 proxies (quinoa, toast sweet potato, chard, pancake banana, pancake eggs) and 2 possibly-reheated brown-rice lines;
+    - no result's status depends on which listed code is chosen;
+    - every decision is blank, and the recommendations are AI-assisted;
+    - **review bundle sent to the owner on 2026-11-07:** `..\review-bundles\moodmeal-r3-decision-sheet-2026-11-07.zip` (outside Git, 16 entries). It holds:
+      - the sheet and `MEAL-TAG-RETENTION.md`;
+      - the unchanged `retention.mjs`, `omega3.mjs` and `r3-sheet.mjs`;
+      - the new independent check `check-factors.mjs`, which reads only the sheet and `retn06.txt`;
+      - the retention inputs, `analysis.json`, `retn06.txt`/`.pdf`, a PowerShell README and SHA256SUMS.
+    - **Checks:**
+      - A fresh full rerun from `0a80674` (full FDC CSV, 8 steps unpiped, all exit 0) reproduced the sheet byte for byte. `analysis.json`, both approval-sheet files, the appendix, the audit and all 108 fingerprints match the 2026-11-06 run; only the recorded calculation date differs.
+      - The factor check found all 59 entries matching (23 code descriptions and 36 factors).
+      - The README steps, followed from the extracted ZIP, passed: every hash read OK, `analysis.json` and the sheet were reproduced byte for byte, and the check passed.
+      - R3 bundle independently verified by Codex on 2026-11-07 from the bundled inputs. All checksums matched, the analysis and decision sheet reproduced byte for byte, and all 59 factor checks passed. All 15 R3 decisions remain open.
+  - the per-result approvals on the third-issue sheet;
+  - a runtime implementation of the meal-tag rule, only when authorized.
+- **Windows PowerShell 5.1 caveat:** piping `node` into `Select-Object -First` stops it, with exit -1 (shown as 255). Run the steps unpiped.
+
 ## Automated Codex review coordinator (Claude Code, 2026-11-04)
 
 - A local coordinator sits outside the repo at `C:\Users\Shakh\Downloads\MoodMeal\ai-review\moodmeal-ai-review\`, with no Git. Claude Code runs `review.mjs submit|reply|status`, and the script runs a read-only Codex reviewer with its own `codex-home` and ChatGPT sign-in.
