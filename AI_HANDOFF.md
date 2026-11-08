@@ -1,9 +1,30 @@
 # MoodMeal AI Handoff
 
+## Phase 1 audit (Claude Code, 2026-11-07)
+
+A read-only audit of `c9ecb10` plus the working tree's uncommitted changes; it changed no repo file. The report and logs are in `..\review-bundles\moodmeal-phase1-audit-2026-11-07.zip` (outside Git).
+- **Results:** typecheck, 55 knowledge tests, avatar tests, the build and the browser suite (no browser errors) pass. `research.py checks` found 0 blocking findings and 1 expected pilot note. A route smoke test made 112 loads (28 routes, 2 widths, with and without a check-in) with no errors, overflow or blank pages.
+- **Research tests:** the full research suite of **59 tests** passed only in the audit working tree, because 3 of its 4 test files and the code they test are untracked. From the committed tree, `run_tests.py` runs just the **11 omega-3 tests** (`test_omega3.py`), confirmed again on 2026-11-07 in a clean clone of `c9ecb10`.
+- **Unwired tests:** `tests/wellness.test.ts` and `tests/recordId.test.ts` pass, but no npm script runs them.
+- **Follow-ups (sprint items 1 and 2), prepared as two separate diffs:**
+  1. Research tooling (uncommitted): the 14 untracked files `test:research`, `export:catalog` and `research.py checks` need, plus the `package.json` and `.gitignore` lines.
+  2. Test wiring: a new `npm run test:unit` (`scripts/test-unit.mjs`) that runs both files, each in its own process, and reports each result.
+     - **Committed as `6a4d629` (owner-authorized, 2026-11-08) and pushed the same day (owner-authorized).** It holds exactly `scripts/test-unit.mjs` and the `test:unit` line in `package.json`.
+     - The commit was made in an isolated clone of `c9ecb10` with only item 2 applied. Coordinator session `MM-f597e00f-b7b5-4c97-a181-ac4f66e15f47` had passed in round 1 with no findings, and `usablePass` was true before and after staging.
+     - It was then fetched into this repo, and `knowledge-system-foundation` was fast-forwarded from `c9ecb10` without touching the working tree.
+     - The push moved `origin/knowledge-system-foundation` from `c9ecb10` to `6a4d629`, a fast-forward, using a per-command `-c http.sslBackend=schannel`; no Git setting was changed. After the push, `git ls-remote` showed the remote tip at `6a4d62967d7c68a4a29f54b1e11cae23c8dd3f78`, equal to local HEAD.
+     - `test:unit` and `typecheck` pass in this tree.
+- **Clean-clone findings** (with both diffs applied to `c9ecb10`):
+  - `export:catalog` and `test:unit` pass. With item 1's revision 2 (owner-requested 2026-11-07), `test:research` runs **68 tests, and all pass** in a clean clone, using only committed data and synthetic fixtures.
+  - Revision 2 moved the API report check out of `runtime-provenance` into a separate, blocking `api-evidence` check; provenance fields stay blocking in both modes. `research.py checks` stays strict by default and fails in a clean clone (0 of 18 reports found), and also when only one report is missing. `--repository-only` skips the evidence check and reports the 18 reports as not checked. Strict mode against the local evidence passes: 18 of 18 found, 0 blocking. `docs/usda/pending-review/` stays out of Git.
+  - Typecheck and the build also fail in a clean clone of `c9ecb10` itself. `fflate`, `pdfjs-dist` and `@napi-rs` are ignored packages, and the root `dist/` rule also ignores vendored files such as `node_modules/postcss-selector-parser/dist/`. With those ignored files copied in from this working tree, both pass.
+- Item 3 (the approval rules and the policy for unmeasured lines) stays open for owner decisions. Item 4 can follow as a candidate-only command with blank decisions.
+
 ## Meal-tag evidence review and the omega-3 correction (Claude Code, 2026-11-05/06)
 
 Started at `3952db8`, equal to origin. **Two commits, both pushed to origin on 2026-11-07 (owner-authorized):** the omega-3 correction, `430dee0`, and the research test runner, `0a80674`. `origin/knowledge-system-foundation` moved from `3952db8` to `0a80674` as a fast-forward. `git ls-remote` confirmed the remote branch at `0a80674c60150519590f89ec151af15c27e224d1`, equal to local HEAD.
 - **Push note:** the system Git config (`C:/Program Files/Git/etc/gitconfig`) sets `http.sslBackend=openssl`, and OpenSSL failed to verify GitHub's certificate ("unable to get local issuer certificate"). The fetch and push used `git -c http.sslBackend=schannel …`, the Windows certificate store, which still verifies certificates. That applied to those commands only, and no Git setting was changed. Plain `git fetch` and `git push` will fail the same way until the OpenSSL certificate store is fixed. The meal-tag research packets and scripts are untracked, and no meal-tag result is approved. **Every result approval is blank.**
+- **Handoff-only commit `c9ecb10` (owner-authorized, 2026-11-07):** it commits only this file, recording the section above through the R3 bundle verification. It was pushed to `origin/knowledge-system-foundation` (`0a80674..c9ecb10`, a fast-forward), with the same per-command schannel setting. After the push, `git ls-remote` showed the remote tip at `c9ecb109f4004c93c9509081161321c9a60e5ad4`, equal to local HEAD. This entry was added after that commit and committed later, in the handoff-only commit that also added the Phase 1 audit entry. All 15 R3 decisions remain open.
 
 - **Packets** (untracked, in `docs/research/`):
   - `MEAL-TAG-EVIDENCE.md`: revision 4, with its audit table and appendix regenerated on 2026-11-06 for the two-path omega-3 rule;
