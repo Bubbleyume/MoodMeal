@@ -21,3 +21,5 @@ node_modules/playwright/
 node_modules/playwright-core/
 
 node_modules/.bin/playwright*
+research-output/
+research-cache/

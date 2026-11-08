@@ -12,6 +12,8 @@
     "test:avatars": "node scripts/test-avatars.mjs",
     "test:unit": "node scripts/test-unit.mjs",
     "test:knowledge": "node scripts/test-knowledge.mjs",
+    "export:catalog": "node scripts/export-catalog.mjs",
+    "test:research": "node scripts/export-catalog.mjs && python -I -B tools/research/run_tests.py",
     "test:browser": "node tests/knowledge.browser.cjs"
   },
   "dependencies": {
