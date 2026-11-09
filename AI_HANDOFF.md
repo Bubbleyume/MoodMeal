@@ -35,7 +35,14 @@ A read-only audit of `c9ecb10` plus the working tree's uncommitted changes; it c
   - **Part B, unmeasured lines (5 decisions, UL-1 to UL-5):** 8 lines in 8 recipes:
     - salt & pepper "to taste" (3), mint "a few" (2), ice (2) and wooden skewers (1);
     - none maps to a catalog food, and no decision alone completes a recipe.
-  - **Side finding, not fixed:** 3 ledger use quantities no longer match their recipe lines: Skewers pineapple, Toast sweet potato and the popcorn sea salt ("pinch" against "0.4 g, weighed"). `ledger-uses-in-catalog` compares labels only.
+  - **Side finding, fixed on 2026-11-09 (owner-requested), committed as `7e12fb7`:** 3 ledger use quantities in `docs/usda/remaining-ingredient-review.json` no longer matched their recipe lines. Only those three `uses` lines changed, each to its recipe's current wording:
+    - Skewers pineapple: "1 cup, raw chunks (165 g USDA reference weight)";
+    - Toast sweet potato: "1, peeled, sliced lengthwise into 1/4-inch planks";
+    - Popcorn sea salt: "0.4 g, weighed", replacing "pinch".
+
+    No approval, hold or note changed. Strict `research.py checks` (18 of 18, 0 blocking) and `test:research` (68) pass. `ledger-uses-in-catalog` still compares labels only.
+    - The pineapple entry's `approvedUses` still records the Skewers use as "1 cup, cubed", the wording of the 2026-10-14 pilot approval. It is left for the owner to decide.
+    - The issued sheet's side finding still says the three are unfixed; the sheet was left as issued.
   - **Review bundle sent to the owner:** `..\review-bundles\moodmeal-item3-decision-sheet-2026-11-09.zip` (outside Git, 8 entries). It holds the sheet, the read-only `unmeasured-lines.mjs`, its three inputs and output, a PowerShell README and SHA256SUMS. Verified from the extracted ZIP: every hash OK, the rerun exit 0, and its output byte-identical.
 
 ## Meal-tag evidence review and the omega-3 correction (Claude Code, 2026-11-05/06)
