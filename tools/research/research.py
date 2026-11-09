@@ -9,6 +9,11 @@ Run with:  python -I -B tools/research/research.py <command> [options]
   checks                                  Ledger, runtime and catalog consistency report.
   tag-evidence --fdc-csv DIR [--threshold 0.10]
                                           Stage C: food tags vs %DV per RACC (report only).
+  ingredient "<label>" --quantity Q --unit U [--state S] [--form F] --fdc-csv DIR
+  ingredient --recipe RECIPE_ID --line N --fdc-csv DIR
+                                          Candidate-only review record for one recipe line:
+                                          requirements, USDA candidates, portion weights,
+                                          evidence status and a blank decision (item 4).
 
 Outputs go to research-output/ and raw API responses to research-cache/; both
 must be git-ignored or nothing is written.
@@ -21,7 +26,8 @@ from pathlib import Path
 # python -I does not put this folder on sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from moodmeal_research import checks, config, tag_evidence  # noqa: E402
+from moodmeal_research import checks, config, ingredient, tag_evidence  # noqa: E402
+from moodmeal_research.requirements import STATE_WORDS  # noqa: E402
 from moodmeal_research.adapters.usda_api import ApiError, UsdaApiAdapter  # noqa: E402
 from moodmeal_research.adapters.usda_csv import UsdaCsvAdapter  # noqa: E402
 from moodmeal_research.cache import Cache, CacheRefused  # noqa: E402
@@ -85,6 +91,73 @@ def run_tag_evidence(cfg, threshold):
     return 0
 
 
+def ingredient_request(cfg, args):
+    """The line to research, from the catalog (--recipe/--line) or from the arguments."""
+    if args.recipe is not None or args.line is not None:
+        if args.recipe is None or args.line is None or args.label:
+            raise config.ConfigError('Use either --recipe with --line, or a label with --quantity and --unit.')
+        catalog_path = cfg.repo / 'research-output/catalog.json'
+        catalog = json.loads(catalog_path.read_text(encoding='utf-8'))
+        recipe = next((r for r in catalog['recipes'] if r['id'] == args.recipe), None)
+        if recipe is None:
+            raise config.ConfigError(f'Recipe {args.recipe} is not in research-output/catalog.json.')
+        if not 0 <= args.line < len(recipe['lines']):
+            raise config.ConfigError(f'{args.recipe} has lines 0 to {len(recipe["lines"]) - 1}.')
+        s = recipe['lines'][args.line]['structured']
+        request = {'recipeId': args.recipe, 'lineIndex': args.line, 'label': s['name'],
+                   'quantity': s['quantity'], 'unit': s['unit'], 'notes': s['notes']}
+        inputs = {'catalog': {'path': 'research-output/catalog.json', 'sourceCommit': catalog['sourceCommit'],
+                              'sha256': ingredient.sha256_file(catalog_path)}}
+    else:
+        if not args.label:
+            raise config.ConfigError('Give a label, or --recipe and --line.')
+        request = {'label': args.label, 'quantity': args.quantity, 'unit': args.unit, 'notes': args.notes or ''}
+        inputs = {}
+    request.update({'state': args.state, 'forms': args.form or [], 'search': args.search,
+                    'fdcIds': [str(i) for i in args.fdc_id or []]})
+    return request, inputs
+
+
+def run_ingredient(cfg, args):
+    try:
+        if args.max_candidates < 1:
+            raise config.ConfigError('--max-candidates must be at least 1.')
+        folder = cfg.require_csv()
+        request, inputs = ingredient_request(cfg, args)
+        ledger_path = cfg.repo / 'docs/usda/remaining-ingredient-review.json'
+        runtime_path = cfg.repo / 'src/data/usda/approved-ingredients.json'
+        ledger = checks.load(ledger_path)
+        runtime = checks.load(runtime_path)
+        for key, path in (('ledger', ledger_path), ('runtime', runtime_path),
+                          ('foodPortion', folder / 'food_portion.csv'), ('measureUnit', folder / 'measure_unit.csv')):
+            if path.is_file():
+                inputs[key] = {'path': path.name if key in ('foodPortion', 'measureUnit') else path.relative_to(cfg.repo).as_posix(),
+                               'sha256': ingredient.sha256_file(path)}
+        out_dir = cfg.output_dir / 'ingredients'
+        config.ensure_ignored(out_dir)
+        record = ingredient.build_record(request, folder, ledger, runtime, inputs, args.max_candidates)
+    except FileNotFoundError as exc:
+        print(f'Error: {exc.filename} not found; run npm run export:catalog first.', file=sys.stderr)
+        return 1
+    except config.ConfigError as exc:
+        print(f'Error: {exc}', file=sys.stderr)
+        return 1
+    out_dir.mkdir(parents=True, exist_ok=True)
+    name = ingredient.slug(request)
+    (out_dir / f'{name}.json').write_text(json.dumps(record, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    (out_dir / f'{name}.md').write_text(ingredient.render_markdown(record), encoding='utf-8')
+    print(f'{request["label"]}: evidence status {record["evidenceStatus"]}'
+          + (f' (missing: {", ".join(record["statusReasons"])})' if record['statusReasons'] else '')
+          + f'; {len(record["candidates"])} candidate(s), {record["search"]["totalMatches"]} search match(es).')
+    for c in record['candidates']:
+        grams = sorted({round(o['grams'], 3) for o in c['weight']['options']})
+        print(f'  FDC {c["fdcId"]} {c["description"]} [{c["dataType"]}; {"+".join(c["foundBy"])}]: '
+              f'state: {c["state"]["result"]}; weight: {c["weight"]["status"]}'
+              + (f' {", ".join(f"{g:g} g" for g in grams)}' if grams else ''))
+    print(f'Wrote research-output/ingredients/{name}.json and .md ({record["fingerprint"]}). Nothing was approved.')
+    return 0
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='command', required=True)
@@ -96,6 +169,19 @@ def main(argv=None):
     te.add_argument('--fdc-csv', help=f'FoodData Central CSV folder (or set {config.CSV_ENV}).')
     te.add_argument('--threshold', type=float, default=0.10,
                     help='Fraction of the Daily Value per RACC (owner choice 2026-11-04: 0.10).')
+    ig = sub.add_parser('ingredient', help='Candidate-only review record for one recipe line (item 4). Approves nothing.')
+    ig.add_argument('label', nargs='?', help='Ingredient label, e.g. "Olive oil".')
+    ig.add_argument('--quantity', help='Amount: 1, 1/2, 1 1/2 or 0.75.')
+    ig.add_argument('--unit', help='tsp, tbsp, cup, fl oz, g, oz, or a count unit such as each or clove.')
+    ig.add_argument('--notes', help='Recipe notes, e.g. "chopped" or "cooked".')
+    ig.add_argument('--state', choices=sorted(STATE_WORDS), help='Preparation state; overrides the notes.')
+    ig.add_argument('--form', action='append', help='Form word such as chopped (repeatable).')
+    ig.add_argument('--search', help='Search text when it should differ from the label.')
+    ig.add_argument('--fdc-id', type=int, action='append', help='Also include this FDC ID (repeatable).')
+    ig.add_argument('--recipe', help='Recipe ID from research-output/catalog.json (run npm run export:catalog first).')
+    ig.add_argument('--line', type=int, help='Line index within --recipe, from 0.')
+    ig.add_argument('--max-candidates', type=int, default=8, help='Search results to show (default 8).')
+    ig.add_argument('--fdc-csv', help=f'FoodData Central CSV folder (or set {config.CSV_ENV}).')
     for name in ('usda-csv', 'check-runtime', 'usda-api'):
         p = sub.add_parser(name)
         p.add_argument('fdc_id', type=int)
@@ -123,6 +209,8 @@ def main(argv=None):
         return 1 if any(f['severity'] == 'blocking' for f in report['findings']) else 0
     if args.command == 'tag-evidence':
         return run_tag_evidence(cfg, args.threshold)
+    if args.command == 'ingredient':
+        return run_ingredient(cfg, args)
     try:
         if args.fdc_id <= 0:
             raise config.ConfigError('FDC ID must be positive.')

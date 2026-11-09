@@ -163,3 +163,51 @@ Each batch packet records the evidence, the owner's decisions and what was appli
 - Source reviewed PDCAAS values before deciding the three held plant protein tags.
 - Review the mood-to-goal rules and the glossary entries.
 - Task 4 still needs explicit approval.
+
+## Ingredient research command (Phase 1 backlog item 4, 2026-11-09)
+
+This is item 4 of `PHASE-1-AUDIT.md`, not the earlier task 4 above. The command takes one recipe line and writes one candidate-only review record. It is offline, reading only the local CSV snapshot, and it approves nothing.
+
+```
+npm run export:catalog
+python -I -B tools/research/research.py ingredient --recipe recipe-salmon-quinoa-bowl --line 5 --state ready-to-use --fdc-csv C:/path/to/FoodData_Central_csv_2026-04-30
+python -I -B tools/research/research.py ingredient "Walnuts" --quantity 1 --unit tbsp --notes chopped --state raw --fdc-csv C:/path/to/FoodData_Central_csv_2026-04-30
+```
+
+- **Options:**
+  - `--state`: one of raw, cooked, dry, brewed, frozen, canned or ready-to-use. Otherwise the state is read from the recipe notes.
+  - `--form`, `--search` and `--fdc-id` are repeatable or optional.
+  - `--max-candidates` defaults to 8.
+- **Output:** `research-output/ingredients/<recipe>-line-<n>.json` and `.md`, which are git-ignored. One run takes about 25 s, because it streams `food_nutrient.csv` once.
+- **Requirements:** identity is always left to the owner. Each line is checked for:
+  - a state;
+  - any form words in its notes;
+  - an amount. "To taste" or "a few" is missing, and points to item 3, UL-2 and UL-3.
+- **Candidates:**
+  - **Search:** a whole-word search of `food.csv` limited to Foundation, SR Legacy and FNDDS records. Plurals are folded, and branded and sample records are never searched. Descriptions that start with the first term come first. The order is a reading aid, not evidence.
+  - **Other sources:** the ledger's candidate IDs and any `--fdc-id`.
+  - **State:** each candidate shows how its description relates to the stated state: matches, conflicts, mixed or not stated. Words after "excluding", "without", "not", "no" or "except" in the same comma-separated part are ignored.
+- **Weights:** every gram weight the USDA portions support for the line's unit is listed, and none is chosen. The weight status is one of:
+  - `exact-mass`: oz, lb, kg or g, using exact definitions;
+  - `direct-portion`: the same unit, with any other portions agreeing;
+  - `derived`: the US customary ratios from `src/lib/units.ts`; mL portions use the exact 1 tsp = 4.92892159375 mL and say so;
+  - `count-portion`: a clove or a medium banana, whose size or count must be confirmed;
+  - `several-options`: different weights, such as walnuts chopped or ground. Portions whose wording matches the line's form are marked;
+  - `no-portion`.
+- **Values:** core nutrients per 100 g, and each weight option's contribution. Unknown stays null, a measured zero stays zero, and duplicate nutrient rows stay null and are flagged.
+- **Status:** only `candidate` or `missing` (with its reasons). Verified, Conditional, Conflicting and Rejected need the owner, or approved item 3 rules. The decision block is blank, with `approved: false` and `publishable: false`.
+- **Context:** the ledger entry and any approved record for the label. Reusing an approved record is the owner's decision, because AR-3 isn't approved.
+- **Fingerprint:** a SHA-256 over the whole record. It covers:
+  - the request and the snapshot name;
+  - the hashes of the ledger, runtime approvals, catalog, `food_portion.csv` and `measure_unit.csv`;
+  - every candidate's source row IDs and values;
+  - the hashes of the four source files.
+
+  A rerun on the same inputs reproduces both files byte for byte.
+- **Code and tests:** `moodmeal_research/requirements.py` and `moodmeal_research/ingredient.py`. `tests/test_ingredient.py` has 23 tests on the synthetic `tests/fixtures/fdc_csv_ingredient/`, bringing `test:research` to 91.
+- **Limits:**
+  - no API search;
+  - no materiality rule for weights that differ slightly;
+  - the state and form tables are short;
+  - Foundation records often have no portions;
+  - energy is read from nutrient 1008 only. Energy reported only as 2047 or 2048 (Atwater factors) or as 1062 (kJ) shows as Unknown. Foundation extra-virgin olive oil, 748608, has no energy row at all.
