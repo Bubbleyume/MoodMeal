@@ -28,6 +28,15 @@ A read-only audit of `c9ecb10` plus the working tree's uncommitted changes; it c
   - Typecheck and the build also fail in a clean clone of `c9ecb10` itself. `fflate`, `pdfjs-dist` and `@napi-rs` are ignored packages, and the root `dist/` rule also ignores vendored files such as `node_modules/postcss-selector-parser/dist/`. With those ignored files copied in from this working tree, both pass.
 - **Handoff-only commit `4fee733` (owner-authorized, 2026-11-08):** it commits only this file, recording this entry and the `c9ecb10` note; the Blueprint paragraph at the top was left out, to go in with `docs/MOODMEAL-BLUEPRINT.md`. It was pushed to `origin/knowledge-system-foundation` (`6a4d629..4fee733`, a fast-forward), with the same per-command schannel setting. After the push, `git ls-remote` showed the remote tip at `4fee733c6780fe233e7a703fcf25b4812ae119f4`, equal to local HEAD. This note was added after that commit and committed later, in the handoff-only commit that also recorded the `9095a54` push.
 - Item 3 (the approval rules and the policy for unmeasured lines) stays open for owner decisions. Item 4 can follow as a candidate-only command with blank decisions.
+- **Item 3 decision sheet (2026-11-09, untracked):** `docs/research/ITEM-3-DECISION-SHEET.md`, prepared from `bb33a35`. **Every decision is blank**, and the recommendations are AI-assisted.
+  - **Part A, approval rules (9 decisions):**
+    - AR-G1 to AR-G4: shadow mode first, eight hard limits, a proposed new `reviewOrigin` value `rule-approved`, and revocation back to pending review;
+    - AR-1 to AR-5: criteria for the blueprint's five conditionally automated categories.
+  - **Part B, unmeasured lines (5 decisions, UL-1 to UL-5):** 8 lines in 8 recipes:
+    - salt & pepper "to taste" (3), mint "a few" (2), ice (2) and wooden skewers (1);
+    - none maps to a catalog food, and no decision alone completes a recipe.
+  - **Side finding, not fixed:** 3 ledger use quantities no longer match their recipe lines: Skewers pineapple, Toast sweet potato and the popcorn sea salt ("pinch" against "0.4 g, weighed"). `ledger-uses-in-catalog` compares labels only.
+  - **Review bundle sent to the owner:** `..\review-bundles\moodmeal-item3-decision-sheet-2026-11-09.zip` (outside Git, 8 entries). It holds the sheet, the read-only `unmeasured-lines.mjs`, its three inputs and output, a PowerShell README and SHA256SUMS. Verified from the extracted ZIP: every hash OK, the rerun exit 0, and its output byte-identical.
 
 ## Meal-tag evidence review and the omega-3 correction (Claude Code, 2026-11-05/06)
 
