@@ -410,7 +410,7 @@
         },
         {
           "recipeId": "recipe-rainbow-fruit-skewers",
-          "quantity": "1 cup, cubed"
+          "quantity": "1 cup, raw chunks (165 g USDA reference weight)"
         }
       ],
       "proposedDefaultFdcId": "169124",
@@ -606,7 +606,7 @@
         },
         {
           "recipeId": "recipe-chamomile-comfort-toast",
-          "quantity": "1, sliced lengthwise into 1/4-inch planks"
+          "quantity": "1, peeled, sliced lengthwise into 1/4-inch planks"
         },
         {
           "recipeId": "recipe-cozy-sweet-potato-hash",
@@ -2751,7 +2751,7 @@
       "uses": [
         {
           "recipeId": "recipe-loaded-popcorn-mix",
-          "quantity": "pinch"
+          "quantity": "0.4 g, weighed"
         }
       ],
       "proposedDefaultFdcId": "173468",
