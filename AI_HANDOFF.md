@@ -44,6 +44,20 @@ A read-only audit of `c9ecb10` plus the working tree's uncommitted changes; it c
     - The pineapple entry's `approvedUses` still records the Skewers use as "1 cup, cubed", the wording of the 2026-10-14 pilot approval. It is left for the owner to decide.
     - The issued sheet's side finding still says the three are unfixed; the sheet was left as issued.
   - **Review bundle sent to the owner:** `..\review-bundles\moodmeal-item3-decision-sheet-2026-11-09.zip` (outside Git, 8 entries). It holds the sheet, the read-only `unmeasured-lines.mjs`, its three inputs and output, a PowerShell README and SHA256SUMS. Verified from the extracted ZIP: every hash OK, the rerun exit 0, and its output byte-identical.
+- **Item 4, the ingredient research command: committed as `d2eed02` (owner-authorized, 2026-11-09) and pushed the same day (owner-authorized).**
+  - **Push:** `origin/knowledge-system-foundation` moved from `7303fa0` to `d2eed02`, a fast-forward without force, using a per-command `-c http.sslBackend=schannel`; no Git setting was changed. After the push, `git ls-remote` showed the remote tip at `d2eed0228531a42871b75d216aa8d932b1d29cd7`, equal to local HEAD.
+  - **What it does:** `research.py ingredient` takes one recipe line, from the catalog (`--recipe`/`--line`) or typed in, and writes one fingerprinted record to the ignored `research-output/ingredients/`. It works offline from the local CSV snapshot.
+    - Candidates: Foundation, SR Legacy and FNDDS only, never branded.
+    - Weights: every portion-based weight for the line's unit is listed, and none is chosen.
+    - Nutrients: unknown stays null.
+    - The status is only candidate or missing, and the decision is blank. The usage is in `docs/research/README.md`.
+  - **Scope:** 10 paths: `requirements.py`, `ingredient.py`, `test_ingredient.py`, the 5 synthetic `fdc_csv_ingredient` fixtures, the command in `research.py`, and the README usage section.
+  - **Checks:**
+    - The diff was reviewed directly; the coordinator doesn't accept `.py`. The review found a negation defect, now fixed: "excluding honey roasted" no longer reads as roasted.
+    - `test:research` ran 91 tests, all passing, here and in a clean clone of `d2eed02`.
+    - Strict `research.py checks`: 18 of 18 reports, 0 blocking.
+    - A real-snapshot rerun reproduced the JSON and Markdown byte for byte.
+  - No ingredient approval, ledger entry or published nutrition changed. Item 6 (running the command on the high-leverage labels) has not started.
 
 ## Meal-tag evidence review and the omega-3 correction (Claude Code, 2026-11-05/06)
 
